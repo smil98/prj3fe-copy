@@ -237,7 +237,7 @@ export function MemberSignup() {
             {/*  </Flex>*/}
             {/*</FormControl>*/}
 
-            <FormControl isRequired>
+            <FormControl>
               <FormLabel htmlFor="birth-date">생년월일</FormLabel>
               <Input
                 id="birth-date"
@@ -248,23 +248,33 @@ export function MemberSignup() {
                 onChange={(e) => setBirthDate(e.target.value)}
               />
             </FormControl>
-            <FormControl isRequired>
+            <FormControl>
               <FormLabel>성별</FormLabel>
-              <ButtonGroup onChange={handleGenderChange} isAttached>
+              <ButtonGroup
+                onChange={handleGenderChange}
+                isAttached
+                w={{ base: "full", md: "80%", lg: "60%" }}
+              >
                 <Button
                   borderLeftRadius={20}
                   borderRightRadius={0}
                   borderRightWidth={0}
-                  variant={gender === "Male" ? "solid" : "outline"}
+                  w="25%"
+                  colorScheme={gender == "Male" ? "purple" : "gray"}
+                  variant="solid"
                   value="Male"
+                  _focus={{ boxShadow: "none", outline: "none" }}
                   onClick={() => handleGenderChange("Male")}
                 >
                   남
                 </Button>
                 <Button
-                  borderRadius={0}
-                  variant={gender === "Female" ? "solid" : "outline"}
-                  value="Female"
+                  borderTopRadius={0}
+                  borderBottomRadius={0}
+                  w="25%"
+                  colorScheme={gender == "Female" ? "purple" : "gray"}
+                  variant="solid"
+                  _focus={{ boxShadow: "none", outline: "none" }}
                   onClick={() => handleGenderChange("Female")}
                 >
                   여
@@ -273,8 +283,11 @@ export function MemberSignup() {
                   borderLeftRadius={0}
                   borderLeftWidth={0}
                   borderRightRadius={20}
-                  variant={gender === "Unidentified" ? "solid" : "outline"}
+                  w="50%"
+                  colorScheme={gender == "Unidentified" ? "purple" : "gray"}
+                  variant="solid"
                   value="Unidentified"
+                  _focus={{ boxShadow: "none", outline: "none" }}
                   onClick={() => handleGenderChange("Unidentified")}
                 >
                   밝히고 싶지 않음
