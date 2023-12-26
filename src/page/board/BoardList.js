@@ -30,6 +30,7 @@ import {
 import { Search } from "./Search";
 import { faHeart as emptyHeart } from "@fortawesome/free-regular-svg-icons";
 import axiosInstance from "../../axiosInstance";
+import axios from "axios";
 
 function LikeContainer({ loggedIn, setLoggedIn, boardId, sendRefreshToken }) {
   const toast = useToast();
@@ -225,41 +226,41 @@ export function BoardList() {
     setSearchParams(params);
     setCurrentPage(0); // 검색 시 첫 페이지로 이동.
   };
-  useEffect(() => {
-    // searchParams 상태를 사용하여 API 호출을 업데이트.
-    axiosInstance
-      .get(`/api/board/list`, {
-        params: {
-          page: currentPage,
-          size: itemsPerPage,
-          title: searchParams.title,
-          albumFormat:
-            albumFormat && !searchParams.format
-              ? albumFormat
-              : searchParams.format,
-          // albumDetails가 undefined가 아닌 경우에만 join을 호출.
-          albumDetails: searchParams.genres
-            ? searchParams.genres.join(",")
-            : "",
-          minPrice: searchParams.minPrice,
-          maxPrice: searchParams.maxPrice,
-          stockQuantity: searchParams.stockQuantity,
-        },
-      })
-      .then((response) => {
-        const boards = response.data.content;
-
-        // 각 board 객체에 대해 boardFile의 fileUrl을 추출합니다.
-        const updatedBoards = boards.map((board) => {
-          // boardFile 객체들이 배열 형태로 저장되어 있다고 가정
-          const fileUrls = board.boardFiles.map((file) => file.fileUrl);
-          return { ...board, fileUrls };
-        });
-
-        setBoardList(updatedBoards);
-        setTotalPage(response.data.totalPages);
-      });
-  }, [currentPage, searchParams, param]);
+  // useEffect(() => {
+  //   // searchParams 상태를 사용하여 API 호출을 업데이트.
+  //   axios
+  //     .get(`/api/board/list`, {
+  //       params: {
+  //         page: currentPage,
+  //         size: itemsPerPage,
+  //         title: searchParams.title,
+  //         albumFormat:
+  //           albumFormat && !searchParams.format
+  //             ? albumFormat
+  //             : searchParams.format,
+  //         // albumDetails가 undefined가 아닌 경우에만 join을 호출.
+  //         albumDetails: searchParams.genres
+  //           ? searchParams.genres.join(",")
+  //           : "",
+  //         minPrice: searchParams.minPrice,
+  //         maxPrice: searchParams.maxPrice,
+  //         stockQuantity: searchParams.stockQuantity,
+  //       },
+  //     })
+  //     .then((response) => {
+  //       const boards = response.data.content;
+  //
+  //       // 각 board 객체에 대해 boardFile의 fileUrl을 추출합니다.
+  //       const updatedBoards = boards.map((board) => {
+  //         // boardFile 객체들이 배열 형태로 저장되어 있다고 가정
+  //         const fileUrls = board.boardFiles.map((file) => file.fileUrl);
+  //         return { ...board, fileUrls };
+  //       });
+  //
+  //       setBoardList(updatedBoards);
+  //       setTotalPage(response.data.totalPages);
+  //     });
+  // }, [currentPage, searchParams, param]);
   // param
   if (boardList === null) {
     return <Spinner />;
@@ -289,7 +290,7 @@ export function BoardList() {
   function handleInCart(board) {
     const accessToken = localStorage.getItem("accessToken");
     console.log("카트 클릭");
-    axiosInstance
+    axios
       .postForm(
         "/cart/add",
         {
@@ -337,60 +338,60 @@ export function BoardList() {
           templateColumns="repeat(4, 1fr)" // 각 열에 4개의 카드를 나열
           gap={5} // 카드 사이의 간격
         >
-          {boardList.map((board) => (
-            <Card
-              key={board.fileUrl}
-              borderRadius="xl"
-              w="100%"
-              h="100%"
-              variant="outline"
-              colorScheme="gray"
-            >
-              <CardHeader onClick={() => navigate(`/board/${board.id}`)}>
-                <Center>
-                  {board.fileUrls &&
-                    board.fileUrls.map((url, index) => (
-                      <Image
-                        src={url}
-                        borderRadius="xl"
-                        style={{
-                          width: "200px",
-                          height: "200px",
-                          objectFit: "cover",
-                        }}
-                      />
-                    ))}
-                </Center>
-              </CardHeader>
-              <CardBody onClick={() => navigate(`/board/${board.id}`)}>
-                <Heading size="md" mb={3}>
-                  {board.title} - {board.artist}
-                </Heading>
-                <Heading size="m" textAlign="left">
-                  {board.price.toLocaleString()} 원
-                </Heading>
-              </CardBody>
-              <CardFooter>
-                <Center>
-                  <ButtonGroup spacing="2">
-                    <IconButton
-                      aria-label="cart"
-                      variant="solid"
-                      colorScheme="pink"
-                      onClick={() => handleInCart(board)}
-                      icon={<FontAwesomeIcon icon={faCartPlus} />}
-                    />
-                    <LikeContainer
-                      loggedIn={loggedIn}
-                      setLoggedIn={setLoggedIn}
-                      boardId={board.id}
-                      sendRefreshToken={sendRefreshToken}
-                    />
-                  </ButtonGroup>
-                </Center>
-              </CardFooter>
-            </Card>
-          ))}
+          {/*{boardList.map((board) => (*/}
+          {/*  <Card*/}
+          {/*    key={board.fileUrl}*/}
+          {/*    borderRadius="xl"*/}
+          {/*    w="100%"*/}
+          {/*    h="100%"*/}
+          {/*    variant="outline"*/}
+          {/*    colorScheme="gray"*/}
+          {/*  >*/}
+          {/*    <CardHeader onClick={() => navigate(`/board/${board.id}`)}>*/}
+          {/*      <Center>*/}
+          {/*        {board.fileUrls &&*/}
+          {/*          board.fileUrls.map((url, index) => (*/}
+          {/*            <Image*/}
+          {/*              src={url}*/}
+          {/*              borderRadius="xl"*/}
+          {/*              style={{*/}
+          {/*                width: "200px",*/}
+          {/*                height: "200px",*/}
+          {/*                objectFit: "cover",*/}
+          {/*              }}*/}
+          {/*            />*/}
+          {/*          ))}*/}
+          {/*      </Center>*/}
+          {/*    </CardHeader>*/}
+          {/*    <CardBody onClick={() => navigate(`/board/${board.id}`)}>*/}
+          {/*      <Heading size="md" mb={3}>*/}
+          {/*        {board.title} - {board.artist}*/}
+          {/*      </Heading>*/}
+          {/*      <Heading size="m" textAlign="left">*/}
+          {/*        {board.price.toLocaleString()} 원*/}
+          {/*      </Heading>*/}
+          {/*    </CardBody>*/}
+          {/*    <CardFooter>*/}
+          {/*      <Center>*/}
+          {/*        <ButtonGroup spacing="2">*/}
+          {/*          <IconButton*/}
+          {/*            aria-label="cart"*/}
+          {/*            variant="solid"*/}
+          {/*            colorScheme="pink"*/}
+          {/*            onClick={() => handleInCart(board)}*/}
+          {/*            icon={<FontAwesomeIcon icon={faCartPlus} />}*/}
+          {/*          />*/}
+          {/*          <LikeContainer*/}
+          {/*            loggedIn={loggedIn}*/}
+          {/*            setLoggedIn={setLoggedIn}*/}
+          {/*            boardId={board.id}*/}
+          {/*            sendRefreshToken={sendRefreshToken}*/}
+          {/*          />*/}
+          {/*        </ButtonGroup>*/}
+          {/*      </Center>*/}
+          {/*    </CardFooter>*/}
+          {/*  </Card>*/}
+          {/*))}*/}
         </SimpleGrid>
         {/*-----------------------------------------*/}
         {/*페이지 네이션-------------------------------------------*/}
