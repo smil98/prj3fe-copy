@@ -1,7 +1,6 @@
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { Link, useToast } from "@chakra-ui/react";
 import { useEffect } from "react";
-import axiosInstance from "../../axiosInstance";
 
 export function Success() {
   const navigate = useNavigate();
@@ -26,7 +25,7 @@ export function Success() {
 
     async function confirm() {
       try {
-        const response = await axiosInstance.post(
+        const response = await axios.post(
           "/payment/toss/success",
           requestData,
           {

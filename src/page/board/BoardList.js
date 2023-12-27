@@ -29,7 +29,6 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { Search } from "./Search";
 import { faHeart as emptyHeart } from "@fortawesome/free-regular-svg-icons";
-import axiosInstance from "../../axiosInstance";
 import axios from "axios";
 
 function LikeContainer({ loggedIn, setLoggedIn, boardId, sendRefreshToken }) {
@@ -37,7 +36,7 @@ function LikeContainer({ loggedIn, setLoggedIn, boardId, sendRefreshToken }) {
   const [like, setLike] = useState(null);
 
   useEffect(() => {
-    axiosInstance
+    axios
       .get(`/api/like/board/${boardId}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
@@ -59,7 +58,7 @@ function LikeContainer({ loggedIn, setLoggedIn, boardId, sendRefreshToken }) {
   }
   function handleLike() {
     if (loggedIn) {
-      axiosInstance
+      axios
         .get("/api/like/update/" + boardId, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
@@ -74,7 +73,7 @@ function LikeContainer({ loggedIn, setLoggedIn, boardId, sendRefreshToken }) {
             const re = sendRefreshToken();
             if (re !== undefined) {
               re.then(() => {
-                axiosInstance
+                axios
                   .get("/api/like/update/" + boardId, {
                     headers: {
                       Authorization: `Bearer ${localStorage.getItem(
@@ -154,7 +153,7 @@ export function BoardList() {
     console.log("리프레시 토큰: ", refreshToken);
     // setLoggedIn(false);
     if (refreshToken !== null) {
-      return axiosInstance
+      return axios
         .get("/refreshToken", {
           headers: { Authorization: `Bearer ${refreshToken}` },
         })
@@ -180,7 +179,7 @@ export function BoardList() {
   useEffect(() => {
     if (localStorage.getItem("accessToken") !== null) {
       console.log(localStorage.getItem("accessToken"));
-      axiosInstance
+      axios
         .get("/accessToken", {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
@@ -191,7 +190,7 @@ export function BoardList() {
           setLoggedIn(true);
           console.log(response.data);
 
-          return axiosInstance.get("/isSocialMember", {
+          return axios.get("/isSocialMember", {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("refreshToken")}`,
             },

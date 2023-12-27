@@ -34,7 +34,7 @@ import {
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axiosInstance from "../../axiosInstance";
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faInfo, faUser } from "@fortawesome/free-solid-svg-icons";
 import {
@@ -48,13 +48,14 @@ import {
   ViewOffIcon,
   WarningTwoIcon,
 } from "@chakra-ui/icons";
+import axios from "axios";
 
 export function MemberSignup() {
   const [logId, setLogId] = useState("");
   const [password, setPassword] = useState("");
   const [rePassword, setRePassword] = useState("");
   const [email, setEmail] = useState("");
-  const [name, setName] = useState("");
+  const [nickName, setNickName] = useState("");
   const [gender, setGender] = useState("Unidentified");
   const [birthDate, setBirthDate] = useState("");
   const [role, setRole] = useState("");
@@ -62,31 +63,32 @@ export function MemberSignup() {
 
   // 사용 가능 여부 체크
   const [emailValid, setEmailValid] = useState(false);
-  const [idValid, setIdValid] = useState(false);
+  const [nickNameValid, setNickNameValid] = useState(false);
   const [passwordValid, setPasswordValid] = useState(false);
   const [passwordChecked, setPasswordChecked] = useState(false);
 
-  let sameOriginEmail = false;
-  let emailChecked = sameOriginEmail || emailValid;
-  let sameOriginId = false;
-  let idChecked = sameOriginId || idValid;
+  const [emailButtonClicked, setEmailButtonClicked] = useState(false);
+  const [nickNameButtonClicked, setNickNameButtonClicked] = useState(false);
+
+  let emailChecked = emailButtonClicked && emailValid;
+  let nickNameChecked = nickNameButtonClicked && nickNameValid;
 
   const toast = useToast();
   const navigate = useNavigate();
   const [passwordErrorMessage, setPasswordErrorMessage] = useState("");
 
   function handleSubmit() {
-    axiosInstance
+    axios
       .post("/member/add", {
-        logId,
-        password,
         email,
-        name,
-        gender,
+        password,
+        nickName,
         birthDate: parseInt(birthDate, 10),
+        gender,
       })
       .then(() => {
         toast({
+          position: "top",
           description: "회원가입이 완료되었습니다",
           status: "success",
         });
@@ -95,71 +97,88 @@ export function MemberSignup() {
       .catch((error) => {
         if (error.response.status === 400) {
           toast({
+            position: "top",
             description: "입력값을 확인해주세요",
             status: "error",
           });
         } else {
           toast({
+            position: "top",
             description: "입력값을 확인해주세요",
             status: "error",
           });
         }
         toast({
-          description: "가입중에 오류가 발생하였습니다.",
+          position: "top",
+          description: "가입 도중 오류가 발생하였습니다",
           status: "error",
         });
       })
       .finally(() => console.log("done"));
   }
   function handleEmailCheck() {
+    setEmailButtonClicked(true);
+
     const params = new URLSearchParams();
-    params.set("email", email);
-    axiosInstance
+    params.set("email", encodeURIComponent(email));
+    axios
       .get("/member/check", {
         params: params,
       })
       .then(() => {
         setEmailValid(false);
-        toast({
-          description: "이미 사용 중인 email입니다.",
-          status: "warning",
-        });
       })
       .catch((error) => {
         if (error.response.status === 404) {
           setEmailValid(true);
-          toast({
-            description: "사용 가능한 email입니다.",
-            status: "success",
-          });
+        } else {
+          setEmailValid(false);
         }
       });
   }
 
-  function handleIdCheck() {
-    const params = new URLSearchParams();
-    params.set("logId", logId);
-    axiosInstance
+  function handleNickNameCheck() {
+    setNickNameButtonClicked(true);
+    axios
       .get("/member/check", {
-        params: params,
+        email,
       })
       .then(() => {
-        setIdValid(false);
-        toast({
-          description: "이미 사용 중인 Id입니다.",
-          status: "warning",
-        });
+        setNickNameValid(false);
       })
       .catch((error) => {
         if (error.response.status === 404) {
-          setIdValid(true);
-          toast({
-            description: "사용 가능한 Id입니다.",
-            status: "success",
-          });
+          setEmailValid(true);
+        } else {
+          setNickNameValid(false);
         }
       });
   }
+
+  // function handleIdCheck() {
+  //   const params = new URLSearchParams();
+  //   params.set("logId", logId);
+  //   axios
+  //     .get("/member/check", {
+  //       params: params,
+  //     })
+  //     .then(() => {
+  //       setIdValid(false);
+  //       toast({
+  //         description: "이미 사용 중인 Id입니다.",
+  //         status: "warning",
+  //       });
+  //     })
+  //     .catch((error) => {
+  //       if (error.response.status === 404) {
+  //         setIdValid(true);
+  //         toast({
+  //           description: "사용 가능한 Id입니다.",
+  //           status: "success",
+  //         });
+  //       }
+  //     });
+  // }
 
   const handleGenderChange = (value) => {
     setGender(value);
@@ -197,6 +216,16 @@ export function MemberSignup() {
     }
   }, [password, rePassword]);
 
+  useEffect(() => {
+    setEmailButtonClicked(false);
+    setEmailValid(false);
+  }, [email]);
+
+  useEffect(() => {
+    setNickNameButtonClicked(false);
+    setNickNameValid(false);
+  }, [nickName]);
+
   return (
     <Box>
       <Spacer h={10} />
@@ -228,9 +257,9 @@ export function MemberSignup() {
                   type="email"
                   value={email}
                   borderRadius={20}
+                  placeholder="이메일을 입력하세요"
                   onChange={(e) => {
                     setEmail(e.target.value);
-                    setEmailValid(false);
                   }}
                 />
                 <InputLeftElement pointerEvents="none" w="3rem">
@@ -248,7 +277,7 @@ export function MemberSignup() {
                   </Button>
                 </InputRightElement>
               </InputGroup>
-              {emailChecked && (
+              {emailButtonClicked && (
                 <>
                   {emailValid ? (
                     <Text color="green.500" fontSize="sm" mt={2}>
@@ -334,19 +363,44 @@ export function MemberSignup() {
               </FormControl>
             )}
             <FormControl>
-              <FormLabel>이름</FormLabel>
+              <FormLabel>닉네임</FormLabel>
               <InputGroup>
                 <Input
-                  value={name}
+                  value={nickName}
                   borderRadius={20}
+                  placeholder="닉네임을 입력하세요"
                   onChange={(e) => {
-                    setName(e.target.value);
+                    setNickName(e.target.value);
                   }}
                 />
                 <InputLeftElement w="3rem">
                   <FontAwesomeIcon icon={faUser} color="#CBD5E0" />
                 </InputLeftElement>
+                <InputRightElement w="7rem">
+                  <Button
+                    w="5rem"
+                    h="1.75rem"
+                    size="sm"
+                    isDisabled={emailChecked}
+                    onClick={handleNickNameCheck}
+                  >
+                    중복 확인
+                  </Button>
+                </InputRightElement>
               </InputGroup>
+              {nickNameButtonClicked && (
+                <>
+                  {nickNameValid ? (
+                    <Text color="green.500" fontSize="sm" mt={2}>
+                      <CheckCircleIcon /> 사용 가능한 닉네임입니다
+                    </Text>
+                  ) : (
+                    <Text color="red.500" fontSize="sm" mt={2}>
+                      <SmallCloseIcon /> 사용 불가능한 닉네임입니다
+                    </Text>
+                  )}
+                </>
+              )}
             </FormControl>
             <FormControl>
               <FormLabel htmlFor="birth-date">생년월일</FormLabel>
@@ -434,20 +488,37 @@ export function MemberSignup() {
           <ButtonGroup
             w="80%"
             ml="10%"
-            iconSpacing={5}
+            iconspacing={5}
             varaint="outline"
             size="lg"
             spacing="4rem"
             justifyContent="center"
           >
             {/* TODO: 소셜 로그인 기능 추가 */}
-            <IconButton isRound={true} icon={<QuestionIcon />} />
-            <IconButton isRound={true} icon={<QuestionIcon />} />
-            <IconButton isRound={true} icon={<QuestionIcon />} />
+            <IconButton
+              isRound={true}
+              icon={<QuestionIcon />}
+              // onClick={() => handleSocialLogin("KAKAO")}
+            />
+            <IconButton
+              isRound={true}
+              icon={<QuestionIcon />}
+              // onClick={() => handleSocialLogin("NAVER")}
+            />
+            <IconButton
+              isRound={true}
+              icon={<QuestionIcon />}
+              // onClick={() => handleSocialLogin("GOOGLE")}
+            />
           </ButtonGroup>
         </CardBody>
         <CardFooter display="flex" justifyContent="center">
-          <Button onClick={handleSubmit} colorScheme="purple" w="full">
+          <Button
+            isDisabled={!(emailChecked && nickNameChecked && passwordValid)}
+            onClick={handleSubmit}
+            colorScheme="purple"
+            w="full"
+          >
             회원 가입하기
           </Button>
         </CardFooter>

@@ -1,11 +1,4 @@
-import {
-  AbsoluteCenter,
-  Box,
-  DrawerFooter,
-  Heading,
-  Spacer,
-  Text,
-} from "@chakra-ui/react";
+import { Box, Spacer } from "@chakra-ui/react";
 import NavBar from "../page/component/NavBar";
 import { Outlet } from "react-router-dom";
 import React from "react";
@@ -21,4 +14,3 @@ export function HomeLayout() {
     </>
   );
 }
-//주석

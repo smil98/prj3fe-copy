@@ -27,7 +27,6 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
-import axiosInstance from "../../axiosInstance";
 
 export function MemberEdit() {
   const navigate = useNavigate();
@@ -57,7 +56,7 @@ export function MemberEdit() {
   function getMember() {
     const accessToken = localStorage.getItem("accessToken");
     console.log("엑세스 토큰", accessToken);
-    axiosInstance
+    axios
       .get("/member", { headers: { Authorization: `Bearer ${accessToken}` } })
       .then((response) => {
         console.log("getMember()의 then 실행");
@@ -126,7 +125,7 @@ export function MemberEdit() {
     const refreshToken = localStorage.getItem("refreshToken");
     console.log("리프레시 토큰: ", refreshToken);
 
-    axiosInstance
+    axios
       .get("/refreshToken", {
         headers: { Authorization: `Bearer ${refreshToken}` },
       })
@@ -198,7 +197,7 @@ export function MemberEdit() {
       initialData.gender = gender;
     }
 
-    axiosInstance
+    axios
       .put(
         "/member/edit/" + member.id,
         {

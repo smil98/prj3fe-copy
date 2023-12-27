@@ -17,7 +17,6 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useImmer } from "use-immer";
 import axios from "axios";
-import axiosInstance from "../../axiosInstance";
 
 export function BoardEdit() {
   const [board, updateBoard] = useImmer(null); //객체 사용해서 가변적으로 상태 변경
@@ -37,7 +36,7 @@ export function BoardEdit() {
   //
 
   useEffect(() => {
-    axiosInstance
+    axios
       .get("/api/board/id/" + id)
       .then((response) => updateBoard(response.data));
   }, []);
