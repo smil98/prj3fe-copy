@@ -38,6 +38,7 @@ import axiosInstance from "../../axiosInstance";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faInfo, faUser } from "@fortawesome/free-solid-svg-icons";
 import {
+  CalendarIcon,
   CheckCircleIcon,
   EmailIcon,
   LockIcon,
@@ -167,7 +168,7 @@ export function MemberSignup() {
   useEffect(() => {
     if (password.length > 0) {
       const hasAlphabet = /[a-zA-Z]/.test(password);
-      const hasSpecialChar = /[+\-!@#$%&*]/.test(password);
+      const hasSpecialChar = /[!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]/.test(password);
       const hasNumber = /\d/.test(password);
 
       const combinationsCount = [hasAlphabet, hasSpecialChar, hasNumber].filter(
@@ -203,10 +204,16 @@ export function MemberSignup() {
         ml={{ base: "none", md: "25%", lg: "25%" }}
       >
         <CardHeader>
-          <Heading textAlign="center">회원 가입</Heading>
+          <Heading textAlign="center" fontFamily="GmarketSansMedium">
+            회원 가입
+          </Heading>
           <Text textAlign="center" size="xs" mt={5}>
             이미 회원이라면?{"  "}
-            <Button colorScheme="purple" variant="link">
+            <Button
+              colorScheme="purple"
+              variant="link"
+              onClick={() => navigate("/login")}
+            >
               로그인
             </Button>
           </Text>
@@ -219,15 +226,16 @@ export function MemberSignup() {
                 <Input
                   type="email"
                   value={email}
+                  borderRadius={20}
                   onChange={(e) => {
                     setEmail(e.target.value);
                     setEmailValid(false);
                   }}
                 />
-                <InputLeftElement pointerEvents="none">
+                <InputLeftElement pointerEvents="none" w="3rem">
                   <EmailIcon color="gray.300" />
                 </InputLeftElement>
-                <InputRightElement w="6rem">
+                <InputRightElement w="7rem">
                   <Button
                     w="5rem"
                     h="1.75rem"
@@ -272,20 +280,25 @@ export function MemberSignup() {
                   type={showPassword ? "text" : "password"}
                   value={password}
                   placeholder="비밀번호를 입력하세요"
+                  borderRadius={20}
                   onChange={(e) => {
                     setPassword(e.target.value);
                     setRePassword("");
                   }}
                 />
-                <InputLeftElement pointerEvents="none">
+                <InputLeftElement pointerEvents="none" w="3rem">
                   <LockIcon color="gray.300" />
                 </InputLeftElement>
-                <InputRightElement width="6rem">
+                <InputRightElement width="7rem">
                   <IconButton
                     isDisabled={password.length <= 0}
                     w="5rem"
                     h="1.75rem"
                     size="sm"
+                    color="gray.300"
+                    variant="ghost"
+                    _hover="none"
+                    _active="none"
                     onClick={() => {
                       setShowPassword(!showPassword);
                     }}
@@ -320,25 +333,33 @@ export function MemberSignup() {
             )}
             <FormControl>
               <FormLabel>이름</FormLabel>
-              <Flex>
+              <InputGroup>
                 <Input
                   value={name}
                   onChange={(e) => {
                     setName(e.target.value);
                   }}
                 />
-              </Flex>
+                <InputLeftElement w="3rem">
+                  <FontAwesomeIcon icon={faUser} color="#CBD5E0" />
+                </InputLeftElement>
+              </InputGroup>
             </FormControl>
             <FormControl>
               <FormLabel htmlFor="birth-date">생년월일</FormLabel>
-              <Input
-                id="birth-date"
-                type="text"
-                placeholder="YYMMDD"
-                maxLength={6}
-                value={birthDate}
-                onChange={(e) => setBirthDate(e.target.value)}
-              />
+              <InputGroup>
+                <InputLeftElement w="3rem">
+                  <CalendarIcon color="gray.300" />
+                </InputLeftElement>
+                <Input
+                  id="birth-date"
+                  type="text"
+                  placeholder="YYMMDD"
+                  maxLength={6}
+                  value={birthDate}
+                  onChange={(e) => setBirthDate(e.target.value)}
+                />
+              </InputGroup>
             </FormControl>
             <FormControl>
               <FormLabel>성별</FormLabel>
@@ -403,7 +424,7 @@ export function MemberSignup() {
               </Heading>
             </AbsoluteCenter>
           </Box>
-          <Heading textAlign="center" size="sm" mb={6}>
+          <Heading textAlign="center" size="sm" mb={6} color="purple">
             소셜 계정으로 가입하기
           </Heading>
           <ButtonGroup

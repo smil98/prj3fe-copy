@@ -2,6 +2,7 @@ import {
   AbsoluteCenter,
   Box,
   DrawerFooter,
+  Heading,
   Spacer,
   Text,
 } from "@chakra-ui/react";
