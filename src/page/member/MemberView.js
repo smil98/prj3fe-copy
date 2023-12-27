@@ -18,6 +18,7 @@ import {
 } from "@chakra-ui/react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
+import axios from "axios";
 
 export function MemberView() {
   const [member, setMember] = useState(null);

@@ -17,6 +17,7 @@ import {
 import { AddIcon, CloseIcon, MinusIcon } from "@chakra-ui/icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faList, faShoppingCart } from "@fortawesome/free-solid-svg-icons";
+import axios from "axios";
 
 function MyNumberInput({ cartItemId, accessToken, count, fetchList, toast }) {
   const handleAddCount = () => {

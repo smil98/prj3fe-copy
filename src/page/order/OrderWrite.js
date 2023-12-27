@@ -17,6 +17,7 @@ import { CartDisplay } from "./CartDisplay";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare } from "@fortawesome/free-solid-svg-icons";
+import axios from "axios";
 
 export function OrderWrite() {
   const [name, setName] = useState("");

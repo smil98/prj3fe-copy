@@ -35,6 +35,7 @@ import {
   ViewIcon,
   ViewOffIcon,
 } from "@chakra-ui/icons";
+import axios from "axios";
 
 export function MemberLogin() {
   const [email, setEmail] = useState("");

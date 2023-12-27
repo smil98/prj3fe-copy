@@ -228,7 +228,7 @@ export function NavBar(props) {
           fontWeight="bold"
           _hover={{ cursor: "pointer" }}
           onClick={() => {
-            window.location.reload();
+            navigate("/");
           }}
         >
           MUSIC RECORDS SHOP

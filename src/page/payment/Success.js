@@ -1,6 +1,7 @@
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { Link, useToast } from "@chakra-ui/react";
 import { useEffect } from "react";
+import axios from "axios";
 
 export function Success() {
   const navigate = useNavigate();

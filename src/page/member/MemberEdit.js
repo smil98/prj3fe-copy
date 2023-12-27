@@ -27,6 +27,7 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 export function MemberEdit() {
   const navigate = useNavigate();
