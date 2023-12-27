@@ -46,6 +46,7 @@ import {
   SmallCloseIcon,
   ViewIcon,
   ViewOffIcon,
+  WarningTwoIcon,
 } from "@chakra-ui/icons";
 
 export function MemberSignup() {
@@ -315,19 +316,20 @@ export function MemberSignup() {
                   <Input
                     type="password"
                     value={rePassword}
+                    borderRadius={20}
                     onChange={(e) => setRePassword(e.target.value)}
                   />
-                  <InputLeftElement pointerEvents="none">
+                  <InputLeftElement pointerEvents="none" w="3rem">
                     <LockIcon color="gray.300" />
                   </InputLeftElement>
                 </InputGroup>
                 {passwordChecked && (
                   <Text color="green.500" fontSize="sm" mt={2}>
-                    <CheckCircleIcon /> 비밀번호가 일치합니다
+                    <CheckCircleIcon mb={1} /> 비밀번호가 일치합니다
                   </Text>
                 )}
                 <FormErrorMessage>
-                  비밀번호가 일치하지 않습니다
+                  <WarningTwoIcon mr={1} /> 비밀번호가 일치하지 않습니다
                 </FormErrorMessage>
               </FormControl>
             )}
@@ -336,6 +338,7 @@ export function MemberSignup() {
               <InputGroup>
                 <Input
                   value={name}
+                  borderRadius={20}
                   onChange={(e) => {
                     setName(e.target.value);
                   }}
@@ -356,6 +359,7 @@ export function MemberSignup() {
                   type="text"
                   placeholder="YYMMDD"
                   maxLength={6}
+                  borderRadius={20}
                   value={birthDate}
                   onChange={(e) => setBirthDate(e.target.value)}
                 />
@@ -436,6 +440,7 @@ export function MemberSignup() {
             spacing="4rem"
             justifyContent="center"
           >
+            {/* TODO: 소셜 로그인 기능 추가 */}
             <IconButton isRound={true} icon={<QuestionIcon />} />
             <IconButton isRound={true} icon={<QuestionIcon />} />
             <IconButton isRound={true} icon={<QuestionIcon />} />
