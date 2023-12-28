@@ -27,7 +27,6 @@ export const Search = ({ onSearch }) => {
   const handleFormatChange = (event) => {
     setSelectedFormat(event.target.value);
   };
-
   const handleGenreChange = (selectedGenres) => {
     setSelectedGenres(selectedGenres);
   };

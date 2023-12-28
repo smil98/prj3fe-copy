@@ -4,45 +4,21 @@ import {
   Box,
   Button,
   ButtonGroup,
-  Card,
-  Center,
-  CloseButton,
-  Collapse,
   Drawer,
   DrawerBody,
   DrawerCloseButton,
   DrawerContent,
-  DrawerFooter,
   DrawerHeader,
   DrawerOverlay,
   Flex,
-  flexbox,
-  IconButton,
-  Spacer,
-  Stack,
-  Text,
+  Heading,
   useDisclosure,
   useToast,
+  VStack,
 } from "@chakra-ui/react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faBars,
-  faDollarSign,
-  faMusic,
-  faRecordVinyl,
-  faRightFromBracket,
-  faRightToBracket,
-  faSearch,
-  faSearchDollar,
-  faUser,
-  faUserPlus,
-  faUsers,
-  faVideo,
-} from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
-import { Search } from "../board/Search";
 import { startSocialLoginTimer } from "./authUtils";
-import { HamburgerIcon } from "@chakra-ui/icons";
+import { Breadcrumbs } from "./Breadcrumbs";
 
 export function NavBar(props) {
   const [loggedIn, setLoggedIn] = useState(false);
@@ -62,6 +38,17 @@ export function NavBar(props) {
   const onCloseDrawer = () => {
     setTitleIconOpen(false);
   };
+
+  const pathSegments = location.pathname
+    .split("/")
+    .filter((segment) => segment !== "");
+
+  const currentPageName =
+    pathSegments.length > 0
+      ? pathSegments[pathSegments.length - 1].charAt(0).toUpperCase() +
+        pathSegments[pathSegments.length - 1].slice(1)
+      : "Home";
+
   function sendRefreshToken() {
     const refreshToken = localStorage.getItem("refreshToken");
     console.log("리프레시 토큰: ", refreshToken);
@@ -221,32 +208,37 @@ export function NavBar(props) {
       <Flex
         display="flex"
         position="fixed"
-        h={"10%"}
+        h={"8%"}
         top={0}
         left={0}
         right={0}
         justifyContent="space-between"
         alignItems="center"
-        border="1px solid black"
-        bgColor="whiteAlpha.600"
+        border="1px solid red"
+        bgColor="whiteAlpha.700"
+        backdropFilter="blur(3px) hue-rotate(90deg)"
         borderRadius={20}
         mt={5}
         mx={{ base: "none", md: "10%", lg: "15%" }}
         zIndex={1}
       >
-        <IconButton
-          onClick={() => onOpen()}
-          icon={<HamburgerIcon />}
-          _hover="none"
-          _shadow="none"
-          _focus="none"
-          ml={5}
-        />
+        {/*<IconButton*/}
+        {/*  onClick={() => onOpen()}*/}
+        {/*  icon={<HamburgerIcon />}*/}
+        {/*  _hover="none"*/}
+        {/*  _shadow="none"*/}
+        {/*  _focus="none"*/}
+        {/*  ml={5}*/}
+        {/*/>*/}
+        <VStack border="1px solid black" ml={5}>
+          <Breadcrumbs pathSegments={pathSegments} />
+          <Heading size="lg">{currentPageName}</Heading>
+        </VStack>
         <ButtonGroup spacing={{ base: 10, md: 50, lg: 100 }} mr={5}>
-          <Button>A</Button>
-          <Button>B</Button>
-          <Button>C</Button>
-          <Button>D</Button>
+          <Button onClick={() => navigate("/")}>Home</Button>
+          <Button onClick={() => navigate("/order")}>order</Button>
+          <Button onClick={() => navigate("/signup")}>signup</Button>
+          <Button onClick={() => navigate("/login")}>login</Button>
         </ButtonGroup>
       </Flex>
 
