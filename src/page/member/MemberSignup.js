@@ -67,11 +67,11 @@ export function MemberSignup() {
   const [passwordValid, setPasswordValid] = useState(false);
   const [passwordChecked, setPasswordChecked] = useState(false);
 
+  const [emailChecked, setEmailChecked] = useState(false);
+  const [nickNameChecked, setNickNameChecked] = useState(false);
+
   const [emailButtonClicked, setEmailButtonClicked] = useState(false);
   const [nickNameButtonClicked, setNickNameButtonClicked] = useState(false);
-
-  let emailChecked = emailButtonClicked && emailValid;
-  let nickNameChecked = nickNameButtonClicked && nickNameValid;
 
   const toast = useToast();
   const navigate = useNavigate();
@@ -134,6 +134,9 @@ export function MemberSignup() {
         } else {
           setEmailValid(false);
         }
+      })
+      .finally(() => {
+        setEmailChecked(emailButtonClicked && emailValid);
       });
   }
 
@@ -152,6 +155,9 @@ export function MemberSignup() {
         } else {
           setNickNameValid(false);
         }
+      })
+      .finally(() => {
+        setNickNameChecked(nickNameButtonClicked && nickNameValid);
       });
   }
 

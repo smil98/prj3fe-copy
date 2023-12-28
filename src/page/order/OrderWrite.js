@@ -22,7 +22,7 @@ import { CartDisplay } from "./CartDisplay";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
-import DaumPostcodeEmbed, { useDaumPostcodePopup } from "react-daum-postcode";
+import { useDaumPostcodePopup } from "react-daum-postcode";
 import { postcodeScriptUrl } from "react-daum-postcode/lib/loadPostcode";
 
 export function OrderWrite() {
@@ -36,7 +36,8 @@ export function OrderWrite() {
   const navigate = useNavigate();
   const accessToken = localStorage.getItem("accessToken");
   const [customEmail, setCustomEmail] = useState(false);
-  const [postCode, setPostCode] = useState(0);
+  const [postCode, setPostCode] = useState("");
+  const [detailedAddress, setDetailedAddress] = useState("");
 
   // 총 가격
   const [totalPrice, setTotalPrice] = useState(0);
@@ -185,7 +186,6 @@ export function OrderWrite() {
   };
 
   const PostCode = () => {
-    console.log("PostCode 실행, 팝업창 오픈 실행");
     const open = useDaumPostcodePopup(postcodeScriptUrl);
 
     const handleComplete = (data) => {
@@ -228,7 +228,9 @@ export function OrderWrite() {
 
   return (
     <div>
-      <Heading my={3}>주문 페이지</Heading>
+      <Heading my={3} ml={5}>
+        주문 페이지
+      </Heading>
       <CartDisplay
         accessToken={accessToken}
         orderName={orderName}
@@ -314,20 +316,16 @@ export function OrderWrite() {
                 type="number"
                 w="40%"
                 placeholder="우편번호"
+                readOnly
                 value={postCode}
               />
               <PostCode />
             </HStack>
+            <Input type="text" value={address} readOnly placeholder="주소" />
             <Input
               type="text"
-              value={address}
-              onChange={(e) => setAddress(e.target.value)}
-              placeholder="주소"
-            />
-            <Input
-              type="text"
-              value={address}
-              onChange={(e) => setAddress(e.target.value)}
+              value={detailedAddress}
+              onChange={(e) => setDetailedAddress(e.target.value)}
               placeholder="상세 주소"
             />
             <Checkbox defaultChecked>

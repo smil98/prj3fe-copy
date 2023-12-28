@@ -6,7 +6,7 @@ import React from "react";
 export function HomeLayout() {
   return (
     <>
-      <Box>
+      <Box bgColor={"black"}>
         <NavBar />
         <Outlet />
       </Box>
