@@ -1,5 +1,6 @@
 import {
   Button,
+  ButtonGroup,
   Card,
   CardBody,
   CardFooter,
@@ -8,18 +9,9 @@ import {
   Heading,
   HStack,
   Input,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
-  Radio,
   Select,
   Stack,
   Text,
-  useDisclosure,
   useToast,
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
@@ -30,6 +22,8 @@ import { CartDisplay } from "./CartDisplay";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
+import DaumPostcodeEmbed, { useDaumPostcodePopup } from "react-daum-postcode";
+import { postcodeScriptUrl } from "react-daum-postcode/lib/loadPostcode";
 
 export function OrderWrite() {
   const [name, setName] = useState("");
@@ -42,8 +36,7 @@ export function OrderWrite() {
   const navigate = useNavigate();
   const accessToken = localStorage.getItem("accessToken");
   const [customEmail, setCustomEmail] = useState(false);
-
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [postCode, setPostCode] = useState(0);
 
   // 총 가격
   const [totalPrice, setTotalPrice] = useState(0);
@@ -84,9 +77,9 @@ export function OrderWrite() {
       });
   };
 
-  useEffect(() => {
-    fetchList();
-  }, []);
+  // useEffect(() => {
+  //   fetchList();
+  // }, []);
 
   // ===========================================
 
@@ -147,9 +140,9 @@ export function OrderWrite() {
         });
       });
   }
-  useEffect(() => {
-    getMember();
-  }, []);
+  // useEffect(() => {
+  //   getMember();
+  // }, []);
 
   const handleSubmit = async () => {
     try {
@@ -191,6 +184,48 @@ export function OrderWrite() {
     }
   };
 
+  const PostCode = () => {
+    console.log("PostCode 실행, 팝업창 오픈 실행");
+    const open = useDaumPostcodePopup(postcodeScriptUrl);
+
+    const handleComplete = (data) => {
+      console.log("받은 데이터: " + data);
+      setPostCode(data.zonecode);
+      let fullAddress = data.address;
+      let extraAddress = "";
+
+      console.log("데이터 addressType에 따라 주소 저장 시작");
+
+      if (data.addressType === "R") {
+        if (data.bname !== "") {
+          extraAddress += data.bname;
+        }
+        if (data.buildingName !== "") {
+          extraAddress +=
+            extraAddress !== "" ? `, ${data.buildingName}` : data.buildingName;
+        }
+        fullAddress += extraAddress !== "" ? `(${extraAddress})` : "";
+      }
+      console.log("fullAddress: " + fullAddress);
+      setAddress(fullAddress);
+      console.log("우편번호 :" + postCode);
+    };
+
+    const handleClick = async () => {
+      try {
+        console.log("handleClick 시작");
+        await open({ onComplete: handleComplete });
+      } catch (error) {
+        console.log("에러 발생");
+        console.log(error.response.data);
+      } finally {
+        console.log("종료");
+      }
+    };
+
+    return <Button onClick={handleClick}>우편번호 찾기</Button>;
+  };
+
   return (
     <div>
       <Heading my={3}>주문 페이지</Heading>
@@ -210,39 +245,20 @@ export function OrderWrite() {
         </CardHeader>
         <CardBody>
           <Stack spacing={5}>
-            <HStack spacing={3}>
-              <Text w="10%" fontWeight="bold">
+            <HStack>
+              <Text w="15%" fontWeight="bold">
                 이름
               </Text>
               <Input
                 type="text"
+                w="88%"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="이름"
               />
             </HStack>
-            <Text fontWeight="bold">배송지</Text>
-            <HStack spacing={3}>
-              <Input
-                type="number"
-                w="70%"
-                placeholder="우편번호를 입력하세요"
-              />
-              <Button w="30%" onClick={onOpen}>
-                우편번호 찾기
-              </Button>
-            </HStack>
-            <Input
-              type="text"
-              value={address}
-              onChange={(e) => setAddress(e.target.value)}
-              placeholder="상세 주소를 입력하세요"
-            />
-            <Checkbox defaultChecked>
-              해당 주소를 기본 배송지로 저장하기
-            </Checkbox>
             <HStack>
-              <Text w="10%" fontWeight="bold">
+              <Text w="15%" fontWeight="bold">
                 이메일
               </Text>
               <Input
@@ -252,11 +268,11 @@ export function OrderWrite() {
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="이메일"
               />
-              <Text w="5%" textAlign="center">
+              <Text w="3%" textAlign="center">
                 @
               </Text>
               <Select
-                w="35%"
+                w="32%"
                 value={emailType}
                 onChange={(e) => {
                   if (e.target.value !== "custom") {
@@ -292,6 +308,31 @@ export function OrderWrite() {
                 onChange={(e) => setEmailType(e.target.value)}
               />
             )}
+            <Text fontWeight="bold">배송지</Text>
+            <HStack spacing={3}>
+              <Input
+                type="number"
+                w="40%"
+                placeholder="우편번호"
+                value={postCode}
+              />
+              <PostCode />
+            </HStack>
+            <Input
+              type="text"
+              value={address}
+              onChange={(e) => setAddress(e.target.value)}
+              placeholder="주소"
+            />
+            <Input
+              type="text"
+              value={address}
+              onChange={(e) => setAddress(e.target.value)}
+              placeholder="상세 주소"
+            />
+            <Checkbox defaultChecked>
+              해당 주소를 기본 배송지로 저장하기
+            </Checkbox>
           </Stack>
         </CardBody>
         <CardFooter style={{ display: "flex", justifyContent: "center" }}>
@@ -301,20 +342,6 @@ export function OrderWrite() {
           <Button onClick={() => navigate(-1)}>취소</Button>
         </CardFooter>
       </Card>
-
-      <Modal isOpen={isOpen} onClose={onClose}>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>우편번호 찾기 팝업 API</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            <Text>우편번호</Text>
-          </ModalBody>
-          <ModalFooter>
-            <Button onClick={onClose}>닫기</Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
     </div>
   );
 }
