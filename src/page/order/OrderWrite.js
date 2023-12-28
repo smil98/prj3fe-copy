@@ -334,7 +334,7 @@ export function OrderWrite() {
           </Stack>
         </CardBody>
         <CardFooter style={{ display: "flex", justifyContent: "center" }}>
-          <Button colorScheme={"orange"} onClick={handleSubmit} mr={2}>
+          <Button colorScheme={"purple"} onClick={handleSubmit} mr={2}>
             주문하기
           </Button>
           <Button onClick={() => navigate(-1)}>취소</Button>

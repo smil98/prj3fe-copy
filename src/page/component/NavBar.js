@@ -216,7 +216,7 @@ export function NavBar(props) {
         display="flex"
         position="fixed"
         alignItems="center"
-        h={"8%"}
+        h={"10%"}
         top={0}
         left={0}
         right={0}
