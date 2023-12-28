@@ -12,6 +12,8 @@ import {
   DrawerOverlay,
   Flex,
   Heading,
+  IconButton,
+  useBreakpointValue,
   useDisclosure,
   useToast,
   VStack,
@@ -19,6 +21,7 @@ import {
 import axios from "axios";
 import { startSocialLoginTimer } from "./authUtils";
 import { Breadcrumbs } from "./Breadcrumbs";
+import { HamburgerIcon } from "@chakra-ui/icons";
 
 export function NavBar(props) {
   const [loggedIn, setLoggedIn] = useState(false);
@@ -39,6 +42,7 @@ export function NavBar(props) {
     setTitleIconOpen(false);
   };
 
+  //BreadCrumb 위해 현재 링크에서 따오는 것들
   const pathSegments = location.pathname
     .split("/")
     .filter((segment) => segment !== "");
@@ -48,6 +52,9 @@ export function NavBar(props) {
       ? pathSegments[pathSegments.length - 1].charAt(0).toUpperCase() +
         pathSegments[pathSegments.length - 1].slice(1)
       : "Home";
+
+  //Nav Bar 변환 위해서 따오는 것들
+  const isSmallScreen = useBreakpointValue({ base: true, md: false });
 
   function sendRefreshToken() {
     const refreshToken = localStorage.getItem("refreshToken");
@@ -208,38 +215,57 @@ export function NavBar(props) {
       <Flex
         display="flex"
         position="fixed"
+        alignItems="center"
         h={"8%"}
         top={0}
         left={0}
         right={0}
-        justifyContent="space-between"
-        alignItems="center"
-        border="1px solid red"
-        bgColor="whiteAlpha.700"
-        backdropFilter="blur(3px) hue-rotate(90deg)"
+        bgColor="whiteAlpha.100"
+        border="1px solid green"
+        backdropFilter="blur(10px) hue-rotate(90deg)"
         borderRadius={20}
+        boxShadow="sm"
         mt={5}
-        mx={{ base: "none", md: "10%", lg: "15%" }}
+        mx={{ base: "5%", md: "10%", lg: "15%" }}
         zIndex={1}
       >
-        {/*<IconButton*/}
-        {/*  onClick={() => onOpen()}*/}
-        {/*  icon={<HamburgerIcon />}*/}
-        {/*  _hover="none"*/}
-        {/*  _shadow="none"*/}
-        {/*  _focus="none"*/}
-        {/*  ml={5}*/}
-        {/*/>*/}
-        <VStack border="1px solid black" ml={5}>
-          <Breadcrumbs pathSegments={pathSegments} />
-          <Heading size="lg">{currentPageName}</Heading>
-        </VStack>
-        <ButtonGroup spacing={{ base: 10, md: 50, lg: 100 }} mr={5}>
-          <Button onClick={() => navigate("/")}>Home</Button>
-          <Button onClick={() => navigate("/order")}>order</Button>
-          <Button onClick={() => navigate("/signup")}>signup</Button>
-          <Button onClick={() => navigate("/login")}>login</Button>
-        </ButtonGroup>
+        <Flex
+          justifyContent="space-between"
+          alignItems="center"
+          bgColor={"0,0,0,0"}
+          border="1px solid blue"
+          w="94%"
+          mx="3%"
+        >
+          <VStack ml={5} spacing={0} alignItems="baseline">
+            <Breadcrumbs pathSegments={pathSegments} navigate={navigate} />
+            <Heading size="lg">{currentPageName}</Heading>
+          </VStack>
+          {isSmallScreen ? (
+            // Show IconButton for smaller screens
+            <IconButton
+              border="1px solid purple"
+              variant="undefined"
+              onClick={() => onOpen()}
+              icon={<HamburgerIcon />}
+            />
+          ) : (
+            // Show the other four buttons for larger screens
+            <ButtonGroup
+              display="flex"
+              justifyContent="space-between"
+              w={{ md: "60%", lg: "50%" }}
+              variant="unstyled"
+              textAlign="center"
+              border="1px solid red"
+            >
+              <Button onClick={() => navigate("/")}>Home</Button>
+              <Button onClick={() => navigate("/order")}>Order</Button>
+              <Button onClick={() => navigate("/signup")}>Sign up</Button>
+              <Button onClick={() => navigate("/login")}>Login</Button>
+            </ButtonGroup>
+          )}
+        </Flex>
       </Flex>
 
       <Drawer placement="left" onClose={onClose} isOpen={isOpen} size="xs">

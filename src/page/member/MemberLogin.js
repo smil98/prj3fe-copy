@@ -144,9 +144,7 @@ export function MemberLogin() {
                   h="1.75rem"
                   size="sm"
                   color="gray.300"
-                  variant="ghost"
-                  _hover="none"
-                  _active="none"
+                  variant="undefined"
                   onClick={() => {
                     setShowPassword(!showPassword);
                   }}

@@ -331,8 +331,7 @@ export function MemberSignup() {
                     h="1.75rem"
                     size="sm"
                     color="gray.300"
-                    variant="ghost"
-                    _hover="none"
+                    variant="undefined"
                     _active="none"
                     onClick={() => {
                       setShowPassword(!showPassword);
