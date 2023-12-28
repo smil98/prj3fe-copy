@@ -4,10 +4,22 @@ import {
   CardBody,
   CardFooter,
   CardHeader,
+  Checkbox,
   Heading,
   HStack,
   Input,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
+  Radio,
+  Select,
+  Stack,
   Text,
+  useDisclosure,
   useToast,
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
@@ -26,8 +38,12 @@ export function OrderWrite() {
   const [quantity, setQuantity] = useState(1);
   const [itemPrice, setItemPrice] = useState(10000); // 가정된 아이템 가격
   const [email, setEmail] = useState("");
+  const [emailType, setEmailType] = useState("");
   const navigate = useNavigate();
   const accessToken = localStorage.getItem("accessToken");
+  const [customEmail, setCustomEmail] = useState(false);
+
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   // 총 가격
   const [totalPrice, setTotalPrice] = useState(0);
@@ -84,8 +100,12 @@ export function OrderWrite() {
         // setMember(response.data);
         const memberData = response.data;
         setName(memberData.name); // 예: 응답에서 'name' 필드 사용
+
+        const [userName, domain] = memberData.email.split("@");
+        setEmail(userName);
+        setEmailType(domain);
+
         setAddress(memberData.address); // 예: 응답에서 'address' 필드 사용
-        setEmail(memberData.email); // 예: 응답에서 'email' 필드 사용
       })
       .catch((error) => {
         if (error.response.status === 401) {
@@ -189,39 +209,90 @@ export function OrderWrite() {
           </Heading>
         </CardHeader>
         <CardBody>
-          <HStack mb={2}>
-            <Text w="10%" fontWeight="bold" textAlign="center">
-              이름 :
-            </Text>
-            <Input
-              type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="이름"
-            />
-          </HStack>
-          <HStack mb={2}>
-            <Text w="10%" fontWeight="bold" textAlign="center">
-              배송지 :
-            </Text>
+          <Stack spacing={5}>
+            <HStack spacing={3}>
+              <Text w="10%" fontWeight="bold">
+                이름
+              </Text>
+              <Input
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="이름"
+              />
+            </HStack>
+            <Text fontWeight="bold">배송지</Text>
+            <HStack spacing={3}>
+              <Input
+                type="number"
+                w="70%"
+                placeholder="우편번호를 입력하세요"
+              />
+              <Button w="30%" onClick={onOpen}>
+                우편번호 찾기
+              </Button>
+            </HStack>
             <Input
               type="text"
               value={address}
               onChange={(e) => setAddress(e.target.value)}
-              placeholder="주소"
+              placeholder="상세 주소를 입력하세요"
             />
-          </HStack>
-          <HStack mb={2}>
-            <Text w="10%" fontWeight="bold" textAlign="center">
-              이메일 :
-            </Text>
-            <Input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="이메일"
-            />
-          </HStack>
+            <Checkbox defaultChecked>
+              해당 주소를 기본 배송지로 저장하기
+            </Checkbox>
+            <HStack>
+              <Text w="10%" fontWeight="bold">
+                이메일
+              </Text>
+              <Input
+                w="50%"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="이메일"
+              />
+              <Text w="5%" textAlign="center">
+                @
+              </Text>
+              <Select
+                w="35%"
+                value={emailType}
+                onChange={(e) => {
+                  if (e.target.value !== "custom") {
+                    setCustomEmail(false);
+                    setEmailType(e.target.value);
+                  } else {
+                    setCustomEmail(true);
+                    setEmailType("");
+                  }
+                }}
+              >
+                {customEmail ? (
+                  <>
+                    <option value="custom">직접 입력</option>
+                    <option value="gmail.com">gmail.com</option>
+                    <option value="naver.com">naver.com</option>
+                    <option value="daum.net">daum.net</option>
+                  </>
+                ) : (
+                  <>
+                    <option value="gmail.com">gmail.com</option>
+                    <option value="naver.com">naver.com</option>
+                    <option value="daum.net">daum.net</option>
+                    <option value="custom">직접 입력</option>
+                  </>
+                )}
+              </Select>
+            </HStack>
+            {customEmail && (
+              <Input
+                value={emailType}
+                placeholder="기타 도메인을 입력해주세요"
+                onChange={(e) => setEmailType(e.target.value)}
+              />
+            )}
+          </Stack>
         </CardBody>
         <CardFooter style={{ display: "flex", justifyContent: "center" }}>
           <Button colorScheme={"orange"} onClick={handleSubmit} mr={2}>
@@ -230,6 +301,20 @@ export function OrderWrite() {
           <Button onClick={() => navigate(-1)}>취소</Button>
         </CardFooter>
       </Card>
+
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>우편번호 찾기 팝업 API</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <Text>우편번호</Text>
+          </ModalBody>
+          <ModalFooter>
+            <Button onClick={onClose}>닫기</Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </div>
   );
 }

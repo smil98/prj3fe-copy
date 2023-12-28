@@ -202,7 +202,7 @@ export function MemberLogin() {
         <Text textAlign="center" size="xs">
           아직 회원이 아니라면?{"  "}
           <Button
-            color="purple"
+            colorScheme="purple"
             variant="link"
             onClick={() => navigate("/signup")}
           >

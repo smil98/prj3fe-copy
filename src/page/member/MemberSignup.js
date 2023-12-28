@@ -228,7 +228,6 @@ export function MemberSignup() {
 
   return (
     <Box>
-      <Spacer h={10} />
       <Card
         width={{ base: "full", md: "50%", lg: "45%" }}
         ml={{ base: "none", md: "25%", lg: "25%" }}
