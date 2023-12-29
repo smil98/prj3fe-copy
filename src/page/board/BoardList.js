@@ -175,7 +175,6 @@ export function BoardList() {
   }, [0]);
 
   const gridStyle = {
-    border: "1px solid pink",
     p: 5,
     borderRadius: "sm",
     placeItems: "center",
@@ -360,6 +359,9 @@ export function BoardList() {
       });
   }
 
+  //TODO: board.id 통해서 해당 포스트 좋아요한 사람들 이름 가져오는 쿼리문 작성, axios로 List 받아와 여기에 저장
+  const likedPeers = ["John", "Jane", "Alice", "Bob", "Charlie", "David"];
+
   // 보드 포맷 확인용 맵
   const cards = Array.from({ length: 8 }, (_, index) => (
     <Box w={{ base: "100%", lg: "95%", xl: "85%" }} transition="all 1s ease">
@@ -392,17 +394,14 @@ export function BoardList() {
           />
         </CardHeader>
         <CardBody>
-          <Heading size="xs">Colorful Heaven</Heading>
+          <Heading size="xs">board.name</Heading>
           <Text color="gray.600" my={3} fontSize="xs">
-            By Mark Benjamin
+            By board.title
           </Text>
           <AvatarGroup size="sm" max={3}>
-            <Avatar name="xs" />
-            <Avatar name="sm" />
-            <Avatar name="base" />
-            <Avatar name="md" />
-            <Avatar name="lg" />
-            <Avatar name="xl" />
+            {likedPeers.map((name, index) => (
+              <Avatar key={index} name={name} />
+            ))}
           </AvatarGroup>
           <Text textAlign="right" mt={3}>
             ₩ {(12000).toLocaleString()}
