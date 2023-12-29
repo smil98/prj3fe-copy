@@ -293,13 +293,13 @@ export function NavBar(props) {
               variant="filled"
               bgColor="blackAlpha.100"
               _hover={{
-                backgroundColor: "blackAlpha.200",
-                color: "white",
+                bgColor: "none",
               }}
               _focus={{
                 outline: "none",
                 border: "2px solid purple",
                 boxShadow: "sm",
+                bgColor: "none",
               }}
               borderRadius={20}
               placeholder="검색"
