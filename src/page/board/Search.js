@@ -19,6 +19,7 @@ import {
 } from "@chakra-ui/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
+import { SearchIcon } from "@chakra-ui/icons";
 
 export const Search = ({ onSearch }) => {
   const [selectedFormat, setSelectedFormat] = useState("");
@@ -98,29 +99,36 @@ export const Search = ({ onSearch }) => {
 
   return (
     <>
-      <Box as="form" onSubmit={handleSubmit}>
-        <Center>
-          <Button type="button" onClick={toggleSearchOptions} mb={4}>
-            <FontAwesomeIcon icon={faSearch} />
-            {showSearchOptions}
-          </Button>
-        </Center>
+      <Box
+        as="form"
+        mx={{ base: "5%", md: "10%", lg: "15%" }}
+        onSubmit={handleSubmit}
+      >
+        <Button
+          w={{ base: "full", md: "40%", lg: "30%" }}
+          mx={{ base: "none", md: "30%", lg: "35%" }}
+          type="button"
+          variant="outline"
+          colorScheme="purple"
+          mb={3}
+          onClick={toggleSearchOptions}
+          _hover="none"
+          leftIcon={<SearchIcon />}
+          iconSpacing={2}
+        >
+          검색 조건 설정
+          {showSearchOptions}
+        </Button>
         <Collapse in={showSearchOptions} animateOpacity>
-          <Flex
-            mx={{ base: "5%", md: "10%", lg: "15%" }}
-            mb={4}
-            gap={4}
-            direction="column"
-            border="1px solid blue"
-          >
+          <Flex mb={4} gap={4} direction="column">
             <FormControl>
               <FormLabel>제목</FormLabel>
               <Input value={title} onChange={handleTitleChange} />
             </FormControl>
             <FormControl>
-              <FormLabel>형태:</FormLabel>
+              <FormLabel>종류:</FormLabel>
               <Select
-                placeholder="Select a format"
+                placeholder="종류 선택"
                 value={selectedFormat}
                 onChange={handleFormatChange}
               >
@@ -147,7 +155,7 @@ export const Search = ({ onSearch }) => {
             </FormControl>
             <Flex gap={4}>
               <FormControl>
-                <FormLabel>Min Price:</FormLabel>
+                <FormLabel>최소 금액:</FormLabel>
                 <Input
                   type="number"
                   value={minPrice}
@@ -155,7 +163,7 @@ export const Search = ({ onSearch }) => {
                 />
               </FormControl>
               <FormControl>
-                <FormLabel>Max Price:</FormLabel>
+                <FormLabel>최대 금액:</FormLabel>
                 <Input
                   type="number"
                   value={maxPrice}
@@ -164,7 +172,7 @@ export const Search = ({ onSearch }) => {
               </FormControl>
             </Flex>
             <Button type="submit" w="full" mt={4} colorScheme="purple">
-              Search
+              검색
             </Button>
           </Flex>
         </Collapse>

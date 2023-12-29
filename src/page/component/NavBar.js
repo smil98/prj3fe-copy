@@ -17,6 +17,10 @@ import {
   Flex,
   Heading,
   IconButton,
+  Input,
+  InputGroup,
+  InputLeftElement,
+  Link,
   List,
   ListItem,
   Menu,
@@ -36,12 +40,12 @@ import {
 } from "@chakra-ui/react";
 import axios from "axios";
 import { startSocialLoginTimer } from "./authUtils";
-import { Breadcrumbs } from "./Breadcrumbs";
-import { HamburgerIcon, LockIcon } from "@chakra-ui/icons";
+import { HamburgerIcon, LockIcon, SearchIcon } from "@chakra-ui/icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faArrowRightFromBracket,
   faBell,
+  faBuilding,
   faCartShopping,
   faCircleQuestion,
   faCompactDisc,
@@ -77,17 +81,6 @@ export function NavBar(props) {
   const onCloseDrawer = () => {
     setTitleIconOpen(false);
   };
-
-  //BreadCrumb 위해 현재 링크에서 따오는 것들
-  const pathSegments = location.pathname
-    .split("/")
-    .filter((segment) => segment !== "");
-
-  const currentPageName =
-    pathSegments.length > 0
-      ? pathSegments[pathSegments.length - 1].charAt(0).toUpperCase() +
-        pathSegments[pathSegments.length - 1].slice(1)
-      : "Home";
 
   //Nav Bar 변환 위해서 따오는 것들
   const isSmallScreen = useBreakpointValue({ base: true, md: false });
@@ -285,21 +278,37 @@ export function NavBar(props) {
           w="94%"
           mx="3%"
         >
-          <VStack
+          <Button
+            onClick={() => navigate("/")}
             ml={5}
-            spacing={0}
-            alignItems="baseline"
-            justifyContent="center"
+            className="logo"
+            variant="undefined"
+            p={0}
+            fontSize="xl"
           >
-            <Breadcrumbs pathSegments={pathSegments} navigate={navigate} />
-            <Heading size="sm">{currentPageName}</Heading>
-          </VStack>
+            FavHub
+          </Button>
+          <InputGroup w={isSmallScreen ? "55%" : "35%"}>
+            <Input
+              variant="filled"
+              _focus={{
+                outline: "none",
+                border: "2px solid purple",
+                boxShadow: "sm",
+              }}
+              borderRadius={20}
+              placeholder="검색"
+            />
+            <InputLeftElement w="3rem">
+              <SearchIcon />
+            </InputLeftElement>
+          </InputGroup>
           {isSmallScreen ? (
             <IconButton
-              // border="1px solid purple"
               variant="undefined"
-              fontSize="2xl"
+              fontSize="xl"
               mr={5}
+              p={0}
               onClick={() => onOpen()}
               icon={<HamburgerIcon />}
               transition="all 1s ease"
@@ -309,14 +318,11 @@ export function NavBar(props) {
               display="flex"
               justifyContent="space-between"
               alignItems="center"
-              w={{ md: "60%", lg: "50%" }}
+              w={{ md: "40%", lg: "35%" }}
               transition="all 1s ease"
               variant="unstyled"
               mr={5}
             >
-              <Button {...fullNavButtonHover} onClick={() => navigate("/")}>
-                홈
-              </Button>
               {loggedIn ? (
                 <>
                   <Button
@@ -335,19 +341,36 @@ export function NavBar(props) {
                     <MenuButton as={Avatar} boxSize={8} />
                     <MenuList>
                       <Text fontSize="sm" fontWeight="bold" textIndent={10}>
-                        👋 환영합니다, 닉네임님
+                        👋 환영합니다, nickName님
                       </Text>
                       <MenuDivider />
                       <MenuGroup title="내 정보 보기">
-                        <MenuItem>계정 정보</MenuItem>
-                        <MenuItem>찜한 목록</MenuItem>
-                        <MenuItem>주문 내역</MenuItem>
+                        <MenuItem as="div">
+                          <Link to={`/member?${urlParams.toString()}`}>
+                            내 정보
+                          </Link>
+                        </MenuItem>
+                        <MenuItem as="div">
+                          <Link>찜한 목록</Link> //TODO: 수정
+                        </MenuItem>
+                        <MenuItem as="div">
+                          <Link>주문 내역</Link> //TODO: 수정
+                        </MenuItem>
                       </MenuGroup>
                       <MenuDivider />
-                      <MenuGroup title="고객센터">
-                        <MenuItem>공지사항</MenuItem>
-                        <MenuItem>문의하기</MenuItem>
-                      </MenuGroup>
+                      {isAdmin && (
+                        <MenuGroup title="관리자">
+                          <MenuItem as="div">
+                            <Link to="/write">제품 등록</Link>
+                          </MenuItem>
+                          <MenuItem as="div">
+                            <Link to="#">상품 관리</Link> //TODO: 수정
+                          </MenuItem>
+                          <MenuItem as="div">
+                            <Link to="/member/list">회원 관리</Link>
+                          </MenuItem>
+                        </MenuGroup>
+                      )}
                     </MenuList>
                   </Menu>
                 </>
@@ -364,12 +387,6 @@ export function NavBar(props) {
                     onClick={() => navigate("/login")}
                   >
                     로그인
-                  </Button>
-                  <Button
-                    {...fullNavButtonHover}
-                    onClick={() => navigate("/queries")}
-                  >
-                    공지사항
                   </Button>
                 </>
               )}
@@ -389,7 +406,6 @@ export function NavBar(props) {
                 환영합니다, nickName님
               </TagLabel>
             </Tag>
-            {/*만약 로그인 된 유저라면 여기서 아바타랑 프로필 띄우기, 아니면 슬로건 */}
           </DrawerHeader>
           <DrawerBody>
             <ButtonGroup
@@ -414,17 +430,6 @@ export function NavBar(props) {
               >
                 홈
               </Button>
-              <Button
-                iconSpacing={6}
-                leftIcon={<FontAwesomeIcon icon={faBell} />}
-                {...drawerButtonStyle}
-                onClick={() => {
-                  onClose();
-                  navigate("/notifications");
-                }}
-              >
-                공지사항
-              </Button>
               {loggedIn ? (
                 <>
                   {/* 회원일 때 보여줄 메뉴 */}
@@ -445,10 +450,10 @@ export function NavBar(props) {
                     {...drawerButtonStyle}
                     onClick={() => {
                       onClose();
-                      navigate("/accountInfo"); //TODO: 수정
+                      navigate("/member?" + urlParams.toString());
                     }}
                   >
-                    계정 정보
+                    내 정보
                   </Button>
                   <Button
                     iconSpacing={5}
@@ -472,17 +477,43 @@ export function NavBar(props) {
                   >
                     주문 내역
                   </Button>
-                  <Button
-                    iconSpacing={5}
-                    leftIcon={<FontAwesomeIcon icon={faCircleQuestion} />}
-                    {...drawerButtonStyle}
-                    onClick={() => {
-                      onClose();
-                      navigate("/queries"); //TODO: 수정
-                    }}
-                  >
-                    문의하기
-                  </Button>
+                  {isAdmin && (
+                    <>
+                      <Button
+                        iconSpacing={5}
+                        leftIcon={<FontAwesomeIcon icon={faCircleQuestion} />}
+                        {...drawerButtonStyle}
+                        onClick={() => {
+                          onClose();
+                          navigate("/write");
+                        }}
+                      >
+                        제품 등록
+                      </Button>
+                      <Button
+                        iconSpacing={5}
+                        leftIcon={<FontAwesomeIcon icon={faCircleQuestion} />}
+                        {...drawerButtonStyle}
+                        onClick={() => {
+                          onClose();
+                          navigate("/queries"); //TODO: 수정
+                        }}
+                      >
+                        제품 관리
+                      </Button>
+                      <Button
+                        iconSpacing={5}
+                        leftIcon={<FontAwesomeIcon icon={faCircleQuestion} />}
+                        {...drawerButtonStyle}
+                        onClick={() => {
+                          onClose();
+                          navigate("/member/list");
+                        }}
+                      >
+                        회원 관리
+                      </Button>
+                    </>
+                  )}
                   <Button
                     iconSpacing={5}
                     leftIcon={

@@ -17,6 +17,9 @@ import {
   IconButton,
   Image,
   Img,
+  Input,
+  InputGroup,
+  InputLeftElement,
   SimpleGrid,
   Spacer,
   Spinner,
@@ -38,6 +41,7 @@ import { Search } from "./Search";
 import { faHeart as emptyHeart } from "@fortawesome/free-regular-svg-icons";
 import axios from "axios";
 import * as animateCSSGrid from "animate-css-grid";
+import { SearchIcon } from "@chakra-ui/icons";
 
 function LikeContainer({ loggedIn, setLoggedIn, boardId, sendRefreshToken }) {
   const toast = useToast();
@@ -165,6 +169,7 @@ export function BoardList() {
     xl: false,
   });
 
+  // 2, 1fr <-> 4, 1fr 변동 시 transition 추가
   useEffect(() => {
     const gridsElement = document.querySelector(".grids");
 
@@ -182,6 +187,7 @@ export function BoardList() {
     gap: 5,
     transition: "all 1s", // or adjust the duration to your preference
   };
+
   function sendRefreshToken() {
     const refreshToken = localStorage.getItem("refreshToken");
     console.log("리프레시 토큰: ", refreshToken);
@@ -435,7 +441,6 @@ export function BoardList() {
       <Box>
         <Spacer h={120} />
         <Search onSearch={handleSearch} /> {/* 검색 컴포넌트*/}
-        <Spacer h={50} />
         <SimpleGrid {...gridStyle} className="grids">
           {cards}
           {/*{boardList.map((board) => (*/}
