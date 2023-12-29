@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import {
+  AbsoluteCenter,
   Avatar,
   Box,
   Button,
   ButtonGroup,
+  Center,
   Drawer,
   DrawerBody,
   DrawerCloseButton,
@@ -283,9 +285,14 @@ export function NavBar(props) {
           w="94%"
           mx="3%"
         >
-          <VStack ml={5} spacing={0} alignItems="baseline">
+          <VStack
+            ml={5}
+            spacing={0}
+            alignItems="baseline"
+            justifyContent="center"
+          >
             <Breadcrumbs pathSegments={pathSegments} navigate={navigate} />
-            <Heading size="md">{currentPageName}</Heading>
+            <Heading size="sm">{currentPageName}</Heading>
           </VStack>
           {isSmallScreen ? (
             <IconButton

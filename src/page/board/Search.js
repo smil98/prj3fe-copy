@@ -57,7 +57,7 @@ export const Search = ({ onSearch }) => {
     setShowSearchOptions(!showSearchOptions); // 버튼 클릭 시 상태 업데이트
   };
 
-  // 장르명 넘기는 게 다른 듯?
+  // 장르명 : 태그로 선택
   const genres = ["INDIE", "OST", "K_POP", "POP"];
 
   const genreDisplayNames = {
@@ -69,12 +69,6 @@ export const Search = ({ onSearch }) => {
 
   const GenreTags = () => {
     const [selectedGenres, setSelectedGenres] = useState([]);
-
-    const handleTagClose = (value) => {
-      setSelectedGenres((prevGenres) =>
-        prevGenres.filter((genre) => genre !== value),
-      );
-    };
 
     const handleTagClick = (value) => {
       setSelectedGenres((prevGenres) =>
@@ -95,9 +89,7 @@ export const Search = ({ onSearch }) => {
             onClick={() => handleTagClick(genre)}
           >
             <TagLabel>{genreDisplayNames[genre]}</TagLabel>
-            {selectedGenres.includes(genre) && (
-              <TagCloseButton onClick={() => handleTagClose(genre)} />
-            )}
+            {selectedGenres.includes(genre) && <TagCloseButton />}
           </Tag>
         ))}
       </Stack>
@@ -115,7 +107,7 @@ export const Search = ({ onSearch }) => {
         </Center>
         <Collapse in={showSearchOptions} animateOpacity>
           <Flex
-            p={10}
+            mx={{ base: "5%", md: "10%", lg: "15%" }}
             mb={4}
             gap={4}
             direction="column"
@@ -171,10 +163,10 @@ export const Search = ({ onSearch }) => {
                 />
               </FormControl>
             </Flex>
+            <Button type="submit" w="full" mt={4} colorScheme="purple">
+              Search
+            </Button>
           </Flex>
-          <Button type="submit" mt={4}>
-            Search
-          </Button>
         </Collapse>
       </Box>
     </>
