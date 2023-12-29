@@ -16,6 +16,7 @@ import {
   Heading,
   IconButton,
   Image,
+  Img,
   SimpleGrid,
   Spacer,
   Spinner,
@@ -350,69 +351,85 @@ export function BoardList() {
 
   // 보드 포맷 확인용 맵
   const cards = Array.from({ length: 8 }, (_, index) => (
-    <Card
-      key={index}
-      border="1px solid purple"
-      p={5}
-      borderRadius={20}
+    <Box
+      // p={0}
+      // border="1px solid blue"
       w={{ base: "100%", lg: "95%", xl: "85%" }}
       transition="all 1s ease"
     >
-      <CardHeader border="1px solid blue" position="relative" p={0}>
-        <Box
-          borderRadius={20}
-          w="full"
-          h="0"
-          paddingBottom="75%" // 4:3 (75% = (3/4) * 100)
-          overflow="hidden"
-          transition="all 1s ease"
-        ></Box>
-        <IconButton
-          isRound={true}
-          position="absolute"
-          top={3}
-          right={3}
-          icon={<FontAwesomeIcon icon={emptyHeart} />}
-          zIndex={1}
-          transition="all 1s ease"
-        />
-      </CardHeader>
-      <CardBody border="1px solid green">
-        <Heading size="xs">Colorful Heaven</Heading>
-        <Text color="gray.600" my={3} fontSize="xs">
-          By Mark Benjamin
-        </Text>
-        <AvatarGroup size="sm" max={3}>
-          <Avatar name="xs" />
-          <Avatar name="sm" />
-          <Avatar name="base" />
-          <Avatar name="md" />
-          <Avatar name="lg" />
-          <Avatar name="xl" />
-        </AvatarGroup>
-      </CardBody>
-      <CardFooter
-        h={10}
-        border="1px solid red"
-        display="flex"
-        justifyContent="flex-start"
-        alignItems="center"
-        p={0}
-      >
-        <Button
-          variant="solid"
-          size="sm"
-          colorScheme="purple"
-          leftIcon={<FontAwesomeIcon icon={faCartPlus} />}
-          borderRadius={20}
-          w="full"
-          // onClick={() => handleInCart(board)}
+      <Card key={index} p={5} borderRadius={20} shadow="base">
+        <CardHeader border="0px dashed blue" position="relative" p={0}>
+          <Box
+            position="relative"
+            overflow="hidden"
+            // border="1px solid yellow"
+            paddingBottom="75%" // 4:3 aspect ratio (75% = (3/4) * 100)
+            w="full"
+          >
+            <Img
+              src="https://horizon-ui.com/chakra-pro/static/media/Nft4.5fc37877b25c9fb9a52d.png"
+              borderRadius={10}
+              objectFit="cover"
+              w="full"
+              h="full"
+              position="absolute"
+              top="0"
+              left="0"
+            />
+          </Box>
+          <IconButton
+            isRound={true}
+            position="absolute"
+            top={3}
+            right={3}
+            icon={<FontAwesomeIcon icon={emptyHeart} />}
+            zIndex={1}
+            transition="all 1s ease"
+          />
+        </CardHeader>
+        <CardBody>
+          <Heading size="xs">Colorful Heaven</Heading>
+          <Text color="gray.600" my={3} fontSize="xs">
+            By Mark Benjamin
+          </Text>
+          <AvatarGroup size="sm" max={3}>
+            <Avatar name="xs" />
+            <Avatar name="sm" />
+            <Avatar name="base" />
+            <Avatar name="md" />
+            <Avatar name="lg" />
+            <Avatar name="xl" />
+          </AvatarGroup>
+        </CardBody>
+        <CardFooter
+          h={10}
+          display="flex"
+          justifyContent="flex-start"
+          alignItems="center"
+          p={0}
         >
-          Add to Cart
-        </Button>
-      </CardFooter>
-    </Card>
+          <Button
+            variant="solid"
+            size="sm"
+            colorScheme="purple"
+            leftIcon={<FontAwesomeIcon icon={faCartPlus} />}
+            borderRadius={20}
+            w="full"
+            // onClick={() => handleInCart(board)}
+          >
+            Add to Cart
+          </Button>
+        </CardFooter>
+      </Card>
+    </Box>
   ));
+
+  const gridsElement = document.querySelector(".grids");
+
+  animateCSSGrid.wrapGrid(gridsElement, {
+    duration: 600,
+    easing: "linear",
+  });
 
   return (
     <>
@@ -420,7 +437,7 @@ export function BoardList() {
         <Spacer h={120} />
         <Search onSearch={handleSearch} /> {/* 검색 컴포넌트*/}
         <Spacer h={50} />
-        <SimpleGrid {...gridStyle}>
+        <SimpleGrid {...gridStyle} className="grids">
           {cards}
           {/*{boardList.map((board) => (*/}
           {/*  <Card*/}
