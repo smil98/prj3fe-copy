@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import {
+  Avatar,
   Box,
   Button,
   ButtonGroup,
@@ -8,11 +9,24 @@ import {
   DrawerBody,
   DrawerCloseButton,
   DrawerContent,
+  DrawerFooter,
   DrawerHeader,
   DrawerOverlay,
   Flex,
   Heading,
   IconButton,
+  List,
+  ListItem,
+  Menu,
+  MenuButton,
+  MenuDivider,
+  MenuGroup,
+  MenuItem,
+  MenuList,
+  Stack,
+  Tag,
+  TagLabel,
+  Text,
   useBreakpointValue,
   useDisclosure,
   useToast,
@@ -21,7 +35,27 @@ import {
 import axios from "axios";
 import { startSocialLoginTimer } from "./authUtils";
 import { Breadcrumbs } from "./Breadcrumbs";
-import { HamburgerIcon } from "@chakra-ui/icons";
+import { HamburgerIcon, LockIcon } from "@chakra-ui/icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faArrowRightFromBracket,
+  faBell,
+  faCartShopping,
+  faCircleQuestion,
+  faCompactDisc,
+  faCreditCard,
+  faDollarSign,
+  faFileInvoice,
+  faHeart,
+  faHome,
+  faList,
+  faMusic,
+  faRecordVinyl,
+  faScroll,
+  faUser,
+  faUserGear,
+  faUserPlus,
+} from "@fortawesome/free-solid-svg-icons";
 
 export function NavBar(props) {
   const [loggedIn, setLoggedIn] = useState(false);
@@ -55,6 +89,13 @@ export function NavBar(props) {
 
   //Nav Bar 변환 위해서 따오는 것들
   const isSmallScreen = useBreakpointValue({ base: true, md: false });
+
+  // Button Style
+  const sharedButtonStyle = {
+    textAlign: "left",
+    justifyContent: "flex-start",
+    _hover: { color: "white", bgColor: "#805AD5" },
+  };
 
   function sendRefreshToken() {
     const refreshToken = localStorage.getItem("refreshToken");
@@ -221,10 +262,10 @@ export function NavBar(props) {
         left={0}
         right={0}
         bgColor="whiteAlpha.100"
-        border="1px solid green"
+        // border="1px solid green"
         backdropFilter="blur(10px) hue-rotate(90deg)"
         borderRadius={20}
-        boxShadow="sm"
+        boxShadow="md"
         mt={5}
         mx={{ base: "5%", md: "10%", lg: "15%" }}
         zIndex={1}
@@ -232,8 +273,7 @@ export function NavBar(props) {
         <Flex
           justifyContent="space-between"
           alignItems="center"
-          bgColor={"0,0,0,0"}
-          border="1px solid blue"
+          // border="1px solid blue"
           w="94%"
           mx="3%"
         >
@@ -242,27 +282,47 @@ export function NavBar(props) {
             <Heading size="lg">{currentPageName}</Heading>
           </VStack>
           {isSmallScreen ? (
-            // Show IconButton for smaller screens
             <IconButton
-              border="1px solid purple"
+              // border="1px solid purple"
               variant="undefined"
+              fontSize="2xl"
+              mr={5}
               onClick={() => onOpen()}
               icon={<HamburgerIcon />}
             />
           ) : (
-            // Show the other four buttons for larger screens
             <ButtonGroup
               display="flex"
               justifyContent="space-between"
+              alignItems="center"
               w={{ md: "60%", lg: "50%" }}
               variant="unstyled"
-              textAlign="center"
-              border="1px solid red"
+              mr={5}
             >
               <Button onClick={() => navigate("/")}>Home</Button>
               <Button onClick={() => navigate("/order")}>Order</Button>
               <Button onClick={() => navigate("/signup")}>Sign up</Button>
               <Button onClick={() => navigate("/login")}>Login</Button>
+              <Button onClick={() => navigate("/logout")}>Logout</Button>
+              <Menu>
+                <MenuButton as={Avatar} boxSize={8} />
+                <MenuList>
+                  <Text fontSize="sm" fontWeight="bold" textIndent={10}>
+                    👋 환영합니다, 닉네임님
+                  </Text>
+                  <MenuDivider />
+                  <MenuGroup title="내 정보 보기">
+                    <MenuItem>계정 정보</MenuItem>
+                    <MenuItem>찜한 목록</MenuItem>
+                    <MenuItem>주문 내역</MenuItem>
+                  </MenuGroup>
+                  <MenuDivider />
+                  <MenuGroup title="고객센터">
+                    <MenuItem>공지사항</MenuItem>
+                    <MenuItem>문의하기</MenuItem>
+                  </MenuGroup>
+                </MenuList>
+              </Menu>
             </ButtonGroup>
           )}
         </Flex>
@@ -272,18 +332,173 @@ export function NavBar(props) {
         <DrawerOverlay />
         <DrawerContent>
           <DrawerCloseButton />
-          <DrawerHeader>Menu</DrawerHeader>
+          <DrawerHeader>
+            <Tag variant="ghost">
+              <Avatar size="sm" ml={-1} mr={3} />
+              <TagLabel fontSize="md" fontWeight="bold">
+                환영합니다, nickName님
+              </TagLabel>
+            </Tag>
+            {/*만약 로그인 된 유저라면 여기서 아바타랑 프로필 띄우기, 아니면 슬로건 */}
+          </DrawerHeader>
           <DrawerBody>
-            <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua.
-              Consequat nisl vel pretium lectus quam id. Semper quis lectus
-              nulla at volutpat diam ut venenatis. Dolor morbi non arcu risus
-              quis varius quam quisque. Massa ultricies mi quis hendrerit dolor
-              magna eget est lorem. Erat imperdiet sed euismod nisi porta.
-              Lectus vestibulum mattis ullamcorper velit.
-            </p>
+            <ButtonGroup
+              h="full"
+              isAttached
+              flexDirection="column"
+              flexWrap="wrap"
+              variant="undefined"
+              w="full"
+              size="lg"
+              // border="1px solid black"
+            >
+              <Button
+                borderRadius={0}
+                iconSpacing={5}
+                leftIcon={<FontAwesomeIcon icon={faHome} />}
+                {...sharedButtonStyle}
+                onClick={() => {
+                  navigate("/");
+                  onClose();
+                }}
+              >
+                홈
+              </Button>
+              <Button
+                iconSpacing={6}
+                leftIcon={<FontAwesomeIcon icon={faBell} />}
+                {...sharedButtonStyle}
+                onClick={() => {
+                  navigate("/");
+                  onClose();
+                }}
+              >
+                공지사항
+              </Button>
+              {loggedIn ? (
+                <>
+                  {/* 회원일 때 보여줄 메뉴 */}
+                  <Button
+                    iconSpacing={5}
+                    leftIcon={<FontAwesomeIcon icon={faCreditCard} />}
+                    {...sharedButtonStyle}
+                    onClick={() => {
+                      navigate("/order");
+                      onClose();
+                    }}
+                  >
+                    주문하기
+                  </Button>
+                  <Button
+                    iconSpacing={4}
+                    leftIcon={<FontAwesomeIcon icon={faUserGear} />}
+                    {...sharedButtonStyle}
+                    onClick={() => {
+                      navigate("/");
+                      onClose();
+                    }}
+                  >
+                    계정 정보
+                  </Button>
+                  <Button
+                    iconSpacing={5}
+                    leftIcon={<FontAwesomeIcon icon={faHeart} />}
+                    {...sharedButtonStyle}
+                    onClick={() => {
+                      navigate("/");
+                      onClose();
+                    }}
+                  >
+                    찜한 목록
+                  </Button>
+                  <Button
+                    iconSpacing={5}
+                    leftIcon={<FontAwesomeIcon icon={faScroll} />}
+                    {...sharedButtonStyle}
+                    onClick={() => {
+                      navigate("/");
+                      onClose();
+                    }}
+                  >
+                    주문 내역
+                  </Button>
+                  <Button
+                    iconSpacing={5}
+                    leftIcon={<FontAwesomeIcon icon={faCircleQuestion} />}
+                    {...sharedButtonStyle}
+                    onClick={() => {
+                      navigate("/");
+                      onClose();
+                    }}
+                  >
+                    문의하기
+                  </Button>
+                  <Button
+                    iconSpacing={5}
+                    leftIcon={
+                      <FontAwesomeIcon icon={faArrowRightFromBracket} />
+                    }
+                    {...sharedButtonStyle}
+                    onClick={() => {
+                      onClose();
+                      navigate("/logout");
+                    }}
+                  >
+                    로그아웃
+                  </Button>
+                </>
+              ) : (
+                <>
+                  {/* 비회원일 때 보여줄 메뉴 */}
+                  <Button
+                    iconSpacing={6}
+                    leftIcon={<FontAwesomeIcon icon={faUser} />}
+                    {...sharedButtonStyle}
+                    onClick={() => {
+                      navigate("/login");
+                      onClose();
+                    }}
+                  >
+                    로그인
+                  </Button>
+                  <Button
+                    iconSpacing={4}
+                    leftIcon={<FontAwesomeIcon icon={faUserPlus} />}
+                    {...sharedButtonStyle}
+                    onClick={() => {
+                      navigate("/signup");
+                      onClose();
+                    }}
+                  >
+                    회원 가입
+                  </Button>
+                </>
+              )}
+            </ButtonGroup>
           </DrawerBody>
+          <DrawerFooter h="10%">
+            <Flex
+              justifyContent="space-between"
+              // border="1px solid black"
+              alignItems="center"
+              w="full"
+              h="full"
+            >
+              <FontAwesomeIcon
+                icon={faCompactDisc}
+                color="#805AD5"
+                size="2xl"
+              />
+              <VStack>
+                <Text className="logo" fontSize="2xl">
+                  FavHub
+                </Text>
+                <Text mt={-4} color="#805AD5" fontSize="xs">
+                  Find Your Favorite
+                </Text>
+              </VStack>
+            </Flex>
+          </DrawerFooter>
         </DrawerContent>
       </Drawer>
     </>

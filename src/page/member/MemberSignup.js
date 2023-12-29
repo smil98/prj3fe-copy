@@ -240,7 +240,7 @@ export function MemberSignup() {
         ml={{ base: "none", md: "20%", lg: "25%" }}
       >
         <CardHeader>
-          <Heading textAlign="center" fontFamily="GmarketSansMedium">
+          <Heading textAlign="center" mt={5} fontFamily="GmarketSansMedium">
             회원 가입
           </Heading>
           <Text textAlign="center" size="xs" mt={5}>

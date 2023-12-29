@@ -97,8 +97,8 @@ export function MemberLogin() {
     <>
       <Spacer h={120} />
       <Card
-        width={{ base: "full", md: "50%", lg: "45%" }}
-        ml={{ base: "none", md: "25%", lg: "25%" }}
+        width={{ base: "full", md: "60%", lg: "50%" }}
+        ml={{ base: "none", md: "20%", lg: "25%" }}
       >
         <CardHeader>
           <Heading textAlign="center" my={5}>
