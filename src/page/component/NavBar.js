@@ -299,30 +299,38 @@ export function NavBar(props) {
               variant="unstyled"
               mr={5}
             >
-              <Button onClick={() => navigate("/")}>Home</Button>
-              <Button onClick={() => navigate("/order")}>Order</Button>
-              <Button onClick={() => navigate("/signup")}>Sign up</Button>
-              <Button onClick={() => navigate("/login")}>Login</Button>
-              <Button onClick={() => navigate("/logout")}>Logout</Button>
-              <Menu>
-                <MenuButton as={Avatar} boxSize={8} />
-                <MenuList>
-                  <Text fontSize="sm" fontWeight="bold" textIndent={10}>
-                    👋 환영합니다, 닉네임님
-                  </Text>
-                  <MenuDivider />
-                  <MenuGroup title="내 정보 보기">
-                    <MenuItem>계정 정보</MenuItem>
-                    <MenuItem>찜한 목록</MenuItem>
-                    <MenuItem>주문 내역</MenuItem>
-                  </MenuGroup>
-                  <MenuDivider />
-                  <MenuGroup title="고객센터">
-                    <MenuItem>공지사항</MenuItem>
-                    <MenuItem>문의하기</MenuItem>
-                  </MenuGroup>
-                </MenuList>
-              </Menu>
+              <Button onClick={() => navigate("/")}>홈</Button>
+              {loggedIn ? (
+                <>
+                  <Button onClick={() => navigate("/order")}>주문하기</Button>
+                  <Button onClick={() => navigate("/logout")}>로그아웃</Button>
+                  <Menu>
+                    <MenuButton as={Avatar} boxSize={8} />
+                    <MenuList>
+                      <Text fontSize="sm" fontWeight="bold" textIndent={10}>
+                        👋 환영합니다, 닉네임님
+                      </Text>
+                      <MenuDivider />
+                      <MenuGroup title="내 정보 보기">
+                        <MenuItem>계정 정보</MenuItem>
+                        <MenuItem>찜한 목록</MenuItem>
+                        <MenuItem>주문 내역</MenuItem>
+                      </MenuGroup>
+                      <MenuDivider />
+                      <MenuGroup title="고객센터">
+                        <MenuItem>공지사항</MenuItem>
+                        <MenuItem>문의하기</MenuItem>
+                      </MenuGroup>
+                    </MenuList>
+                  </Menu>
+                </>
+              ) : (
+                <>
+                  <Button onClick={() => navigate("/signup")}>회원가입</Button>
+                  <Button onClick={() => navigate("/login")}>로그인</Button>
+                  <Button onClick={() => navigate("/")}>공지사항</Button>
+                </>
+              )}
             </ButtonGroup>
           )}
         </Flex>
