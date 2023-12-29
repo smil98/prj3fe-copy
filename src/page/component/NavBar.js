@@ -291,6 +291,11 @@ export function NavBar(props) {
           <InputGroup w={isSmallScreen ? "55%" : "35%"}>
             <Input
               variant="filled"
+              bgColor="blackAlpha.100"
+              _hover={{
+                backgroundColor: "blackAlpha.200",
+                color: "white",
+              }}
               _focus={{
                 outline: "none",
                 border: "2px solid purple",
