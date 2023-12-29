@@ -32,13 +32,7 @@ const ScrollToTopButton = () => {
 
   return (
     <Fade in={isOpen}>
-      <Box
-        position="fixed"
-        bottom="10"
-        right="10"
-        zIndex="1000"
-        display={isOpen ? "block" : "none"}
-      >
+      <Box position="fixed" bottom="10" right="10" zIndex="1000">
         <IconButton
           icon={<ArrowUpIcon />}
           aria-label="Scroll to Top"
