@@ -528,7 +528,6 @@ export function MemberSignup() {
           </Button>
         </CardFooter>
       </Card>
-      <Spacer h={50} />
     </Box>
   );
 }
