@@ -263,12 +263,13 @@ export function NavBar(props) {
         right={0}
         bgColor="whiteAlpha.100"
         // border="1px solid green"
-        backdropFilter="blur(10px) hue-rotate(90deg)"
+        backdropFilter="blur(10px)"
         borderRadius={20}
         boxShadow="md"
         mt={5}
         mx={{ base: "5%", md: "10%", lg: "15%" }}
         zIndex={1}
+        transition="all 1s ease"
       >
         <Flex
           justifyContent="space-between"
@@ -279,7 +280,7 @@ export function NavBar(props) {
         >
           <VStack ml={5} spacing={0} alignItems="baseline">
             <Breadcrumbs pathSegments={pathSegments} navigate={navigate} />
-            <Heading size="lg">{currentPageName}</Heading>
+            <Heading size="md">{currentPageName}</Heading>
           </VStack>
           {isSmallScreen ? (
             <IconButton
@@ -289,6 +290,7 @@ export function NavBar(props) {
               mr={5}
               onClick={() => onOpen()}
               icon={<HamburgerIcon />}
+              transition="all 1s ease"
             />
           ) : (
             <ButtonGroup
@@ -296,6 +298,7 @@ export function NavBar(props) {
               justifyContent="space-between"
               alignItems="center"
               w={{ md: "60%", lg: "50%" }}
+              transition="all 1s ease"
               variant="unstyled"
               mr={5}
             >

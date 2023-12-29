@@ -1,6 +1,8 @@
 //  앨범 쇼핑몰 첫 페이지 상품 셀렉 페이지
-import React, { useEffect, useState } from "react";
+import React, { createElement, useEffect, useRef, useState } from "react";
 import {
+  Avatar,
+  AvatarGroup,
   Box,
   Button,
   ButtonGroup,
@@ -9,6 +11,7 @@ import {
   CardFooter,
   CardHeader,
   Center,
+  css,
   Flex,
   Heading,
   IconButton,
@@ -17,6 +20,7 @@ import {
   Spacer,
   Spinner,
   Text,
+  useBreakpointValue,
   useToast,
 } from "@chakra-ui/react";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -30,6 +34,7 @@ import {
 import { Search } from "./Search";
 import { faHeart as emptyHeart } from "@fortawesome/free-regular-svg-icons";
 import axios from "axios";
+import * as animateCSSGrid from "animate-css-grid";
 
 function LikeContainer({ loggedIn, setLoggedIn, boardId, sendRefreshToken }) {
   const toast = useToast();
@@ -148,6 +153,24 @@ export function BoardList() {
   const albumFormat = param ? param : "";
   console.log(albumFormat);
 
+  // 화면 따라 보드 리스트 그리드 설정 변경 위해서 가져옴
+  const isSmallScreen = useBreakpointValue({
+    xs: true,
+    sm: true,
+    base: false,
+    md: false,
+    xl: false,
+  });
+
+  const gridStyle = {
+    border: "1px solid pink",
+    p: 5,
+    borderRadius: "sm",
+    placeItems: "center",
+    templateColumns: isSmallScreen ? "repeat(2, 1fr)" : "repeat(4, 1fr)",
+    gap: 5,
+    transition: "all 1s", // or adjust the duration to your preference
+  };
   function sendRefreshToken() {
     const refreshToken = localStorage.getItem("refreshToken");
     console.log("리프레시 토큰: ", refreshToken);
@@ -325,18 +348,80 @@ export function BoardList() {
       });
   }
 
+  // 보드 포맷 확인용 맵
+  const cards = Array.from({ length: 8 }, (_, index) => (
+    <Card
+      key={index}
+      border="1px solid purple"
+      p={5}
+      borderRadius={20}
+      w={{ base: "100%", lg: "95%", xl: "85%" }}
+      transition="all 1s ease"
+    >
+      <CardHeader border="1px solid blue" position="relative" p={0}>
+        <Box
+          borderRadius={20}
+          w="full"
+          h="0"
+          paddingBottom="75%" // 4:3 (75% = (3/4) * 100)
+          overflow="hidden"
+          transition="all 1s ease"
+        ></Box>
+        <IconButton
+          isRound={true}
+          position="absolute"
+          top={3}
+          right={3}
+          icon={<FontAwesomeIcon icon={emptyHeart} />}
+          zIndex={1}
+          transition="all 1s ease"
+        />
+      </CardHeader>
+      <CardBody border="1px solid green">
+        <Heading size="xs">Colorful Heaven</Heading>
+        <Text color="gray.600" my={3} fontSize="xs">
+          By Mark Benjamin
+        </Text>
+        <AvatarGroup size="sm" max={3}>
+          <Avatar name="xs" />
+          <Avatar name="sm" />
+          <Avatar name="base" />
+          <Avatar name="md" />
+          <Avatar name="lg" />
+          <Avatar name="xl" />
+        </AvatarGroup>
+      </CardBody>
+      <CardFooter
+        h={10}
+        border="1px solid red"
+        display="flex"
+        justifyContent="flex-start"
+        alignItems="center"
+        p={0}
+      >
+        <Button
+          variant="solid"
+          size="sm"
+          colorScheme="purple"
+          leftIcon={<FontAwesomeIcon icon={faCartPlus} />}
+          borderRadius={20}
+          w="full"
+          // onClick={() => handleInCart(board)}
+        >
+          Add to Cart
+        </Button>
+      </CardFooter>
+    </Card>
+  ));
+
   return (
     <>
       <Box>
-        <Spacer h={50} />
+        <Spacer h={120} />
         <Search onSearch={handleSearch} /> {/* 검색 컴포넌트*/}
         <Spacer h={50} />
-        <SimpleGrid
-          borderRadius="sm"
-          placeItems="center"
-          templateColumns="repeat(4, 1fr)" // 각 열에 4개의 카드를 나열
-          gap={5} // 카드 사이의 간격
-        >
+        <SimpleGrid {...gridStyle}>
+          {cards}
           {/*{boardList.map((board) => (*/}
           {/*  <Card*/}
           {/*    key={board.fileUrl}*/}
