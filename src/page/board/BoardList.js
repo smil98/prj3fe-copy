@@ -23,6 +23,7 @@ import {
   Text,
   useBreakpointValue,
   useToast,
+  VStack,
 } from "@chakra-ui/react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -31,6 +32,7 @@ import {
   faChevronLeft,
   faChevronRight,
   faHeart as fullHeart,
+  faWonSign,
 } from "@fortawesome/free-solid-svg-icons";
 import { Search } from "./Search";
 import { faHeart as emptyHeart } from "@fortawesome/free-regular-svg-icons";
@@ -162,6 +164,15 @@ export function BoardList() {
     md: false,
     xl: false,
   });
+
+  useEffect(() => {
+    const gridsElement = document.querySelector(".grids");
+
+    animateCSSGrid.wrapGrid(gridsElement, {
+      duration: 600,
+      easing: "linear",
+    });
+  }, [0]);
 
   const gridStyle = {
     border: "1px solid pink",
@@ -327,7 +338,7 @@ export function BoardList() {
       .then((response) => {
         console.log(board.id + "번 상품 카트에 추가");
         toast({
-          description: `${board.title} 상품이 장바구니에 추가되었습니다.`,
+          description: `${board.title}을 장바구니에 추가되었습니다.`,
           status: "success",
         });
       })
@@ -341,7 +352,7 @@ export function BoardList() {
           });
         } else {
           toast({
-            title: `${board.title} 상품을 장바구니에 추가하지 못했습니다.`,
+            title: `${board.title}을 장바구니에 추가하지 못했습니다.`,
             description: "다시 한 번 시도해주세요",
             status: "error",
           });
@@ -351,18 +362,12 @@ export function BoardList() {
 
   // 보드 포맷 확인용 맵
   const cards = Array.from({ length: 8 }, (_, index) => (
-    <Box
-      // p={0}
-      // border="1px solid blue"
-      w={{ base: "100%", lg: "95%", xl: "85%" }}
-      transition="all 1s ease"
-    >
+    <Box w={{ base: "100%", lg: "95%", xl: "85%" }} transition="all 1s ease">
       <Card key={index} p={5} borderRadius={20} shadow="base">
         <CardHeader border="0px dashed blue" position="relative" p={0}>
           <Box
             position="relative"
             overflow="hidden"
-            // border="1px solid yellow"
             paddingBottom="75%" // 4:3 aspect ratio (75% = (3/4) * 100)
             w="full"
           >
@@ -384,7 +389,6 @@ export function BoardList() {
             right={3}
             icon={<FontAwesomeIcon icon={emptyHeart} />}
             zIndex={1}
-            transition="all 1s ease"
           />
         </CardHeader>
         <CardBody>
@@ -400,6 +404,9 @@ export function BoardList() {
             <Avatar name="lg" />
             <Avatar name="xl" />
           </AvatarGroup>
+          <Text textAlign="right" mt={3}>
+            ₩ {(12000).toLocaleString()}
+          </Text>
         </CardBody>
         <CardFooter
           h={10}
@@ -417,19 +424,12 @@ export function BoardList() {
             w="full"
             // onClick={() => handleInCart(board)}
           >
-            Add to Cart
+            카트에 넣기
           </Button>
         </CardFooter>
       </Card>
     </Box>
   ));
-
-  const gridsElement = document.querySelector(".grids");
-
-  animateCSSGrid.wrapGrid(gridsElement, {
-    duration: 600,
-    easing: "linear",
-  });
 
   return (
     <>

@@ -331,7 +331,7 @@ export function NavBar(props) {
                 <>
                   <Button onClick={() => navigate("/signup")}>회원가입</Button>
                   <Button onClick={() => navigate("/login")}>로그인</Button>
-                  <Button onClick={() => navigate("/")}>공지사항</Button>
+                  <Button onClick={() => navigate("/queries")}>공지사항</Button>
                 </>
               )}
             </ButtonGroup>
@@ -369,8 +369,8 @@ export function NavBar(props) {
                 leftIcon={<FontAwesomeIcon icon={faHome} />}
                 {...sharedButtonStyle}
                 onClick={() => {
-                  navigate("/");
                   onClose();
+                  navigate("/");
                 }}
               >
                 홈
@@ -380,8 +380,8 @@ export function NavBar(props) {
                 leftIcon={<FontAwesomeIcon icon={faBell} />}
                 {...sharedButtonStyle}
                 onClick={() => {
-                  navigate("/");
                   onClose();
+                  navigate("/notifications");
                 }}
               >
                 공지사항
@@ -394,8 +394,8 @@ export function NavBar(props) {
                     leftIcon={<FontAwesomeIcon icon={faCreditCard} />}
                     {...sharedButtonStyle}
                     onClick={() => {
-                      navigate("/order");
                       onClose();
+                      navigate("/order");
                     }}
                   >
                     주문하기
@@ -405,8 +405,8 @@ export function NavBar(props) {
                     leftIcon={<FontAwesomeIcon icon={faUserGear} />}
                     {...sharedButtonStyle}
                     onClick={() => {
-                      navigate("/");
                       onClose();
+                      navigate("/accountInfo"); //TODO: 수정
                     }}
                   >
                     계정 정보
@@ -416,8 +416,8 @@ export function NavBar(props) {
                     leftIcon={<FontAwesomeIcon icon={faHeart} />}
                     {...sharedButtonStyle}
                     onClick={() => {
-                      navigate("/");
                       onClose();
+                      navigate("/likeList"); //TODO: 수정
                     }}
                   >
                     찜한 목록
@@ -427,8 +427,8 @@ export function NavBar(props) {
                     leftIcon={<FontAwesomeIcon icon={faScroll} />}
                     {...sharedButtonStyle}
                     onClick={() => {
-                      navigate("/");
                       onClose();
+                      navigate("/orderDetails"); //TODO: 수정
                     }}
                   >
                     주문 내역
@@ -438,8 +438,8 @@ export function NavBar(props) {
                     leftIcon={<FontAwesomeIcon icon={faCircleQuestion} />}
                     {...sharedButtonStyle}
                     onClick={() => {
-                      navigate("/");
                       onClose();
+                      navigate("/queries"); //TODO: 수정
                     }}
                   >
                     문의하기
@@ -466,8 +466,8 @@ export function NavBar(props) {
                     leftIcon={<FontAwesomeIcon icon={faUser} />}
                     {...sharedButtonStyle}
                     onClick={() => {
-                      navigate("/login");
                       onClose();
+                      navigate("/login");
                     }}
                   >
                     로그인
@@ -477,8 +477,8 @@ export function NavBar(props) {
                     leftIcon={<FontAwesomeIcon icon={faUserPlus} />}
                     {...sharedButtonStyle}
                     onClick={() => {
-                      navigate("/signup");
                       onClose();
+                      navigate("/signup");
                     }}
                   >
                     회원 가입
