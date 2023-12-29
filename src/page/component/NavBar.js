@@ -268,7 +268,7 @@ export function NavBar(props) {
         boxShadow="md"
         mt={5}
         mx={{ base: "5%", md: "10%", lg: "15%" }}
-        zIndex={5}
+        zIndex={3}
         transition="all 1s ease"
       >
         <Flex
@@ -302,7 +302,6 @@ export function NavBar(props) {
                 bgColor: "none",
               }}
               borderRadius={20}
-              placeholder="검색"
             />
             <InputLeftElement w="3rem">
               <SearchIcon />
