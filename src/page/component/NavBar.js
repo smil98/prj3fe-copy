@@ -91,10 +91,14 @@ export function NavBar(props) {
   const isSmallScreen = useBreakpointValue({ base: true, md: false });
 
   // Button Style
-  const sharedButtonStyle = {
+  const drawerButtonStyle = {
     textAlign: "left",
     justifyContent: "flex-start",
     _hover: { color: "white", bgColor: "#805AD5" },
+  };
+
+  const fullNavButtonHover = {
+    _hover: { color: "#805AD5" },
   };
 
   function sendRefreshToken() {
@@ -251,6 +255,7 @@ export function NavBar(props) {
         navigate("/");
       });
   }
+
   return (
     <>
       <Flex
@@ -302,11 +307,23 @@ export function NavBar(props) {
               variant="unstyled"
               mr={5}
             >
-              <Button onClick={() => navigate("/")}>홈</Button>
+              <Button {...fullNavButtonHover} onClick={() => navigate("/")}>
+                홈
+              </Button>
               {loggedIn ? (
                 <>
-                  <Button onClick={() => navigate("/order")}>주문하기</Button>
-                  <Button onClick={() => navigate("/logout")}>로그아웃</Button>
+                  <Button
+                    {...fullNavButtonHover}
+                    onClick={() => navigate("/order")}
+                  >
+                    주문하기
+                  </Button>
+                  <Button
+                    {...fullNavButtonHover}
+                    onClick={() => navigate("/logout")}
+                  >
+                    로그아웃
+                  </Button>
                   <Menu>
                     <MenuButton as={Avatar} boxSize={8} />
                     <MenuList>
@@ -329,9 +346,24 @@ export function NavBar(props) {
                 </>
               ) : (
                 <>
-                  <Button onClick={() => navigate("/signup")}>회원가입</Button>
-                  <Button onClick={() => navigate("/login")}>로그인</Button>
-                  <Button onClick={() => navigate("/queries")}>공지사항</Button>
+                  <Button
+                    {...fullNavButtonHover}
+                    onClick={() => navigate("/signup")}
+                  >
+                    회원가입
+                  </Button>
+                  <Button
+                    {...fullNavButtonHover}
+                    onClick={() => navigate("/login")}
+                  >
+                    로그인
+                  </Button>
+                  <Button
+                    {...fullNavButtonHover}
+                    onClick={() => navigate("/queries")}
+                  >
+                    공지사항
+                  </Button>
                 </>
               )}
             </ButtonGroup>
@@ -367,7 +399,7 @@ export function NavBar(props) {
                 borderRadius={0}
                 iconSpacing={5}
                 leftIcon={<FontAwesomeIcon icon={faHome} />}
-                {...sharedButtonStyle}
+                {...drawerButtonStyle}
                 onClick={() => {
                   onClose();
                   navigate("/");
@@ -378,7 +410,7 @@ export function NavBar(props) {
               <Button
                 iconSpacing={6}
                 leftIcon={<FontAwesomeIcon icon={faBell} />}
-                {...sharedButtonStyle}
+                {...drawerButtonStyle}
                 onClick={() => {
                   onClose();
                   navigate("/notifications");
@@ -392,7 +424,7 @@ export function NavBar(props) {
                   <Button
                     iconSpacing={5}
                     leftIcon={<FontAwesomeIcon icon={faCreditCard} />}
-                    {...sharedButtonStyle}
+                    {...drawerButtonStyle}
                     onClick={() => {
                       onClose();
                       navigate("/order");
@@ -403,7 +435,7 @@ export function NavBar(props) {
                   <Button
                     iconSpacing={4}
                     leftIcon={<FontAwesomeIcon icon={faUserGear} />}
-                    {...sharedButtonStyle}
+                    {...drawerButtonStyle}
                     onClick={() => {
                       onClose();
                       navigate("/accountInfo"); //TODO: 수정
@@ -414,7 +446,7 @@ export function NavBar(props) {
                   <Button
                     iconSpacing={5}
                     leftIcon={<FontAwesomeIcon icon={faHeart} />}
-                    {...sharedButtonStyle}
+                    {...drawerButtonStyle}
                     onClick={() => {
                       onClose();
                       navigate("/likeList"); //TODO: 수정
@@ -425,7 +457,7 @@ export function NavBar(props) {
                   <Button
                     iconSpacing={5}
                     leftIcon={<FontAwesomeIcon icon={faScroll} />}
-                    {...sharedButtonStyle}
+                    {...drawerButtonStyle}
                     onClick={() => {
                       onClose();
                       navigate("/orderDetails"); //TODO: 수정
@@ -436,7 +468,7 @@ export function NavBar(props) {
                   <Button
                     iconSpacing={5}
                     leftIcon={<FontAwesomeIcon icon={faCircleQuestion} />}
-                    {...sharedButtonStyle}
+                    {...drawerButtonStyle}
                     onClick={() => {
                       onClose();
                       navigate("/queries"); //TODO: 수정
@@ -449,7 +481,7 @@ export function NavBar(props) {
                     leftIcon={
                       <FontAwesomeIcon icon={faArrowRightFromBracket} />
                     }
-                    {...sharedButtonStyle}
+                    {...drawerButtonStyle}
                     onClick={() => {
                       onClose();
                       navigate("/logout");
@@ -464,7 +496,7 @@ export function NavBar(props) {
                   <Button
                     iconSpacing={6}
                     leftIcon={<FontAwesomeIcon icon={faUser} />}
-                    {...sharedButtonStyle}
+                    {...drawerButtonStyle}
                     onClick={() => {
                       onClose();
                       navigate("/login");
@@ -475,7 +507,7 @@ export function NavBar(props) {
                   <Button
                     iconSpacing={4}
                     leftIcon={<FontAwesomeIcon icon={faUserPlus} />}
-                    {...sharedButtonStyle}
+                    {...drawerButtonStyle}
                     onClick={() => {
                       onClose();
                       navigate("/signup");

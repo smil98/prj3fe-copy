@@ -90,7 +90,7 @@ export const Search = ({ onSearch }) => {
           <Tag
             key={genre}
             borderRadius="full"
-            variant="solid"
+            variant={selectedGenres.includes(genre) ? "solid" : "subtle"}
             colorScheme={selectedGenres.includes(genre) ? "purple" : "gray"}
             onClick={() => handleTagClick(genre)}
           >
