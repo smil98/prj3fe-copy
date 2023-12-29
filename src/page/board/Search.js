@@ -122,11 +122,11 @@ export const Search = ({ onSearch }) => {
             border="1px solid blue"
           >
             <FormControl>
-              <FormLabel>Title:</FormLabel>
+              <FormLabel>제목</FormLabel>
               <Input value={title} onChange={handleTitleChange} />
             </FormControl>
             <FormControl>
-              <FormLabel>Format:</FormLabel>
+              <FormLabel>형태:</FormLabel>
               <Select
                 placeholder="Select a format"
                 value={selectedFormat}
@@ -138,7 +138,7 @@ export const Search = ({ onSearch }) => {
               </Select>
             </FormControl>
             <FormControl>
-              <FormLabel>Genres:</FormLabel>
+              <FormLabel>장르</FormLabel>
               <GenreTags />
               {/*<CheckboxGroup*/}
               {/*  colorScheme="green"*/}
