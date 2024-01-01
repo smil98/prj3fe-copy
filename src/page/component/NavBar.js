@@ -302,6 +302,7 @@ export function NavBar(props) {
                 bgColor: "none",
               }}
               borderRadius={20}
+              placeholder="Find your favorite"
             />
             <InputLeftElement w="3rem">
               <SearchIcon />
@@ -380,6 +381,7 @@ export function NavBar(props) {
                 </>
               ) : (
                 <>
+                  <Box></Box>
                   <Button
                     {...fullNavButtonHover}
                     onClick={() => navigate("/signup")}
@@ -407,7 +409,7 @@ export function NavBar(props) {
             <Tag variant="ghost">
               <Avatar size="sm" ml={-1} mr={3} />
               <TagLabel fontSize="md" fontWeight="bold">
-                환영합니다, nickName님
+                {loggedIn ? "환영합니다, nickName님" : "로그인 해주세요"}
               </TagLabel>
             </Tag>
           </DrawerHeader>

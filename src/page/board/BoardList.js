@@ -14,6 +14,7 @@ import {
   css,
   Flex,
   Heading,
+  Icon,
   IconButton,
   Image,
   Img,
@@ -23,7 +24,13 @@ import {
   SimpleGrid,
   Spacer,
   Spinner,
+  Table,
+  TableContainer,
+  Tbody,
+  Td,
   Text,
+  Thead,
+  Tr,
   useBreakpointValue,
   useToast,
   VStack,
@@ -34,7 +41,9 @@ import {
   faCartPlus,
   faChevronLeft,
   faChevronRight,
+  faGrip,
   faHeart as fullHeart,
+  faList,
   faWonSign,
 } from "@fortawesome/free-solid-svg-icons";
 import { Search } from "./Search";
@@ -169,6 +178,18 @@ export function BoardList() {
     xl: false,
   });
 
+  const gridStyle = {
+    p: 5,
+    borderRadius: "sm",
+    placeItems: "center",
+    templateColumns: isSmallScreen ? "repeat(2, 1fr)" : "repeat(4, 1fr)",
+    gap: 5,
+    transition: "all 1s", // or adjust the duration to your preference
+  };
+
+  //그리드, 리스트 형식 전환용
+  const [isGrid, setIsGrid] = useState(true);
+
   // 2, 1fr <-> 4, 1fr 변동 시 transition 추가
   useEffect(() => {
     const gridsElement = document.querySelector(".grids");
@@ -178,15 +199,6 @@ export function BoardList() {
       easing: "linear",
     });
   }, [0]);
-
-  const gridStyle = {
-    p: 5,
-    borderRadius: "sm",
-    placeItems: "center",
-    templateColumns: isSmallScreen ? "repeat(2, 1fr)" : "repeat(4, 1fr)",
-    gap: 5,
-    transition: "all 1s", // or adjust the duration to your preference
-  };
 
   function sendRefreshToken() {
     const refreshToken = localStorage.getItem("refreshToken");
@@ -367,137 +379,343 @@ export function BoardList() {
 
   //TODO: board.id 통해서 해당 포스트 좋아요한 사람들 이름 가져오는 쿼리문 작성, axios로 List 받아와 여기에 저장
   const likedPeers = ["John", "Jane", "Alice", "Bob", "Charlie", "David"];
+  const items = [
+    {
+      id: 1,
+      urlString:
+        "https://horizon-ui.com/chakra-pro/static/media/Nft4.5fc37877b25c9fb9a52d.png",
+      price: 12000,
+      title: "item.title",
+      artist: "item.artist",
+    },
+    {
+      id: 2,
+      urlString:
+        "https://horizon-ui.com/chakra-pro/static/media/Nft4.5fc37877b25c9fb9a52d.png",
+      price: 12000,
+      title: "item.title",
+      artist: "item.artist",
+    },
+    {
+      id: 3,
+      urlString:
+        "https://horizon-ui.com/chakra-pro/static/media/Nft4.5fc37877b25c9fb9a52d.png",
+      price: 12000,
+      title: "item.title",
+      artist: "item.artist",
+    },
+    {
+      id: 4,
+      urlString:
+        "https://horizon-ui.com/chakra-pro/static/media/Nft4.5fc37877b25c9fb9a52d.png",
+      price: 12000,
+      title: "item.title",
+      artist: "item.artist",
+    },
+    {
+      id: 5,
+      urlString:
+        "https://horizon-ui.com/chakra-pro/static/media/Nft4.5fc37877b25c9fb9a52d.png",
+      price: 12000,
+      title: "item.title",
+      artist: "item.artist",
+    },
+    {
+      id: 6,
+      urlString:
+        "https://horizon-ui.com/chakra-pro/static/media/Nft4.5fc37877b25c9fb9a52d.png",
+      price: 12000,
+      title: "item.title",
+      artist: "item.artist",
+    },
+    {
+      id: 7,
+      urlString:
+        "https://horizon-ui.com/chakra-pro/static/media/Nft4.5fc37877b25c9fb9a52d.png",
+      price: 12000,
+      title: "item.title",
+      artist: "item.artist",
+    },
+    {
+      id: 8,
+      urlString:
+        "https://horizon-ui.com/chakra-pro/static/media/Nft4.5fc37877b25c9fb9a52d.png",
+      price: 12000,
+      title: "item.title",
+      artist: "item.artist",
+    },
+  ];
 
-  // 보드 포맷 확인용 맵
-  const cards = Array.from({ length: 8 }, (_, index) => (
-    <Box w={{ base: "100%", lg: "95%", xl: "85%" }} transition="all 1s ease">
-      <Card key={index} p={5} borderRadius={20} shadow="base">
-        <CardHeader border="0px dashed blue" position="relative" p={0}>
-          <Box
-            position="relative"
-            overflow="hidden"
-            paddingBottom="75%" // 4:3 aspect ratio (75% = (3/4) * 100)
-            w="full"
-          >
-            <Img
-              src="https://horizon-ui.com/chakra-pro/static/media/Nft4.5fc37877b25c9fb9a52d.png"
-              borderRadius={10}
-              objectFit="cover"
-              w="full"
-              h="full"
-              position="absolute"
-              top="0"
-              left="0"
-            />
-          </Box>
-          <IconButton
-            isRound={true}
-            position="absolute"
-            top={3}
-            right={3}
-            icon={<FontAwesomeIcon icon={emptyHeart} />}
-            zIndex={1}
-          />
-        </CardHeader>
-        <CardBody>
-          <Heading size="xs">board.name</Heading>
-          <Text color="gray.600" my={3} fontSize="xs">
-            By board.title
-          </Text>
-          <AvatarGroup size="sm" max={3}>
-            {likedPeers.map((name, index) => (
-              <Avatar key={index} name={name} />
-            ))}
-          </AvatarGroup>
-          <Text textAlign="right" mt={3}>
-            ₩ {(12000).toLocaleString()}
-          </Text>
-        </CardBody>
-        <CardFooter
-          h={10}
-          display="flex"
-          justifyContent="flex-start"
-          alignItems="center"
-          p={0}
+  const TableComponent = ({ items, likedPeers }) => {
+    return (
+      <TableContainer
+        mx={{ md: "5%", lg: "10%" }}
+        p={5}
+        transition="0.5s all ease"
+      >
+        <Table
+          variant="simple"
+          colorScheme="purple"
+          w="full"
+          size={{ base: "sm", md: "md", lg: "lg" }}
+          transition="0.5s all ease"
         >
-          <Button
-            variant="solid"
-            size="sm"
-            colorScheme="purple"
-            leftIcon={<FontAwesomeIcon icon={faCartPlus} />}
-            borderRadius={20}
-            w="full"
-            // onClick={() => handleInCart(board)}
-          >
-            카트에 넣기
-          </Button>
-        </CardFooter>
-      </Card>
-    </Box>
-  ));
+          <Thead>
+            <Tr
+              fontWeight="bold"
+              fontSize={{ base: "sm", md: "md" }}
+              transition="0.5s all ease"
+            >
+              <Td textAlign="center" border="1px solid red">
+                커버
+              </Td>
+              <Td textAlign="center">제목</Td>
+              <Td textAlign="center" border="1px solid red">
+                가수명
+              </Td>
+              <Td textAlign="center">가격</Td>
+              <Td textAlign="center">찜한 사람들</Td>
+              <Td textAlign="center">찜하기</Td>
+              <Td textAlign="center">카트에 넣기</Td>
+            </Tr>
+          </Thead>
+          <Tbody>
+            {items.map((item) => (
+              <Tr key={item.id} textAlign="center">
+                <Td>
+                  <Flex
+                    alignItems="center"
+                    justifyContent="center"
+                    position="relative"
+                    overflow="hidden"
+                    paddingBottom="100%"
+                    w="full"
+                  >
+                    <Img
+                      w="full"
+                      h="full"
+                      borderRadius={10}
+                      position="absolute"
+                      top="0"
+                      left="0"
+                      src={item.urlString}
+                    />
+                  </Flex>
+                </Td>
+                <Td textAlign="center" whiteSpace="normal">
+                  {item.title}
+                </Td>
+                <Td textAlign="center" whiteSpace="normal">
+                  {item.artist}
+                </Td>
+                <Td textAlign="center">₩ {item.price.toLocaleString()}</Td>
+                <Td>
+                  <Flex alignItems="center" justifyContent="center">
+                    <AvatarGroup size="sm" max={isSmallScreen ? 2 : 3}>
+                      {likedPeers.map((name, index) => (
+                        <Avatar key={index} name={name} />
+                      ))}
+                    </AvatarGroup>
+                  </Flex>
+                </Td>
+                <Td>
+                  <Flex alignItems="center" justifyContent="center">
+                    <IconButton
+                      isRound={true}
+                      icon={<FontAwesomeIcon icon={emptyHeart} />}
+                    />
+                  </Flex>
+                </Td>
+                <Td>
+                  <Flex alignItems="center" justifyContent="center">
+                    {isSmallScreen ? (
+                      <IconButton
+                        variant="solid"
+                        size="sm"
+                        colorScheme="purple"
+                        icon={<FontAwesomeIcon icon={faCartPlus} />}
+                      />
+                    ) : (
+                      <Button
+                        variant="solid"
+                        size="sm"
+                        colorScheme="purple"
+                        leftIcon={<FontAwesomeIcon icon={faCartPlus} />}
+                        borderRadius={20}
+                        // onClick={() => handleInCart(board)}
+                      >
+                        {isSmallScreen ? "" : "카트에 넣기"}
+                      </Button>
+                    )}
+                  </Flex>
+                </Td>
+              </Tr>
+            ))}
+          </Tbody>
+        </Table>
+      </TableContainer>
+    );
+  };
 
   return (
     <>
       <Box>
         <Spacer h={120} />
+        <ButtonGroup ml="5%" isAttached mb={5} border="1px solid red">
+          <IconButton
+            aria-label={"grid"}
+            onClick={() => {
+              setIsGrid(true);
+            }}
+            icon={<FontAwesomeIcon icon={faGrip} />}
+            colorScheme={isGrid ? "purple" : "gray"}
+            borderRadius={0}
+          />
+          <IconButton
+            aria-label={"list"}
+            onClick={() => {
+              setIsGrid(false);
+            }}
+            icon={<FontAwesomeIcon icon={faList} />}
+            colorScheme={isGrid ? "gray" : "purple"}
+            borderRadius={0}
+          />
+        </ButtonGroup>
         <Search onSearch={handleSearch} /> {/* 검색 컴포넌트*/}
-        <SimpleGrid {...gridStyle} className="grids">
-          {cards}
-          {/*{boardList.map((board) => (*/}
-          {/*  <Card*/}
-          {/*    key={board.fileUrl}*/}
-          {/*    borderRadius="xl"*/}
-          {/*    w="100%"*/}
-          {/*    h="100%"*/}
-          {/*    variant="outline"*/}
-          {/*    colorScheme="gray"*/}
-          {/*  >*/}
-          {/*    <CardHeader onClick={() => navigate(`/board/${board.id}`)}>*/}
-          {/*      <Center>*/}
-          {/*        {board.fileUrls &&*/}
-          {/*          board.fileUrls.map((url, index) => (*/}
-          {/*            <Image*/}
-          {/*              src={url}*/}
-          {/*              borderRadius="xl"*/}
-          {/*              style={{*/}
-          {/*                width: "200px",*/}
-          {/*                height: "200px",*/}
-          {/*                objectFit: "cover",*/}
-          {/*              }}*/}
-          {/*            />*/}
-          {/*          ))}*/}
-          {/*      </Center>*/}
-          {/*    </CardHeader>*/}
-          {/*    <CardBody onClick={() => navigate(`/board/${board.id}`)}>*/}
-          {/*      <Heading size="md" mb={3}>*/}
-          {/*        {board.title} - {board.artist}*/}
-          {/*      </Heading>*/}
-          {/*      <Heading size="m" textAlign="left">*/}
-          {/*        {board.price.toLocaleString()} 원*/}
-          {/*      </Heading>*/}
-          {/*    </CardBody>*/}
-          {/*    <CardFooter>*/}
-          {/*      <Center>*/}
-          {/*        <ButtonGroup spacing="2">*/}
-          {/*          <IconButton*/}
-          {/*            aria-label="cart"*/}
-          {/*            variant="solid"*/}
-          {/*            colorScheme="pink"*/}
-          {/*            onClick={() => handleInCart(board)}*/}
-          {/*            icon={<FontAwesomeIcon icon={faCartPlus} />}*/}
-          {/*          />*/}
-          {/*          <LikeContainer*/}
-          {/*            loggedIn={loggedIn}*/}
-          {/*            setLoggedIn={setLoggedIn}*/}
-          {/*            boardId={board.id}*/}
-          {/*            sendRefreshToken={sendRefreshToken}*/}
-          {/*          />*/}
-          {/*        </ButtonGroup>*/}
-          {/*      </Center>*/}
-          {/*    </CardFooter>*/}
-          {/*  </Card>*/}
-          {/*))}*/}
-        </SimpleGrid>
+        {isGrid ? (
+          <SimpleGrid {...gridStyle} className="grids">
+            {items.map((item) => (
+              <Box
+                key={item.id}
+                w={{ base: "100%", lg: "95%", xl: "85%" }}
+                transition="1s all ease"
+              >
+                <Card p={5} borderRadius={20} shadow="base">
+                  <CardHeader
+                    border="0px dashed blue"
+                    position="relative"
+                    p={0}
+                  >
+                    <Box
+                      position="relative"
+                      overflow="hidden"
+                      paddingBottom="75%" // 4:3 aspect ratio (75% = (3/4) * 100)
+                      w="full"
+                    >
+                      <Img
+                        src={item.urlString}
+                        borderRadius={10}
+                        objectFit="cover"
+                        w="full"
+                        h="full"
+                        position="absolute"
+                        top="0"
+                        left="0"
+                      />
+                    </Box>
+                    <IconButton
+                      isRound={true}
+                      position="absolute"
+                      top={3}
+                      right={3}
+                      icon={<FontAwesomeIcon icon={emptyHeart} />}
+                      zIndex={1}
+                    />
+                  </CardHeader>
+                  <CardBody>
+                    <Heading size="xs">{item.title}</Heading>
+                    <Text color="gray.600" my={3} fontSize="xs">
+                      By {item.artist}
+                    </Text>
+                    <AvatarGroup size="sm" max={3}>
+                      {likedPeers.map((name, index) => (
+                        <Avatar key={index} name={name} />
+                      ))}
+                    </AvatarGroup>
+                    <Text textAlign="right" mt={3}>
+                      ₩ {item.price.toLocaleString()}
+                    </Text>
+                  </CardBody>
+                  <CardFooter
+                    h={10}
+                    display="flex"
+                    justifyContent="flex-start"
+                    alignItems="center"
+                    p={0}
+                  >
+                    <Button
+                      variant="solid"
+                      size="sm"
+                      colorScheme="purple"
+                      leftIcon={<FontAwesomeIcon icon={faCartPlus} />}
+                      borderRadius={20}
+                      w="full"
+                      // onClick={() => handleInCart(board)}
+                    >
+                      카트에 넣기
+                    </Button>
+                  </CardFooter>
+                </Card>
+                {/*{boardList.map((board) => (*/}
+                {/*  <Card*/}
+                {/*    key={board.fileUrl}*/}
+                {/*    borderRadius="xl"*/}
+                {/*    w="100%"*/}
+                {/*    h="100%"*/}
+                {/*    variant="outline"*/}
+                {/*    colorScheme="gray"*/}
+                {/*  >*/}
+                {/*    <CardHeader onClick={() => navigate(`/board/${board.id}`)}>*/}
+                {/*      <Center>*/}
+                {/*        {board.fileUrls &&*/}
+                {/*          board.fileUrls.map((url, index) => (*/}
+                {/*            <Image*/}
+                {/*              src={url}*/}
+                {/*              borderRadius="xl"*/}
+                {/*              style={{*/}
+                {/*                width: "200px",*/}
+                {/*                height: "200px",*/}
+                {/*                objectFit: "cover",*/}
+                {/*              }}*/}
+                {/*            />*/}
+                {/*          ))}*/}
+                {/*      </Center>*/}
+                {/*    </CardHeader>*/}
+                {/*    <CardBody onClick={() => navigate(`/board/${board.id}`)}>*/}
+                {/*      <Heading size="md" mb={3}>*/}
+                {/*        {board.title} - {board.artist}*/}
+                {/*      </Heading>*/}
+                {/*      <Heading size="m" textAlign="left">*/}
+                {/*        {board.price.toLocaleString()} 원*/}
+                {/*      </Heading>*/}
+                {/*    </CardBody>*/}
+                {/*    <CardFooter>*/}
+                {/*      <Center>*/}
+                {/*        <ButtonGroup spacing="2">*/}
+                {/*          <IconButton*/}
+                {/*            aria-label="cart"*/}
+                {/*            variant="solid"*/}
+                {/*            colorScheme="pink"*/}
+                {/*            onClick={() => handleInCart(board)}*/}
+                {/*            icon={<FontAwesomeIcon icon={faCartPlus} />}*/}
+                {/*          />*/}
+                {/*          <LikeContainer*/}
+                {/*            loggedIn={loggedIn}*/}
+                {/*            setLoggedIn={setLoggedIn}*/}
+                {/*            boardId={board.id}*/}
+                {/*            sendRefreshToken={sendRefreshToken}*/}
+                {/*          />*/}
+                {/*        </ButtonGroup>*/}
+                {/*      </Center>*/}
+                {/*    </CardFooter>*/}
+                {/*  </Card>*/}
+                {/*))}*/}
+              </Box>
+            ))}
+          </SimpleGrid>
+        ) : (
+          <TableComponent items={items} likedPeers={likedPeers} />
+        )}
         {/*-----------------------------------------*/}
         {/*페이지 네이션-------------------------------------------*/}
         <Spacer h={50} />

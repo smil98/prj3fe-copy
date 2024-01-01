@@ -14,6 +14,7 @@ import {
   Heading,
   HStack,
   IconButton,
+  Image,
   Img,
   Input,
   InputGroup,
@@ -36,6 +37,8 @@ import {
   ViewOffIcon,
 } from "@chakra-ui/icons";
 import axios from "axios";
+import { faComment } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export function MemberLogin() {
   const [email, setEmail] = useState("");
@@ -183,14 +186,15 @@ export function MemberLogin() {
             {/* TODO: 소셜 로그인 기능 추가 */}
             <IconButton
               isRound={true}
-              icon={<QuestionIcon />}
+              bgColor="#FEE500"
+              color="#191919"
+              variant="undefined"
+              icon={<FontAwesomeIcon icon={faComment} />}
               onClick={() => handleSocialLogin("KAKAO")}
             />
-            <IconButton
-              isRound={true}
-              icon={<QuestionIcon />}
-              onClick={() => handleSocialLogin("NAVER")}
-            />
+            <Button isRound={true} onClick={() => handleSocialLogin("NAVER")}>
+              <Image src={"/public/naverButton.png"} />
+            </Button>
             <IconButton
               isRound={true}
               icon={<QuestionIcon />}
