@@ -121,6 +121,7 @@ export function NavBar(props) {
         setLoggedIn(false);
       });
   }
+
   useEffect(() => {
     if (localStorage.getItem("accessToken") !== null) {
       console.log(localStorage.getItem("accessToken"));
@@ -139,16 +140,7 @@ export function NavBar(props) {
             console.log("setIsAdmin(true) 동작");
             setIsAdmin(true);
           }
-
-          return axios.get("/isSocialMember", {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("refreshToken")}`,
-            },
-          });
-        })
-        .then((response) => {
-          console.log("isSocialMember = " + response.data);
-          if (response.data) {
+          if (response.data.role === "ROLE_SOCIAL") {
             setIsSocial(true);
           }
         })

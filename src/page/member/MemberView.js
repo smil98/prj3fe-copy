@@ -36,13 +36,13 @@ export function MemberView() {
         console.log("getMember()의 then 실행");
         console.log(response.data);
         setMember(response.data);
-        return axios.get(`/member/${response.data.logId}/orders`, {
-          headers: { Authorization: `Bearer ${accessToken}` },
-        });
+        // return axios.get(`/member/${response.data.logId}/orders`, {
+        //   headers: { Authorization: `Bearer ${accessToken}` },
+        // });
       })
-      .then((response) => {
-        setOrderNames(response.data);
-      })
+      // .then((response) => {
+      //   setOrderNames(response.data);
+      // })
       .catch((error) => {
         if (error.response && error.response.status === 401) {
           console.log("getMember()의 catch 실행");
@@ -64,13 +64,15 @@ export function MemberView() {
         }
       });
   }
+
+  //TODO : 주문 표시하는 것 여기있음
   // 주문 이름들을 표시하는 폼 컨트롤
-  const orderNameControls = orderNames.map((orderName, index) => (
-    <FormControl key={index}>
-      <FormLabel>Order Name {index + 1}</FormLabel>
-      <Input type="text" value={orderName} readOnly />
-    </FormControl>
-  ));
+  // const orderNameControls = orderNames.map((orderName, index) => (
+  //   <FormControl key={index}>
+  //     <FormLabel>Order Name {index + 1}</FormLabel>
+  //     <Input type="text" value={orderName} readOnly />
+  //   </FormControl>
+  // ));
 
   function sendRefreshToken() {
     const refreshToken = localStorage.getItem("refreshToken");
@@ -177,7 +179,6 @@ export function MemberView() {
       <Button colorScheme="red" onClick={onOpen}>
         탈퇴
       </Button>
-      {orderNameControls}
 
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />

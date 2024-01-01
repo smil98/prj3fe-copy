@@ -50,18 +50,6 @@ export function MemberLogin() {
   const toast = useToast();
   const navigate = useNavigate();
 
-  // useEffect(() => {
-  //   const fetchImagePrefix = async () => {
-  //     try {
-  //       const response = await axios.get("/api/login/image");
-  //       setImagePrefix(response.data);
-  //     } catch (error) {
-  //       console.error("error fetching image prefix", error);
-  //     }
-  //   };
-  //   fetchImagePrefix();
-  // }, []);
-
   function handleLogin() {
     axios
       .post("/login", { email, password })
@@ -76,7 +64,7 @@ export function MemberLogin() {
       })
       .catch(() => {
         toast({
-          description: "아이디나 비밀번호가 틀렸습니다.",
+          description: "이메일 혹은 비밀번호가 틀렸습니다.",
           status: "error",
         });
       });

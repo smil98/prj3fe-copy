@@ -7,9 +7,7 @@ import {
   CardBody,
   CardFooter,
   CardHeader,
-  Center,
   Divider,
-  Flex,
   FormControl,
   FormErrorMessage,
   FormLabel,
@@ -21,23 +19,17 @@ import {
   InputGroup,
   InputLeftElement,
   InputRightElement,
-  MenuItemOption,
-  Radio,
-  RadioGroup,
-  Select,
   Spacer,
   Stack,
   Text,
   Tooltip,
   useToast,
-  Wrap,
-  WrapItem,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faComment, faInfo, faUser } from "@fortawesome/free-solid-svg-icons";
+import { faComment, faUser } from "@fortawesome/free-solid-svg-icons";
 import {
   CalendarIcon,
   CheckCircleIcon,
@@ -53,7 +45,6 @@ import axios from "axios";
 import { handleSocialLogin } from "../component/authUtils";
 
 export function MemberSignup() {
-  const [logId, setLogId] = useState("");
   const [password, setPassword] = useState("");
   const [rePassword, setRePassword] = useState("");
   const [email, setEmail] = useState("");
@@ -121,34 +112,36 @@ export function MemberSignup() {
   function handleEmailCheck() {
     setEmailButtonClicked(true);
 
-    const params = new URLSearchParams();
-    params.set("email", encodeURIComponent(email));
+    console.log("Before Axios request");
+
     axios
-      .get("/member/check", {
-        params: params,
-      })
+      .get("/member/check?email=" + email)
       .then(() => {
         setEmailValid(false);
       })
       .catch((error) => {
         if (error.response.status === 404) {
           setEmailValid(true);
+        } else if (error.response.status === 431) {
+          console.log("Header too large again?");
         } else {
           setEmailValid(false);
         }
       })
       .finally(() => {
+        console.log("axios request finished");
         setEmailChecked(emailButtonClicked && emailValid);
       });
   }
 
   function handleNickNameCheck() {
     setNickNameButtonClicked(true);
-    const params = new URLSearchParams();
-    params.set("email", email);
+
     axios
       .get("/member/check", {
-        params: params,
+        params: {
+          nickName: nickName,
+        },
       })
       .then(() => {
         setNickNameValid(false);
@@ -411,7 +404,7 @@ export function MemberSignup() {
                   borderRightRadius={0}
                   borderRightWidth={0}
                   w="33%"
-                  colorScheme={gender == "Male" ? "purple" : "gray"}
+                  colorScheme={gender === "Male" ? "purple" : "gray"}
                   variant="solid"
                   value="Male"
                   _focus={{ boxShadow: "none", outline: "none" }}
@@ -423,7 +416,7 @@ export function MemberSignup() {
                   borderTopRadius={0}
                   borderBottomRadius={0}
                   w="33%"
-                  colorScheme={gender == "Female" ? "purple" : "gray"}
+                  colorScheme={gender === "Female" ? "purple" : "gray"}
                   variant="solid"
                   _focus={{ boxShadow: "none", outline: "none" }}
                   onClick={() => handleGenderChange("Female")}
@@ -435,7 +428,7 @@ export function MemberSignup() {
                   borderLeftWidth={0}
                   borderRightRadius={20}
                   w="33%"
-                  colorScheme={gender == "Unidentified" ? "purple" : "gray"}
+                  colorScheme={gender === "Unidentified" ? "purple" : "gray"}
                   variant="solid"
                   value="Unidentified"
                   _focus={{ boxShadow: "none", outline: "none" }}
