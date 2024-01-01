@@ -39,6 +39,7 @@ import {
 import axios from "axios";
 import { faComment } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { handleSocialLogin } from "../component/authUtils";
 
 export function MemberLogin() {
   const [email, setEmail] = useState("");
@@ -80,21 +81,6 @@ export function MemberLogin() {
         });
       });
   }
-
-  // if (imagePrefix === "") {
-  //   return <Spinner />;
-  // }
-
-  const handleSocialLogin = (socialLoginType) => {
-    axios
-      .get(`/api/auth/${socialLoginType}`)
-      .then((response) => {
-        console.log(response.data);
-        window.location.href = response.data;
-      })
-      .catch((error) => console.log(error))
-      .finally(() => console.log(`${socialLoginType} 로그인`));
-  };
 
   return (
     <>
@@ -183,7 +169,6 @@ export function MemberLogin() {
             spacing="4rem"
             justifyContent="center"
           >
-            {/* TODO: 소셜 로그인 기능 추가 */}
             <IconButton
               isRound={true}
               bgColor="#FEE500"
@@ -192,14 +177,20 @@ export function MemberLogin() {
               icon={<FontAwesomeIcon icon={faComment} />}
               onClick={() => handleSocialLogin("KAKAO")}
             />
-            <Button isRound={true} onClick={() => handleSocialLogin("NAVER")}>
-              <Image src={"/public/naverButton.png"} />
-            </Button>
             <IconButton
               isRound={true}
-              icon={<QuestionIcon />}
+              vairant="undefined"
+              onClick={() => handleSocialLogin("NAVER")}
+            >
+              <Image src="/naverButton.png" boxSize="100%" objectFit="fit" />
+            </IconButton>
+            <IconButton
+              isRound={true}
+              variant="undefined"
               onClick={() => handleSocialLogin("GOOGLE")}
-            />
+            >
+              <Image src="/googleButton.png" boxSize="100%" objectFit="fit" />
+            </IconButton>
           </ButtonGroup>
         </CardBody>
         <CardFooter display="flex" justifyContent="center">

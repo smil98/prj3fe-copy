@@ -464,15 +464,11 @@ export function BoardList() {
             <Tr
               fontWeight="bold"
               fontSize={{ base: "sm", md: "md" }}
-              transition="0.5s all ease"
+              color="#805AD5"
             >
-              <Td textAlign="center" border="1px solid red">
-                커버
-              </Td>
+              <Td textAlign="center">커버</Td>
               <Td textAlign="center">제목</Td>
-              <Td textAlign="center" border="1px solid red">
-                가수명
-              </Td>
+              <Td textAlign="center">가수명</Td>
               <Td textAlign="center">가격</Td>
               <Td textAlign="center">찜한 사람들</Td>
               <Td textAlign="center">찜하기</Td>
@@ -561,7 +557,7 @@ export function BoardList() {
     <>
       <Box>
         <Spacer h={120} />
-        <ButtonGroup ml="5%" isAttached mb={5} border="1px solid red">
+        <ButtonGroup ml="5%" isAttached mb={5}>
           <IconButton
             aria-label={"grid"}
             onClick={() => {

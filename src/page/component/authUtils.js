@@ -1,5 +1,16 @@
 import axios from "axios";
 
+export const handleSocialLogin = (socialLoginType) => {
+  axios
+    .get(`/api/auth/${socialLoginType}`)
+    .then((response) => {
+      console.log(response.data);
+      window.location.href = response.data;
+    })
+    .catch((error) => console.log(error))
+    .finally(() => console.log(`${socialLoginType} 로그인`));
+};
+
 export const startSocialLoginTimer = async (
   accessTokenExpiry,
   refreshThreshold,

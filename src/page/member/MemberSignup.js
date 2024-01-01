@@ -16,6 +16,7 @@ import {
   Heading,
   HStack,
   IconButton,
+  Image,
   Input,
   InputGroup,
   InputLeftElement,
@@ -36,7 +37,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faInfo, faUser } from "@fortawesome/free-solid-svg-icons";
+import { faComment, faInfo, faUser } from "@fortawesome/free-solid-svg-icons";
 import {
   CalendarIcon,
   CheckCircleIcon,
@@ -49,6 +50,7 @@ import {
   WarningTwoIcon,
 } from "@chakra-ui/icons";
 import axios from "axios";
+import { handleSocialLogin } from "../component/authUtils";
 
 export function MemberSignup() {
   const [logId, setLogId] = useState("");
@@ -142,9 +144,11 @@ export function MemberSignup() {
 
   function handleNickNameCheck() {
     setNickNameButtonClicked(true);
+    const params = new URLSearchParams();
+    params.set("email", email);
     axios
       .get("/member/check", {
-        email,
+        params: params,
       })
       .then(() => {
         setNickNameValid(false);
@@ -160,31 +164,6 @@ export function MemberSignup() {
         setNickNameChecked(nickNameButtonClicked && nickNameValid);
       });
   }
-
-  // function handleIdCheck() {
-  //   const params = new URLSearchParams();
-  //   params.set("logId", logId);
-  //   axios
-  //     .get("/member/check", {
-  //       params: params,
-  //     })
-  //     .then(() => {
-  //       setIdValid(false);
-  //       toast({
-  //         description: "이미 사용 중인 Id입니다.",
-  //         status: "warning",
-  //       });
-  //     })
-  //     .catch((error) => {
-  //       if (error.response.status === 404) {
-  //         setIdValid(true);
-  //         toast({
-  //           description: "사용 가능한 Id입니다.",
-  //           status: "success",
-  //         });
-  //       }
-  //     });
-  // }
 
   const handleGenderChange = (value) => {
     setGender(value);
@@ -499,22 +478,28 @@ export function MemberSignup() {
             spacing="4rem"
             justifyContent="center"
           >
-            {/* TODO: 소셜 로그인 기능 추가 */}
             <IconButton
               isRound={true}
-              icon={<QuestionIcon />}
-              // onClick={() => handleSocialLogin("KAKAO")}
+              bgColor="#FEE500"
+              color="#191919"
+              variant="undefined"
+              icon={<FontAwesomeIcon icon={faComment} />}
+              onClick={() => handleSocialLogin("KAKAO")}
             />
             <IconButton
               isRound={true}
-              icon={<QuestionIcon />}
-              // onClick={() => handleSocialLogin("NAVER")}
-            />
+              vairant="undefined"
+              onClick={() => handleSocialLogin("NAVER")}
+            >
+              <Image src="/naverButton.png" boxSize="100%" objectFit="fit" />
+            </IconButton>
             <IconButton
               isRound={true}
-              icon={<QuestionIcon />}
-              // onClick={() => handleSocialLogin("GOOGLE")}
-            />
+              variant="undefined"
+              onClick={() => handleSocialLogin("GOOGLE")}
+            >
+              <Image src="/googleButton.png" boxSize="100%" objectFit="fit" />
+            </IconButton>
           </ButtonGroup>
         </CardBody>
         <CardFooter display="flex" justifyContent="center">
