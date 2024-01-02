@@ -50,7 +50,7 @@ export function MemberSignup() {
   const [email, setEmail] = useState("");
   const [nickName, setNickName] = useState("");
   const [gender, setGender] = useState("Unidentified");
-  const [birthDate, setBirthDate] = useState("");
+  const [age, setAge] = useState("");
   const [role, setRole] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
@@ -76,7 +76,7 @@ export function MemberSignup() {
         email,
         password,
         nickName,
-        birthDate: parseInt(birthDate, 10),
+        age,
         gender,
       })
       .then(() => {
@@ -370,19 +370,18 @@ export function MemberSignup() {
               )}
             </FormControl>
             <FormControl>
-              <FormLabel htmlFor="birth-date">생년월일</FormLabel>
+              <FormLabel htmlFor="birth-date">나이</FormLabel>
               <InputGroup>
                 <InputLeftElement w="3rem">
                   <CalendarIcon color="gray.300" />
                 </InputLeftElement>
                 <Input
-                  id="birth-date"
-                  type="text"
-                  placeholder="YYMMDD"
-                  maxLength={6}
+                  type="number"
+                  placeholder="나이"
+                  min={14}
                   borderRadius={20}
-                  value={birthDate}
-                  onChange={(e) => setBirthDate(e.target.value)}
+                  value={age}
+                  onChange={(e) => setAge(e.target.value)}
                 />
               </InputGroup>
             </FormControl>
