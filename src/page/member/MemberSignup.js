@@ -29,7 +29,11 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faComment, faUser } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCakeCandles,
+  faComment,
+  faUser,
+} from "@fortawesome/free-solid-svg-icons";
 import {
   CalendarIcon,
   CheckCircleIcon,
@@ -373,11 +377,11 @@ export function MemberSignup() {
               <FormLabel htmlFor="birth-date">나이</FormLabel>
               <InputGroup>
                 <InputLeftElement w="3rem">
-                  <CalendarIcon color="gray.300" />
+                  <FontAwesomeIcon icon={faCakeCandles} color="#CBD5E0" />
                 </InputLeftElement>
                 <Input
                   type="number"
-                  placeholder="나이"
+                  placeholder="14살 이상만 가입 가능합니다"
                   min={14}
                   borderRadius={20}
                   value={age}
