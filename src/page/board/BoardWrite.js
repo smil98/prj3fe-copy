@@ -19,6 +19,9 @@ import {
   InputRightAddon,
   useToast,
   Textarea,
+  Spacer,
+  InputRightElement,
+  InputLeftElement,
 } from "@chakra-ui/react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -123,12 +126,16 @@ export function BoardWrite() {
     }
   }
   return (
-    <Center>
-      <Card w={"lg"}>
+    <>
+      <Spacer h={120} />
+      <Card
+        p={8}
+        mx={{ base: "5%", md: "10%", lg: "15%" }}
+        transition="1s all ease"
+      >
         <CardHeader>
           <Heading>앨범 등록</Heading>
         </CardHeader>
-
         <CardBody>
           <FormControl mb={5}>
             <FormLabel>앨범 이미지</FormLabel>
@@ -139,13 +146,13 @@ export function BoardWrite() {
               onChange={(e) => setUploadFiles(e.target.files)}
               placeholder="이미지 url을 입력하세요"
             ></Input>
-            <FormHelperText color="red">
+            <FormHelperText color="#805AD5">
               한 개 파일은 1MB 이내, 총 용량은 10MB 이내로 첨부 가능합니다.
             </FormHelperText>
           </FormControl>
 
           <FormControl mb={5}>
-            <FormLabel>Album Title</FormLabel>
+            <FormLabel>앨범명</FormLabel>
             <Input
               value={title}
               placeholder="등록하려는 앨범의 이름을 입력해주세요"
@@ -154,25 +161,29 @@ export function BoardWrite() {
           </FormControl>
           {/*================================*/}
           <FormControl mb={5}>
-            <FormLabel>Artist</FormLabel>
-            <Input value={artist} onChange={(e) => setArtist(e.target.value)} />
+            <FormLabel>가수</FormLabel>
+            <Input
+              value={artist}
+              placeholder="가수명을 입력해주세요"
+              onChange={(e) => setArtist(e.target.value)}
+            />
           </FormControl>
           {/*======================================*/}
           <FormControl mb={5}>
-            <FormLabel>Album Introduction</FormLabel>
+            <FormLabel>음반 소개</FormLabel>
             <Textarea
               value={content}
               onChange={(e) => setContent(e.target.value)}
-              placeholder="음반 소개 글을 입력해주세요"
+              placeholder="음반 소개를 입력해주세요"
             />
           </FormControl>
           {/* 앨범 포맷 입력란 */}
           <FormControl mt={4}>
-            <FormLabel>Album Format</FormLabel>
+            <FormLabel>형태</FormLabel>
             <Select
               value={albumFormat}
               onChange={(e) => setAlbumFormat(e.target.value)}
-              placeholder="앨범 포맷을 선택하세요"
+              placeholder="앨범 형태를 선택하세요"
             >
               <option value="CD">CD</option>
               <option value="VINYL">VINYL</option>
@@ -181,7 +192,7 @@ export function BoardWrite() {
           </FormControl>
 
           <FormControl mb={5}>
-            <FormLabel>Genres</FormLabel>
+            <FormLabel>장르</FormLabel>
             <CheckboxGroup
               value={albumDetails}
               onChange={(selectedAlbumGenres) =>
@@ -199,7 +210,7 @@ export function BoardWrite() {
 
           {/* 릴리스 날짜 입력란 */}
           <FormControl mt={4}>
-            <FormLabel>Release Date</FormLabel>
+            <FormLabel>발매일</FormLabel>
             <Input
               type="date"
               value={releaseDate}
@@ -209,7 +220,7 @@ export function BoardWrite() {
 
           {/*발매사 입력란 */}
           <FormControl mt={4}>
-            <FormLabel>Agency</FormLabel>
+            <FormLabel>음반사</FormLabel>
             <Input
               value={agency}
               onChange={(e) => setAgency(e.target.value)}
@@ -224,22 +235,24 @@ export function BoardWrite() {
               value={stockQuantity}
               onChange={(e) => setStockQuantity(e.target.value)}
               min="0"
-              placeholder="기본 재고는 80입니다. 80으로 설정해주세요"
+              placeholder="재고를 입력해주세요"
             />
           </FormControl>
 
           {/*사용한 가격 입력 폼*/}
           <FormControl mb={5}>
-            <FormLabel>Price</FormLabel>
+            <FormLabel>가격</FormLabel>
             <InputGroup>
-              <InputRightAddon children="₩" />
               <Input
                 value={price}
                 onChange={(e) => setPrice(e.target.value)}
                 type="number"
                 min="0"
-                placeholder="xx,000원으로 끝나도록 입력해주세요"
+                placeholder="가격만 입력해주세요 (Ex. 18000)"
               />
+              <InputLeftElement pointerEvents="none" w="3rem">
+                ₩
+              </InputLeftElement>
             </InputGroup>
           </FormControl>
         </CardBody>
@@ -247,12 +260,13 @@ export function BoardWrite() {
           <Button
             isDisabled={isSubmitting}
             onClick={handleSubmit}
-            colorScheme="pink"
+            colorScheme="purple"
+            w="full"
           >
             저장
           </Button>
         </CardFooter>
       </Card>
-    </Center>
+    </>
   );
 }
