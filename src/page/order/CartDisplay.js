@@ -119,7 +119,7 @@ export function CartDisplay({
   };
 
   return (
-    <Card>
+    <Card mx={{ base: "5%", md: "10%", lg: "15%" }} transition="1s all ease">
       <CardHeader>
         <Heading size="md">
           <FontAwesomeIcon icon={faList} /> {orderName}
@@ -172,7 +172,12 @@ export function CartDisplay({
             >
               <AbsoluteCenter mx="auto">
                 <FontAwesomeIcon icon={faShoppingCart} size="5x" color="grey" />
-                <Heading color="grey" size="md" mt="4">
+                <Heading
+                  color="grey"
+                  size={{ base: "sm", md: "md" }}
+                  mt="4"
+                  transition="0.5s all ease"
+                >
                   주문하신 상품이 없습니다
                 </Heading>
               </AbsoluteCenter>

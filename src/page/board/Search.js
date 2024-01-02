@@ -16,6 +16,8 @@ import {
   Tag,
   TagLabel,
   TagCloseButton,
+  Text,
+  HStack,
 } from "@chakra-ui/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
@@ -153,7 +155,7 @@ export const Search = ({ onSearch }) => {
               {/*  </Stack>*/}
               {/*</CheckboxGroup>*/}
             </FormControl>
-            <Flex gap={4}>
+            <Flex direction="row" align="center" gap={4}>
               <FormControl>
                 <FormLabel>최소 금액:</FormLabel>
                 <Input
@@ -162,6 +164,7 @@ export const Search = ({ onSearch }) => {
                   onChange={handleMinPriceChange}
                 />
               </FormControl>
+              <Text mt={8}>~</Text>
               <FormControl>
                 <FormLabel>최대 금액:</FormLabel>
                 <Input

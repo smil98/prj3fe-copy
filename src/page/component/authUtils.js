@@ -15,11 +15,7 @@ export const handleSocialLogin = (socialLoginType) => {
     .finally(() => console.log(`${socialLoginType} 로그인`));
 };
 
-export const PostCode = () => {
-  const [postCode, setPostCode] = useState("");
-  const [detailedAddress, setDetailedAddress] = useState("");
-  const [address, setAddress] = useState("");
-
+export const PostCode = ({ setPostCode, setAddress }) => {
   const open = useDaumPostcodePopup(postcodeScriptUrl);
 
   const handleComplete = (data) => {
@@ -42,7 +38,6 @@ export const PostCode = () => {
     }
     console.log("fullAddress: " + fullAddress);
     setAddress(fullAddress);
-    console.log("우편번호 :" + postCode);
   };
 
   const handleClick = async () => {

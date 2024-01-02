@@ -10,6 +10,7 @@ import {
   HStack,
   Input,
   Select,
+  Spacer,
   Stack,
   Text,
   useToast,
@@ -187,8 +188,13 @@ export function OrderWrite() {
   };
 
   return (
-    <div>
-      <Heading my={3} ml={5}>
+    <>
+      <Spacer h={120} />
+      <Heading
+        my={3}
+        mx={{ base: "5%", md: "10%", lg: "15%" }}
+        transition="1s all ease"
+      >
         주문 페이지
       </Heading>
       <CartDisplay
@@ -199,7 +205,11 @@ export function OrderWrite() {
         fetchList={fetchList}
         toast={toast}
       />
-      <Card my={5}>
+      <Card
+        my={5}
+        mx={{ base: "5%", md: "10%", lg: "15%" }}
+        transition="1s all ease"
+      >
         <CardHeader>
           <Heading size="md">
             <FontAwesomeIcon icon={faPenToSquare} mr={3} /> 주문 정보 입력
@@ -208,23 +218,21 @@ export function OrderWrite() {
         <CardBody>
           <Stack spacing={5}>
             <HStack>
-              <Text w="15%" fontWeight="bold">
+              <Text fontWeight="bold" w="50px">
                 이름
               </Text>
               <Input
                 type="text"
-                w="88%"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="이름"
               />
             </HStack>
             <HStack>
-              <Text w="15%" fontWeight="bold">
+              <Text fontWeight="bold" w="115px">
                 이메일
               </Text>
               <Input
-                w="50%"
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -234,7 +242,6 @@ export function OrderWrite() {
                 @
               </Text>
               <Select
-                w="32%"
                 value={emailType}
                 onChange={(e) => {
                   if (e.target.value !== "custom") {
@@ -279,7 +286,7 @@ export function OrderWrite() {
                 readOnly
                 value={postCode}
               />
-              <PostCode />
+              <PostCode setPostCode={setPostCode} setAddress={setAddress} />
             </HStack>
             <Input type="text" value={address} readOnly placeholder="주소" />
             <Input
@@ -294,12 +301,22 @@ export function OrderWrite() {
           </Stack>
         </CardBody>
         <CardFooter style={{ display: "flex", justifyContent: "center" }}>
-          <Button colorScheme={"purple"} onClick={handleSubmit} mr={2}>
+          <Button
+            w={{ base: "45%", md: "35%", xl: "20%" }}
+            mr={2}
+            onClick={() => navigate(-1)}
+          >
+            취소
+          </Button>
+          <Button
+            w={{ base: "45%", md: "35%", xl: "20%" }}
+            colorScheme={"purple"}
+            onClick={handleSubmit}
+          >
             주문하기
           </Button>
-          <Button onClick={() => navigate(-1)}>취소</Button>
         </CardFooter>
       </Card>
-    </div>
+    </>
   );
 }

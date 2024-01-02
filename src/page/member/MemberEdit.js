@@ -71,7 +71,7 @@ export function MemberEdit() {
   const [postCode, setPostCode] = useState("");
   const [detailedAddress, setDetailedAddress] = useState("");
 
-  const [gender, setGender] = useState("");
+  const [gender, setGender] = useState("Unidentified");
   const [age, setAge] = useState(0);
 
   const [nickNameValid, setNickNameValid] = useState(false);
@@ -83,7 +83,7 @@ export function MemberEdit() {
   const [showPassword, setShowPassword] = useState(false);
   const [passwordErrorMessage, setPasswordErrorMessage] = useState("");
 
-  let updateData;
+  let updateData = {};
 
   // 멤버 불러오기
   useEffect(() => {
@@ -417,7 +417,7 @@ export function MemberEdit() {
                   readOnly
                   value={postCode}
                 />
-                <PostCode />
+                <PostCode setPostCode={setPostCode} setAddress={setAddress} />
               </HStack>
               <Input type="text" value={address} readOnly placeholder="주소" />
               <Input

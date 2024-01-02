@@ -157,18 +157,19 @@ export function MemberView() {
     color: "#805AD5",
     fontWeight: "bold",
     my: 3,
+    mx: 4,
   };
 
   return (
     <>
       <Spacer h={120} />
       <Card mx={{ base: "5%", md: "10%", lg: "15%" }} transition="1s all ease">
-        <CardHeader p={8}>
+        <CardHeader pt={8} px={8}>
           <Heading display="flex" transition="1s all ease">
             <Text color="#805AD5">{member.nickName}</Text>님 정보
           </Heading>
         </CardHeader>
-        <CardBody px={10}>
+        <CardBody px={5}>
           <FormControl>
             <FormLabel {...labelStyles}>닉네임</FormLabel>
             <Input value={member.nickName} variant="undefined" readOnly />
