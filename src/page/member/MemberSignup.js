@@ -148,7 +148,7 @@ export function MemberSignup() {
       })
       .catch((error) => {
         if (error.response.status === 404) {
-          setEmailValid(true);
+          setNickNameValid(true);
         } else {
           setNickNameValid(false);
         }
