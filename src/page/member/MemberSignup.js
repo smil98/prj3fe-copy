@@ -131,6 +131,7 @@ export function MemberSignup() {
       .finally(() => {
         console.log("axios request finished");
         setEmailChecked(emailButtonClicked && emailValid);
+        console.log(emailChecked);
       });
   }
 
@@ -155,6 +156,7 @@ export function MemberSignup() {
       })
       .finally(() => {
         setNickNameChecked(nickNameButtonClicked && nickNameValid);
+        console.log(nickNameChecked);
       });
   }
 
@@ -259,7 +261,7 @@ export function MemberSignup() {
                 <>
                   {emailValid ? (
                     <Text color="green.500" fontSize="sm" mt={2}>
-                      <CheckCircleIcon /> 사용 가능한 이메일입니다
+                      <CheckCircleIcon mb={1} /> 사용 가능한 이메일입니다
                     </Text>
                   ) : (
                     <Text color="red.500" fontSize="sm" mt={2}>
@@ -369,7 +371,7 @@ export function MemberSignup() {
                 <>
                   {nickNameValid ? (
                     <Text color="green.500" fontSize="sm" mt={2}>
-                      <CheckCircleIcon /> 사용 가능한 닉네임입니다
+                      <CheckCircleIcon mb={1} /> 사용 가능한 닉네임입니다
                     </Text>
                   ) : (
                     <Text color="red.500" fontSize="sm" mt={2}>
@@ -497,7 +499,7 @@ export function MemberSignup() {
         </CardBody>
         <CardFooter display="flex" justifyContent="center">
           <Button
-            isDisabled={!(emailChecked && nickNameChecked && passwordValid)}
+            isDisabled={!(emailChecked && nickNameChecked && passwordChecked)}
             onClick={handleSubmit}
             colorScheme="purple"
             w="full"
