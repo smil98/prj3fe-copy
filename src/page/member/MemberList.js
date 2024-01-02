@@ -6,8 +6,10 @@ import {
   Flex,
   Input,
   Select,
+  Spacer,
   Spinner,
   Table,
+  TableContainer,
   Tbody,
   Td,
   Th,
@@ -95,6 +97,25 @@ export function MemberList() {
     setCurrentPage((prev) => Math.min(prev + 1, totalPages - 1));
   }
 
+  const mapGenderToAbbreviation = (gender) => {
+    const genderMappings = {
+      Female: "F",
+      Male: "M",
+      Unidentified: "X",
+    };
+
+    return genderMappings[gender] || gender; // Default to the original value if not found
+  };
+
+  const formattedDate = (joinDate) => {
+    const date = new Date(joinDate);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0"); // Adding 1 because months are zero-based
+    const day = String(date.getDate()).padStart(2, "0");
+
+    return `${year}/${month}/${day}`;
+  };
+
   // 페이지 번호 버튼 생성
   const pageButtons = [];
   for (let i = 0; i < totalPages; i++) {
@@ -102,47 +123,56 @@ export function MemberList() {
       <Button
         key={i}
         onClick={() => setCurrentPage(i)}
-        colorScheme={i === currentPage ? "blue" : "gray"}
+        colorScheme={i === currentPage ? "purple" : "gray"}
       >
         {i + 1}
       </Button>,
     );
   }
   return (
-    <Box>
-      <Table>
-        <Thead>
-          <Tr>
-            <Th>logId</Th>
-            <Th>name</Th>
-            <Th>email</Th>
-            <Th>address</Th>
-            <Th>age</Th>
-            <Th>gender</Th>
-            <Th>role</Th>
-            <Th>joinDate</Th>
-          </Tr>
-        </Thead>
-        <Tbody>
-          {list.map((member) => (
-            <Tr
-              _hover={{ cursor: "pointer" }}
-              key={member.logId}
-              // onClick={() => handleTableRowClick(member.logId)}
-            >
-              <Td>{member.logId}</Td>
-              <Td>{member.name}</Td>
-              <Td>{member.email}</Td>
-              <Td>{member.address}</Td>
-              <Td>{member.age}</Td>
-              <Td>{member.gender}</Td>
-              <Td>{member.role}</Td>
-              <Td>{member.joinDate}</Td>
+    <>
+      <Spacer h={120} />
+      <TableContainer
+        mx={{ md: "5%", lg: "10%" }}
+        p={5}
+        transition="0.5s all ease"
+      >
+        <Table
+          w="full"
+          size={{ base: "sm", md: "md", lg: "lg" }}
+          transition="0.5s all ease"
+        >
+          <Thead>
+            <Tr>
+              <Th>닉네임</Th>
+              <Th>이메일</Th>
+              <Th>주소</Th>
+              <Th>나이</Th>
+              <Th>성별</Th>
+              <Th>등급</Th>
+              <Th>가입 날짜</Th>
             </Tr>
-          ))}
-        </Tbody>
-      </Table>
-      <Center>
+          </Thead>
+          <Tbody>
+            {list.map((member) => (
+              <Tr
+                _hover={{ cursor: "pointer" }}
+                key={member.logId}
+                // onClick={() => handleTableRowClick(member.logId)}
+              >
+                <Td>{member.nickName}</Td>
+                <Td>{member.email}</Td>
+                <Td>{member.address}</Td>
+                <Td>{member.age}</Td>
+                <Td>{mapGenderToAbbreviation(member.gender)}</Td>
+                <Td>{member.role}</Td>
+                <Td>{formattedDate(member.joinDate)}</Td>
+              </Tr>
+            ))}
+          </Tbody>
+        </Table>
+      </TableContainer>
+      <Center mb={10}>
         <SearchComponent />
       </Center>
       <Center>
@@ -159,6 +189,6 @@ export function MemberList() {
           </Button>
         </ButtonGroup>
       </Center>
-    </Box>
+    </>
   );
 }

@@ -195,10 +195,6 @@ export function MemberSignup() {
     setNickNameValid(false);
   }, [nickName]);
 
-  console.log("passwordChecked", passwordChecked);
-  console.log("nickNameChecked", nickNameChecked);
-  console.log("emailChecked", emailChecked);
-
   return (
     <Box>
       <Spacer h={120} />

@@ -24,6 +24,7 @@ import { faPenToSquare } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 import { useDaumPostcodePopup } from "react-daum-postcode";
 import { postcodeScriptUrl } from "react-daum-postcode/lib/loadPostcode";
+import { PostCode } from "../component/authUtils";
 
 export function OrderWrite() {
   const [name, setName] = useState("");
@@ -183,47 +184,6 @@ export function OrderWrite() {
     } catch (error) {
       console.error("결제 요청 실패:", error);
     }
-  };
-
-  const PostCode = () => {
-    const open = useDaumPostcodePopup(postcodeScriptUrl);
-
-    const handleComplete = (data) => {
-      console.log("받은 데이터: " + data);
-      setPostCode(data.zonecode);
-      let fullAddress = data.address;
-      let extraAddress = "";
-
-      console.log("데이터 addressType에 따라 주소 저장 시작");
-
-      if (data.addressType === "R") {
-        if (data.bname !== "") {
-          extraAddress += data.bname;
-        }
-        if (data.buildingName !== "") {
-          extraAddress +=
-            extraAddress !== "" ? `, ${data.buildingName}` : data.buildingName;
-        }
-        fullAddress += extraAddress !== "" ? `(${extraAddress})` : "";
-      }
-      console.log("fullAddress: " + fullAddress);
-      setAddress(fullAddress);
-      console.log("우편번호 :" + postCode);
-    };
-
-    const handleClick = async () => {
-      try {
-        console.log("handleClick 시작");
-        await open({ onComplete: handleComplete });
-      } catch (error) {
-        console.log("에러 발생");
-        console.log(error.response.data);
-      } finally {
-        console.log("종료");
-      }
-    };
-
-    return <Button onClick={handleClick}>우편번호 찾기</Button>;
   };
 
   return (

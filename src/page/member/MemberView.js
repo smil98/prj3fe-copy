@@ -1,6 +1,10 @@
 import {
   Box,
   Button,
+  Card,
+  CardBody,
+  CardFooter,
+  CardHeader,
   FormControl,
   FormLabel,
   Heading,
@@ -12,7 +16,9 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
+  Spacer,
   Spinner,
+  Text,
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
@@ -147,54 +153,80 @@ export function MemberView() {
     return "";
   };
 
+  const labelStyles = {
+    color: "#805AD5",
+    fontWeight: "bold",
+    my: 3,
+  };
+
   return (
-    <Box>
-      <Heading>{member.logId}님 정보</Heading>
-      <FormControl>
-        <FormLabel>name</FormLabel>
-        <Input value={member.name} readOnly />
-      </FormControl>
-      <FormControl>
-        <FormLabel>address</FormLabel>
-        <Input type="text" value={member.address} readOnly />
-      </FormControl>
-      <FormControl>
-        <FormLabel>email</FormLabel>
-        <Input value={formattedEmail()} readOnly />
-      </FormControl>
-      <FormControl>
-        <FormLabel>age</FormLabel>
-        <Input type="text" value={member.age} readOnly />
-      </FormControl>
-      <FormControl>
-        <FormLabel>gender</FormLabel>
-        <Input type="text" value={member.gender} readOnly />
-      </FormControl>
-      <Button
-        colorScheme="purple"
-        onClick={() => navigate("/medit/" + member.id)}
-      >
-        수정
-      </Button>
-      <Button colorScheme="red" onClick={onOpen}>
-        탈퇴
-      </Button>
-
-      <Modal isOpen={isOpen} onClose={onClose}>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>탈퇴 확인</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>탈퇴 하시겠습니까?</ModalBody>
-
-          <ModalFooter>
-            <Button onClick={onClose}>닫기</Button>
-            <Button onClick={handleDelete} colorScheme="red">
-              탈퇴
-            </Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
-    </Box>
+    <>
+      <Spacer h={120} />
+      <Card mx={{ base: "5%", md: "10%", lg: "15%" }} transition="1s all ease">
+        <CardHeader p={8}>
+          <Heading display="flex" transition="1s all ease">
+            <Text color="#805AD5">{member.nickName}</Text>님 정보
+          </Heading>
+        </CardHeader>
+        <CardBody px={10}>
+          <FormControl>
+            <FormLabel {...labelStyles}>닉네임</FormLabel>
+            <Input value={member.nickName} variant="undefined" readOnly />
+          </FormControl>
+          <FormControl>
+            <FormLabel {...labelStyles}>이메일</FormLabel>
+            <Input value={formattedEmail()} variant="undefined" readOnly />
+          </FormControl>
+          <FormControl>
+            <FormLabel {...labelStyles}>주소</FormLabel>
+            <Input
+              type="text"
+              variant="undefined"
+              value={member.address}
+              readOnly
+            />
+          </FormControl>
+          <FormControl>
+            <FormLabel {...labelStyles}>나이</FormLabel>
+            <Input
+              type="text"
+              variant="undefined"
+              value={member.age}
+              readOnly
+            />
+          </FormControl>
+          <FormControl>
+            <FormLabel {...labelStyles}>성별</FormLabel>
+            <Input
+              type="text"
+              variant="undefined"
+              value={member.gender}
+              readOnly
+            />
+          </FormControl>
+        </CardBody>
+        <CardFooter
+          display={{ base: "block", md: "flex" }}
+          justifyContent="center"
+        >
+          <Button
+            colorScheme="purple"
+            w={{ base: "full", md: "45%" }}
+            mb={{ base: 5, md: 0 }}
+            mr={{ base: 0, md: 5 }}
+            onClick={() => navigate("/medit/" + member.id)}
+          >
+            수정
+          </Button>
+          <Button
+            colorScheme="red"
+            w={{ base: "full", md: "45%" }}
+            onClick={onOpen}
+          >
+            탈퇴
+          </Button>
+        </CardFooter>
+      </Card>
+    </>
   );
 }

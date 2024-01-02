@@ -67,20 +67,14 @@ export function NavBar(props) {
   const [loggedIn, setLoggedIn] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const [isSocial, setIsSocial] = useState(false);
+  const [member, setMember] = useState({});
   const navigate = useNavigate();
   const urlParams = new URLSearchParams();
   const location = useLocation();
   const toast = useToast();
-  const [titleIconOpen, setTitleIconOpen] = useState(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPage, setTotalPage] = useState(0);
-  const [show, setShow] = React.useState(false);
-  const handleToggle = () => setShow(!show);
-  const [placement, setPlacement] = React.useState("left");
-  const onCloseDrawer = () => {
-    setTitleIconOpen(false);
-  };
 
   //Nav Bar 변환 위해서 따오는 것들
   const isSmallScreen = useBreakpointValue({ base: true, md: false });
@@ -119,6 +113,42 @@ export function NavBar(props) {
         localStorage.removeItem("refreshToken");
 
         setLoggedIn(false);
+      });
+  }
+
+  useEffect(() => {
+    getMember();
+  }, []);
+
+  function getMember() {
+    const accessToken = localStorage.getItem("accessToken");
+    console.log("엑세스 토큰", accessToken);
+    axios
+      .get("/member", { headers: { Authorization: `Bearer ${accessToken}` } })
+      .then((response) => {
+        console.log("getMember()의 then 실행");
+        console.log(response.data);
+        setMember(response.data);
+      })
+      .catch((error) => {
+        if (error.response && error.response.status === 401) {
+          console.log("getMember()의 catch 실행");
+          localStorage.removeItem("accessToken");
+          sendRefreshToken();
+          console.log("sendRefreshToken 호출");
+        } else if (error.response && error.response.status === 403) {
+          toast({
+            description: "접근이 거부되었습니다",
+            status: "error",
+          });
+          console.log("403에러!!!");
+        } else {
+          toast({
+            description: "오류가 발생했습니다",
+            status: "error",
+          });
+          console.log("그 외 에러");
+        }
       });
   }
 
@@ -253,7 +283,6 @@ export function NavBar(props) {
         left={0}
         right={0}
         bgColor="whiteAlpha.100"
-        // border="1px solid green"
         backdropFilter="blur(10px)"
         borderRadius={20}
         boxShadow="md"
@@ -339,14 +368,20 @@ export function NavBar(props) {
                     <MenuButton as={Avatar} boxSize={8} />
                     <MenuList>
                       <Text fontSize="sm" fontWeight="bold" textIndent={10}>
-                        👋 환영합니다, nickName님
+                        👋 환영합니다,{" "}
+                        {member.nickName !== null
+                          ? member.nickName
+                          : member.email}
+                        님
                       </Text>
                       <MenuDivider />
                       <MenuGroup title="내 정보 보기">
-                        <MenuItem as="div">
-                          <Link to={`/member?${urlParams.toString()}`}>
-                            내 정보
-                          </Link>
+                        <MenuItem
+                          onClick={() =>
+                            navigate(`/member?${urlParams.toString()}`)
+                          }
+                        >
+                          내 정보
                         </MenuItem>
                         <MenuItem as="div">
                           <Link>찜한 목록</Link> //TODO: 수정
@@ -358,14 +393,14 @@ export function NavBar(props) {
                       <MenuDivider />
                       {isAdmin && (
                         <MenuGroup title="관리자">
-                          <MenuItem as="div">
-                            <Link to="/write">제품 등록</Link>
+                          <MenuItem onClick={() => navigate("/write")}>
+                            제품 등록
                           </MenuItem>
                           <MenuItem as="div">
                             <Link to="#">상품 관리</Link> //TODO: 수정
                           </MenuItem>
-                          <MenuItem as="div">
-                            <Link to="/member/list">회원 관리</Link>
+                          <MenuItem onClick={() => navigate("/member/list")}>
+                            회원 관리
                           </MenuItem>
                         </MenuGroup>
                       )}
@@ -402,7 +437,11 @@ export function NavBar(props) {
             <Tag variant="ghost">
               <Avatar size="sm" ml={-1} mr={3} />
               <TagLabel fontSize="md" fontWeight="bold">
-                {loggedIn ? "환영합니다, nickName님" : "로그인 해주세요"}
+                {loggedIn
+                  ? `환영합니다, ${
+                      member.nickName !== null ? member.nickName : member.email
+                    }님`
+                  : "로그인 해주세요"}
               </TagLabel>
             </Tag>
           </DrawerHeader>
