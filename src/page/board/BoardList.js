@@ -242,15 +242,7 @@ export function BoardList() {
           setLoggedIn(true);
           console.log(response.data);
 
-          return axios.get("/isSocialMember", {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("refreshToken")}`,
-            },
-          });
-        })
-        .then((response) => {
-          console.log("isSocialMember = " + response.data);
-          if (response.data) {
+          if (response.data.role === "ROLE_SOCIAL") {
             setIsSocial(true);
           }
         })

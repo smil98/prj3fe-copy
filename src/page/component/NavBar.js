@@ -183,7 +183,6 @@ export function NavBar(props) {
         },
       })
       .then(() => {
-        console.log("!!!!!!!!!!!!!!!!!!!");
         const accessToken = localStorage.getItem("accessToken");
         const refreshToken = localStorage.getItem("refreshToken");
         console.log(accessToken, refreshToken);
@@ -330,7 +329,9 @@ export function NavBar(props) {
                   </Button>
                   <Button
                     {...fullNavButtonHover}
-                    onClick={() => navigate("/logout")}
+                    onClick={() => {
+                      handleLogout();
+                    }}
                   >
                     로그아웃
                   </Button>
@@ -432,17 +433,6 @@ export function NavBar(props) {
                 <>
                   {/* 회원일 때 보여줄 메뉴 */}
                   <Button
-                    iconSpacing={5}
-                    leftIcon={<FontAwesomeIcon icon={faCreditCard} />}
-                    {...drawerButtonStyle}
-                    onClick={() => {
-                      onClose();
-                      navigate("/order");
-                    }}
-                  >
-                    주문하기
-                  </Button>
-                  <Button
                     iconSpacing={4}
                     leftIcon={<FontAwesomeIcon icon={faUserGear} />}
                     {...drawerButtonStyle}
@@ -463,6 +453,17 @@ export function NavBar(props) {
                     }}
                   >
                     찜한 목록
+                  </Button>
+                  <Button
+                    iconSpacing={5}
+                    leftIcon={<FontAwesomeIcon icon={faCreditCard} />}
+                    {...drawerButtonStyle}
+                    onClick={() => {
+                      onClose();
+                      navigate("/order");
+                    }}
+                  >
+                    주문하기
                   </Button>
                   <Button
                     iconSpacing={5}
@@ -494,7 +495,7 @@ export function NavBar(props) {
                         {...drawerButtonStyle}
                         onClick={() => {
                           onClose();
-                          navigate("/queries"); //TODO: 수정
+                          navigate("/products"); //TODO: 수정
                         }}
                       >
                         제품 관리
@@ -520,7 +521,7 @@ export function NavBar(props) {
                     {...drawerButtonStyle}
                     onClick={() => {
                       onClose();
-                      navigate("/logout");
+                      handleLogout();
                     }}
                   >
                     로그아웃
