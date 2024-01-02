@@ -58,10 +58,6 @@ export function MemberSignup() {
   const [emailValid, setEmailValid] = useState(false);
   const [nickNameValid, setNickNameValid] = useState(false);
   const [passwordValid, setPasswordValid] = useState(false);
-  const [passwordChecked, setPasswordChecked] = useState(false);
-
-  const [emailChecked, setEmailChecked] = useState(false);
-  const [nickNameChecked, setNickNameChecked] = useState(false);
 
   const [emailButtonClicked, setEmailButtonClicked] = useState(false);
   const [nickNameButtonClicked, setNickNameButtonClicked] = useState(false);
@@ -69,6 +65,10 @@ export function MemberSignup() {
   const toast = useToast();
   const navigate = useNavigate();
   const [passwordErrorMessage, setPasswordErrorMessage] = useState("");
+
+  const nickNameChecked = nickNameValid && nickNameButtonClicked;
+  const passwordChecked = passwordValid && rePassword === password;
+  const emailChecked = emailValid && emailButtonClicked;
 
   function handleSubmit() {
     axios
@@ -81,7 +81,6 @@ export function MemberSignup() {
       })
       .then(() => {
         toast({
-          position: "top",
           description: "회원가입이 완료되었습니다",
           status: "success",
         });
@@ -90,74 +89,70 @@ export function MemberSignup() {
       .catch((error) => {
         if (error.response.status === 400) {
           toast({
-            position: "top",
             description: "입력값을 확인해주세요",
             status: "error",
           });
         } else {
           toast({
-            position: "top",
             description: "입력값을 확인해주세요",
             status: "error",
           });
         }
         toast({
-          position: "top",
           description: "가입 도중 오류가 발생하였습니다",
           status: "error",
         });
       })
       .finally(() => console.log("done"));
   }
-  function handleEmailCheck() {
+  async function handleEmailCheck() {
     setEmailButtonClicked(true);
+    console.log("Before try-catch, emailButtonClicked: ", emailButtonClicked);
 
-    console.log("Before Axios request");
-
-    axios
-      .get("/member/check?email=" + email)
-      .then(() => {
+    try {
+      console.log("Before Axios request");
+      await axios.get("/member/check?email=" + email);
+      setEmailValid(false);
+    } catch (error) {
+      if (error.response.status === 404) {
+        setEmailValid(true);
+        console.log("emailValid after 404: ", emailValid);
+      } else if (error.response.status === 431) {
+        console.log("Header too large again?");
+      } else {
         setEmailValid(false);
-      })
-      .catch((error) => {
-        if (error.response.status === 404) {
-          setEmailValid(true);
-        } else if (error.response.status === 431) {
-          console.log("Header too large again?");
-        } else {
-          setEmailValid(false);
-        }
-      })
-      .finally(() => {
-        console.log("axios request finished");
-        setEmailChecked(emailButtonClicked && emailValid);
-        console.log(emailChecked);
-      });
+      }
+    } finally {
+      console.log("Axios request finished");
+      console.log(emailChecked);
+    }
   }
 
-  function handleNickNameCheck() {
+  async function handleNickNameCheck() {
     setNickNameButtonClicked(true);
+    console.log(
+      "Before try-catch, NickNameButtonClicked: ",
+      nickNameButtonClicked,
+    );
 
-    axios
-      .get("/member/check", {
+    try {
+      await axios.get("/member/check", {
         params: {
           nickName: nickName,
         },
-      })
-      .then(() => {
-        setNickNameValid(false);
-      })
-      .catch((error) => {
-        if (error.response.status === 404) {
-          setNickNameValid(true);
-        } else {
-          setNickNameValid(false);
-        }
-      })
-      .finally(() => {
-        setNickNameChecked(nickNameButtonClicked && nickNameValid);
-        console.log(nickNameChecked);
       });
+      setNickNameValid(false);
+    } catch (error) {
+      if (error.response.status === 404) {
+        setNickNameValid(true);
+        console.log("nickNamevalid after 404: ", nickNameValid);
+      } else {
+        setNickNameValid(false);
+      }
+    } finally {
+      console.log("Axios request finished");
+      console.log(nickNameChecked);
+    }
   }
 
   const handleGenderChange = (value) => {
@@ -188,12 +183,6 @@ export function MemberSignup() {
       setPasswordValid(false);
       setPasswordErrorMessage("패스워드를 입력해주세요.");
     }
-
-    if (rePassword === password) {
-      setPasswordChecked(true);
-    } else {
-      setPasswordChecked(false);
-    }
   }, [password, rePassword]);
 
   useEffect(() => {
@@ -205,6 +194,10 @@ export function MemberSignup() {
     setNickNameButtonClicked(false);
     setNickNameValid(false);
   }, [nickName]);
+
+  console.log("passwordChecked", passwordChecked);
+  console.log("nickNameChecked", nickNameChecked);
+  console.log("emailChecked", emailChecked);
 
   return (
     <Box>
@@ -360,7 +353,6 @@ export function MemberSignup() {
                     w="5rem"
                     h="1.75rem"
                     size="sm"
-                    isDisabled={emailChecked}
                     onClick={handleNickNameCheck}
                   >
                     중복 확인
