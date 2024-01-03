@@ -4,8 +4,16 @@ import {
   ButtonGroup,
   Center,
   Flex,
+  Heading,
   IconButton,
   Input,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
   Select,
   Spacer,
   Spinner,
@@ -13,10 +21,13 @@ import {
   TableContainer,
   Tbody,
   Td,
+  Text,
   Th,
   Thead,
   Tr,
+  useDisclosure,
 } from "@chakra-ui/react";
+import React from "react";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -34,6 +45,7 @@ function SearchComponent() {
   const [keyword, setKeyword] = useState("");
   const navigate = useNavigate();
   const [category, setCategory] = useState("all");
+
   function handleSearch() {
     const params = new URLSearchParams();
     params.set("k", keyword);
@@ -64,12 +76,15 @@ function SearchComponent() {
 }
 
 export function MemberList() {
+  const { isOpen, onClose, onOpen } = useDisclosure();
   const [list, setList] = useState(null);
   const navigate = useNavigate();
   const location = useLocation(); // 현재 URL의 위치 정보를 가져옵니다.
   const [currentPage, setCurrentPage] = useState(0); // 현재 페이지 번호 (0부터 시작)
   const [totalPage, setTotalPage] = useState(0); // 총 페이지 수
   const itemsPerPage = 10; // 페이지당 항목 수
+
+  const [openModalId, setOpenModalId] = useState(null);
 
   useEffect(() => {
     const queryParams = new URLSearchParams(location.search);
@@ -92,23 +107,19 @@ export function MemberList() {
   }, [currentPage, location.search]);
 
   if (list === null) {
-    return <Spinner />;
+    return (
+      <Flex height="100vh" align="center" justify="center">
+        <Spinner
+          center
+          thickness="4px"
+          speed="0.65s"
+          emptyColor="gray.200"
+          color="#805AD5"
+          size="xl"
+        />
+      </Flex>
+    );
   }
-
-  function handleTableRowClick(id) {
-    console.log("Clicked Member's ID :" + id);
-    navigate("/medit/" + id);
-  }
-
-  const mapGenderToAbbreviation = (gender) => {
-    const genderMappings = {
-      Female: "F",
-      Male: "M",
-      Unidentified: "X",
-    };
-
-    return genderMappings[gender] || gender; // Default to the original value if not found
-  };
 
   const formattedDate = (joinDate) => {
     const date = new Date(joinDate);
@@ -118,6 +129,30 @@ export function MemberList() {
 
     return `${year}/${month}/${day}`;
   };
+
+  function handleDelete({ member }) {
+    axios
+      .delete("/member/delete/" + member.id, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        },
+      })
+      .then(() => {
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("refreshToken");
+        console.log("회원 탈퇴 성공");
+      })
+      .catch(() => console.log("회원 탈퇴 실패"))
+      .finally(() => {
+        console.log("해치웠나");
+        onClose();
+        navigate("/");
+        // 페이지 새로고침
+        window.location.reload();
+      });
+    //   axios.delete().then().catch();
+    // 홈 화면으로 이동시킬 것
+  }
 
   return (
     <>
@@ -144,36 +179,78 @@ export function MemberList() {
           </Thead>
           <Tbody>
             {list.map((member) => (
-              <Tr
-                _hover={{ cursor: "pointer" }}
-                key={member.id}
-                onClick={() => navigate(`/member/${member.id}`)}
-              >
-                <Td textAlign="center">{member.nickName}</Td>
-                <Td textAlign="center">{member.email}</Td>
-                <Td textAlign="center">
-                  {member.role ? member.role.substring(5) : ""}
-                </Td>
-                <Td textAlign="center">{formattedDate(member.joinDate)}</Td>
-                <Td textAlign="center">
-                  <IconButton
-                    variant="ghost"
-                    colorScheme="purple"
-                    icon={<FontAwesomeIcon icon={faPenNib} />}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      navigate("/medit/" + member.id);
-                    }}
-                  />
-                </Td>
-                <Td textAlign="center">
-                  <IconButton
-                    variant="ghost"
-                    colorScheme="red"
-                    icon={<FontAwesomeIcon icon={faTrashCan} />}
-                  />
-                </Td>
-              </Tr>
+              <React.Fragment key={member.id}>
+                <Tr
+                  _hover={{ cursor: "pointer" }}
+                  onClick={() => navigate(`/member/${member.id}`)}
+                >
+                  <Td textAlign="center">{member.nickName}</Td>
+                  <Td textAlign="center">{member.email}</Td>
+                  <Td textAlign="center">
+                    {member.role ? member.role.substring(5) : ""}
+                  </Td>
+                  <Td textAlign="center">{formattedDate(member.joinDate)}</Td>
+                  <Td textAlign="center">
+                    <IconButton
+                      variant="ghost"
+                      colorScheme="purple"
+                      icon={<FontAwesomeIcon icon={faPenNib} />}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        navigate("/medit/" + member.id);
+                      }}
+                    />
+                  </Td>
+                  <Td textAlign="center">
+                    <IconButton
+                      variant="ghost"
+                      colorScheme="red"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setOpenModalId(member.id);
+                      }}
+                      icon={<FontAwesomeIcon icon={faTrashCan} />}
+                    />
+                    <Modal
+                      isOpen={openModalId === member.id}
+                      onClose={() => setOpenModalId(null)}
+                    >
+                      <ModalOverlay />
+                      <ModalContent>
+                        <ModalHeader>회원 강퇴 확인</ModalHeader>
+                        <ModalCloseButton />
+                        <ModalBody>
+                          <Flex>
+                            정말 회원
+                            <Heading
+                              as="span"
+                              mx={2}
+                              mt={1}
+                              size="sm"
+                              color="#805AD5"
+                            >
+                              {member.nickName}
+                            </Heading>
+                            을(를) 강퇴하시겠습니까?
+                          </Flex>
+                        </ModalBody>
+
+                        <ModalFooter>
+                          <Button onClick={onClose}>닫기</Button>
+                          <Button
+                            onClick={() => {
+                              handleDelete(member);
+                            }}
+                            colorScheme="red"
+                          >
+                            탈퇴
+                          </Button>
+                        </ModalFooter>
+                      </ModalContent>
+                    </Modal>
+                  </Td>
+                </Tr>
+              </React.Fragment>
             ))}
           </Tbody>
         </Table>

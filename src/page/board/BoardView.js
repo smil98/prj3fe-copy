@@ -5,6 +5,7 @@ import {
   Button,
   Center,
   Divider,
+  Flex,
   Heading,
   Image,
   Modal,
@@ -110,7 +111,18 @@ export function BoardView() {
   }
 
   if (board === null) {
-    return <Spinner />;
+    return (
+      <Flex height="100vh" align="center" justify="center">
+        <Spinner
+          center
+          thickness="4px"
+          speed="0.65s"
+          emptyColor="gray.200"
+          color="#805AD5"
+          size="xl"
+        />
+      </Flex>
+    );
   }
 
   function handleDelete() {

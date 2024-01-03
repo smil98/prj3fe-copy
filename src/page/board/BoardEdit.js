@@ -2,6 +2,7 @@ import {
   Box,
   Button,
   Container,
+  Flex,
   FormControl,
   FormLabel,
   Heading,
@@ -54,7 +55,18 @@ export function BoardEdit() {
   // }, [board]);
 
   if (board === null) {
-    return <Spinner />;
+    return (
+      <Flex height="100vh" align="center" justify="center">
+        <Spinner
+          center
+          thickness="4px"
+          speed="0.65s"
+          emptyColor="gray.200"
+          color="#805AD5"
+          size="xl"
+        />
+      </Flex>
+    );
   }
 
   function handleFileUrlChange(e) {

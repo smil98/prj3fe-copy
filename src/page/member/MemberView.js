@@ -1,10 +1,12 @@
 import {
+  AbsoluteCenter,
   Box,
   Button,
   Card,
   CardBody,
   CardFooter,
   CardHeader,
+  Flex,
   FormControl,
   FormLabel,
   Heading,
@@ -39,7 +41,18 @@ export function MemberView() {
   }, []);
 
   if (member === null) {
-    return <Spinner />;
+    return (
+      <Flex height="100vh" align="center" justify="center">
+        <Spinner
+          center
+          thickness="4px"
+          speed="0.65s"
+          emptyColor="gray.200"
+          color="#805AD5"
+          size="xl"
+        />
+      </Flex>
+    );
   }
 
   function getMember(memberId) {

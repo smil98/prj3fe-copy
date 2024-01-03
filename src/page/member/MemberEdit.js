@@ -6,6 +6,7 @@ import {
   CardBody,
   CardFooter,
   CardHeader,
+  Flex,
   FormControl,
   FormErrorMessage,
   FormLabel,
@@ -212,7 +213,18 @@ export function MemberEdit() {
 
   // 해당 멤버 존재하지 않을 경우 Spinner
   if (member === null) {
-    return <Spinner />;
+    return (
+      <Flex height="100vh" align="center" justify="center">
+        <Spinner
+          center
+          thickness="4px"
+          speed="0.65s"
+          emptyColor="gray.200"
+          color="#805AD5"
+          size="xl"
+        />
+      </Flex>
+    );
   }
 
   // 버튼 비활성화 지정

@@ -297,7 +297,7 @@ export function NavBar(props) {
             <MenuItem
               icon={<FontAwesomeIcon icon={faHeart} />}
               onClick={() => {
-                navigate("/likelist");
+                navigate(`/likes/${member.id}`);
               }}
             >
               찜한 목록 //TODO: 수정
@@ -454,7 +454,7 @@ export function NavBar(props) {
                         <MenuItem
                           icon={<FontAwesomeIcon icon={faHeart} />}
                           onClick={() => {
-                            navigate("/likelist");
+                            navigate(`/likes/${member.id}`);
                           }}
                         >
                           찜한 목록 //TODO: 수정
@@ -585,7 +585,7 @@ export function NavBar(props) {
                     {...drawerButtonStyle}
                     onClick={() => {
                       onClose();
-                      navigate("/likeList"); //TODO: 수정
+                      navigate(`/likes/${member.id}`); //TODO: 수정
                     }}
                   >
                     찜한 목록

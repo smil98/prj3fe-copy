@@ -35,6 +35,7 @@ const routes = createBrowserRouter(
       <Route path="member/list" element={<MemberList />} />
       <Route path="member/:id" element={<MemberView />} />
       <Route path="medit/:id" element={<MemberEdit />} />
+      <Route path="likes/:id" element={<MemberEdit />} />
       <Route path="login" element={<MemberLogin />} />
       <Route path="search" element={<Search />} />
       <Route path="loginprocess/:type" element={<MemeberSocialLogin />} />
