@@ -290,7 +290,7 @@ export function NavBar(props) {
           <MenuGroup title="내 정보 보기">
             <MenuItem
               icon={<FontAwesomeIcon icon={faUserGear} />}
-              onClick={() => navigate(`/member?${urlParams.toString()}`)}
+              onClick={() => navigate(`/member/${member.id}`)}
             >
               내 정보
             </MenuItem>
@@ -447,9 +447,7 @@ export function NavBar(props) {
                       <MenuGroup title="내 정보 보기">
                         <MenuItem
                           icon={<FontAwesomeIcon icon={faUserGear} />}
-                          onClick={() =>
-                            navigate(`/member?${urlParams.toString()}`)
-                          }
+                          onClick={() => navigate(`/member/${member.id}`)}
                         >
                           내 정보
                         </MenuItem>
@@ -576,7 +574,7 @@ export function NavBar(props) {
                     {...drawerButtonStyle}
                     onClick={() => {
                       onClose();
-                      navigate("/member?" + urlParams.toString());
+                      navigate(`/member/${member.id}`);
                     }}
                   >
                     내 정보

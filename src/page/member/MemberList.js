@@ -162,7 +162,7 @@ export function MemberList() {
                     icon={<FontAwesomeIcon icon={faPenNib} />}
                     onClick={(e) => {
                       e.stopPropagation();
-                      navigate(`/medit/${member.id}`);
+                      navigate("/medit/" + member.id);
                     }}
                   />
                 </Td>

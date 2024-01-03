@@ -22,11 +22,12 @@ import {
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
 export function MemberView() {
+  const { id } = useParams();
   const [member, setMember] = useState(null);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const navigate = useNavigate();
@@ -34,18 +35,20 @@ export function MemberView() {
   const [orderNames, setOrderNames] = useState([]);
 
   useEffect(() => {
-    getMember();
+    getMember(id);
   }, []);
 
   if (member === null) {
     return <Spinner />;
   }
 
-  function getMember() {
+  function getMember(memberId) {
     const accessToken = localStorage.getItem("accessToken");
     console.log("엑세스 토큰", accessToken);
     axios
-      .get("/member", { headers: { Authorization: `Bearer ${accessToken}` } })
+      .get(`/member/${memberId}`, {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      })
       .then((response) => {
         console.log("getMember()의 then 실행");
         console.log(response.data);

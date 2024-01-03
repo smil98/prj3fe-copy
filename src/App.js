@@ -33,7 +33,7 @@ const routes = createBrowserRouter(
       <Route path="edit/:id" element={<BoardEdit />} />
       <Route path="signup" element={<MemberSignup />}></Route>
       <Route path="member/list" element={<MemberList />} />
-      <Route path="member" element={<MemberView />} />
+      <Route path="member/:id" element={<MemberView />} />
       <Route path="medit/:id" element={<MemberEdit />} />
       <Route path="login" element={<MemberLogin />} />
       <Route path="search" element={<Search />} />
