@@ -22,6 +22,7 @@ import {
   Spacer,
   InputRightElement,
   InputLeftElement,
+  VStack,
 } from "@chakra-ui/react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -96,6 +97,7 @@ export function BoardWrite() {
         setIsSubmitting(false);
       });
   }
+
   function sendRefreshToken() {
     const refreshToken = localStorage.getItem("refreshToken");
     console.log("리프레시 토큰: ", refreshToken);
@@ -125,6 +127,14 @@ export function BoardWrite() {
         });
     }
   }
+
+  const labelStyles = {
+    color: "#805AD5",
+    fontSize: "lg",
+    fontWeight: "bold",
+    my: 4,
+  };
+
   return (
     <>
       <Spacer h={120} />
@@ -137,22 +147,21 @@ export function BoardWrite() {
           <Heading>앨범 등록</Heading>
         </CardHeader>
         <CardBody>
-          <FormControl mb={5}>
-            <FormLabel>앨범 이미지</FormLabel>
+          <FormControl>
+            <FormLabel {...labelStyles}>앨범 이미지</FormLabel>
             <Input
               type="file"
               accept="image/*"
               multiple
               onChange={(e) => setUploadFiles(e.target.files)}
-              placeholder="이미지 url을 입력하세요"
-            ></Input>
+            />
             <FormHelperText color="#805AD5">
-              한 개 파일은 1MB 이내, 총 용량은 10MB 이내로 첨부 가능합니다.
+              파일당 1MB 이내, 총 용량은 10MB 이내로 첨부 가능합니다.
             </FormHelperText>
           </FormControl>
 
-          <FormControl mb={5}>
-            <FormLabel>앨범명</FormLabel>
+          <FormControl>
+            <FormLabel {...labelStyles}>앨범명</FormLabel>
             <Input
               value={title}
               placeholder="등록하려는 앨범의 이름을 입력해주세요"
@@ -160,8 +169,8 @@ export function BoardWrite() {
             />
           </FormControl>
           {/*================================*/}
-          <FormControl mb={5}>
-            <FormLabel>가수</FormLabel>
+          <FormControl>
+            <FormLabel {...labelStyles}>가수</FormLabel>
             <Input
               value={artist}
               placeholder="가수명을 입력해주세요"
@@ -169,8 +178,8 @@ export function BoardWrite() {
             />
           </FormControl>
           {/*======================================*/}
-          <FormControl mb={5}>
-            <FormLabel>음반 소개</FormLabel>
+          <FormControl>
+            <FormLabel {...labelStyles}>음반 소개</FormLabel>
             <Textarea
               value={content}
               onChange={(e) => setContent(e.target.value)}
@@ -178,8 +187,8 @@ export function BoardWrite() {
             />
           </FormControl>
           {/* 앨범 포맷 입력란 */}
-          <FormControl mt={4}>
-            <FormLabel>형태</FormLabel>
+          <FormControl>
+            <FormLabel {...labelStyles}>형태</FormLabel>
             <Select
               value={albumFormat}
               onChange={(e) => setAlbumFormat(e.target.value)}
@@ -191,8 +200,8 @@ export function BoardWrite() {
             </Select>
           </FormControl>
 
-          <FormControl mb={5}>
-            <FormLabel>장르</FormLabel>
+          <FormControl>
+            <FormLabel {...labelStyles}>장르</FormLabel>
             <CheckboxGroup
               value={albumDetails}
               onChange={(selectedAlbumGenres) =>
@@ -209,8 +218,8 @@ export function BoardWrite() {
           </FormControl>
 
           {/* 릴리스 날짜 입력란 */}
-          <FormControl mt={4}>
-            <FormLabel>발매일</FormLabel>
+          <FormControl>
+            <FormLabel {...labelStyles}>발매일</FormLabel>
             <Input
               type="date"
               value={releaseDate}
@@ -219,8 +228,8 @@ export function BoardWrite() {
           </FormControl>
 
           {/*발매사 입력란 */}
-          <FormControl mt={4}>
-            <FormLabel>음반사</FormLabel>
+          <FormControl>
+            <FormLabel {...labelStyles}>음반사</FormLabel>
             <Input
               value={agency}
               onChange={(e) => setAgency(e.target.value)}
@@ -228,20 +237,20 @@ export function BoardWrite() {
             />
           </FormControl>
           {/*수량 입력란*/}
-          <FormControl mt={4}>
-            <FormLabel>수량</FormLabel>
+          <FormControl>
+            <FormLabel {...labelStyles}>재고 수량</FormLabel>
             <Input
               type="number"
               value={stockQuantity}
               onChange={(e) => setStockQuantity(e.target.value)}
               min="0"
-              placeholder="재고를 입력해주세요"
+              placeholder="재고 수량을 입력해주세요"
             />
           </FormControl>
 
           {/*사용한 가격 입력 폼*/}
-          <FormControl mb={5}>
-            <FormLabel>가격</FormLabel>
+          <FormControl>
+            <FormLabel {...labelStyles}>가격</FormLabel>
             <InputGroup>
               <Input
                 value={price}

@@ -9,9 +9,11 @@ import ScrollToTopButton from "./page/component/ScrollToTopButton";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-  <ChakraProvider theme={theme}>
-    <Fonts />
-    <App />
-    <ScrollToTopButton />
-  </ChakraProvider>,
+  <React.StrictMode>
+    <ChakraProvider theme={theme}>
+      <Fonts />
+      <App />
+      <ScrollToTopButton />
+    </ChakraProvider>
+  </React.StrictMode>,
 );

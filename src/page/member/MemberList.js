@@ -4,6 +4,7 @@ import {
   ButtonGroup,
   Center,
   Flex,
+  IconButton,
   Input,
   Select,
   Spacer,
@@ -19,9 +20,15 @@ import {
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSearch } from "@fortawesome/free-solid-svg-icons";
+import {
+  faGear,
+  faPenNib,
+  faSearch,
+  faTrashCan,
+} from "@fortawesome/free-solid-svg-icons";
 
 import axios from "axios";
+import { Pagenation } from "../component/Pagenation";
 
 function SearchComponent() {
   const [keyword, setKeyword] = useState("");
@@ -61,12 +68,14 @@ export function MemberList() {
   const navigate = useNavigate();
   const location = useLocation(); // 현재 URL의 위치 정보를 가져옵니다.
   const [currentPage, setCurrentPage] = useState(0); // 현재 페이지 번호 (0부터 시작)
-  const [totalPages, setTotalPages] = useState(0); // 총 페이지 수
+  const [totalPage, setTotalPage] = useState(0); // 총 페이지 수
   const itemsPerPage = 10; // 페이지당 항목 수
+
   useEffect(() => {
     const queryParams = new URLSearchParams(location.search);
     const keyword = queryParams.get("k");
     const category = queryParams.get("c");
+
     axios
       .get(
         `/member/list?page=${currentPage}&size=${itemsPerPage}&k=${keyword}&c=${category}`,
@@ -78,23 +87,17 @@ export function MemberList() {
       )
       .then((response) => {
         setList(response.data.content);
-        setTotalPages(response.data.totalPages);
+        setTotalPage(response.data.totalPages);
       });
   }, [currentPage, location.search]);
+
   if (list === null) {
     return <Spinner />;
   }
-  // function handleTableRowClick(id) {
-  //   const params = new URLSearchParams();
-  //   params.set("id", id);
-  //   navigate("/member?" + params.toString());
-  // }
-  function handlePreviousPage() {
-    setCurrentPage((prev) => Math.max(prev - 1, 0));
-  }
 
-  function handleNextPage() {
-    setCurrentPage((prev) => Math.min(prev + 1, totalPages - 1));
+  function handleTableRowClick(id) {
+    console.log("Clicked Member's ID :" + id);
+    navigate("/medit/" + id);
   }
 
   const mapGenderToAbbreviation = (gender) => {
@@ -116,19 +119,6 @@ export function MemberList() {
     return `${year}/${month}/${day}`;
   };
 
-  // 페이지 번호 버튼 생성
-  const pageButtons = [];
-  for (let i = 0; i < totalPages; i++) {
-    pageButtons.push(
-      <Button
-        key={i}
-        onClick={() => setCurrentPage(i)}
-        colorScheme={i === currentPage ? "purple" : "gray"}
-      >
-        {i + 1}
-      </Button>,
-    );
-  }
   return (
     <>
       <Spacer h={120} />
@@ -139,34 +129,50 @@ export function MemberList() {
       >
         <Table
           w="full"
-          size={{ base: "sm", md: "md", lg: "lg" }}
+          size={{ sm: "xs", base: "sm", md: "md", lg: "lg" }}
           transition="0.5s all ease"
         >
           <Thead>
             <Tr>
-              <Th>닉네임</Th>
-              <Th>이메일</Th>
-              <Th>주소</Th>
-              <Th>나이</Th>
-              <Th>성별</Th>
-              <Th>등급</Th>
-              <Th>가입 날짜</Th>
+              <Th textAlign="center">닉네임</Th>
+              <Th textAlign="center">이메일</Th>
+              <Th textAlign="center">등급</Th>
+              <Th textAlign="center">가입일</Th>
+              <Th textAlign="center">수정</Th>
+              <Th textAlign="center">탈퇴</Th>
             </Tr>
           </Thead>
           <Tbody>
             {list.map((member) => (
               <Tr
                 _hover={{ cursor: "pointer" }}
-                key={member.logId}
-                // onClick={() => handleTableRowClick(member.logId)}
+                key={member.id}
+                onClick={() => navigate(`/member/${member.id}`)}
               >
-                <Td>{member.nickName}</Td>
-                <Td>{member.email}</Td>
-                <Td>{member.address}</Td>
-                <Td>{member.age}</Td>
-                <Td>{mapGenderToAbbreviation(member.gender)}</Td>
-                <Td>{member.role}</Td>
-                <Td>{formattedDate(member.joinDate)}</Td>
+                <Td textAlign="center">{member.nickName}</Td>
+                <Td textAlign="center">{member.email}</Td>
+                <Td textAlign="center">
+                  {member.role ? member.role.substring(5) : ""}
+                </Td>
+                <Td textAlign="center">{formattedDate(member.joinDate)}</Td>
+                <Td textAlign="center">
+                  <IconButton
+                    variant="ghost"
+                    colorScheme="purple"
+                    icon={<FontAwesomeIcon icon={faPenNib} />}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      navigate(`/medit/${member.id}`);
+                    }}
+                  />
+                </Td>
+                <Td textAlign="center">
+                  <IconButton
+                    variant="ghost"
+                    colorScheme="red"
+                    icon={<FontAwesomeIcon icon={faTrashCan} />}
+                  />
+                </Td>
               </Tr>
             ))}
           </Tbody>
@@ -175,20 +181,11 @@ export function MemberList() {
       <Center mb={10}>
         <SearchComponent />
       </Center>
-      <Center>
-        <ButtonGroup>
-          <Button onClick={handlePreviousPage} disabled={currentPage === 0}>
-            이전
-          </Button>
-          {pageButtons}
-          <Button
-            onClick={handleNextPage}
-            disabled={currentPage === totalPages - 1}
-          >
-            다음
-          </Button>
-        </ButtonGroup>
-      </Center>
+      <Pagenation
+        totalPage={totalPage}
+        currentPage={currentPage}
+        setCurrentPage={setCurrentPage}
+      />
     </>
   );
 }

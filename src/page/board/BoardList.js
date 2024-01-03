@@ -51,6 +51,7 @@ import { faHeart as emptyHeart } from "@fortawesome/free-regular-svg-icons";
 import axios from "axios";
 import * as animateCSSGrid from "animate-css-grid";
 import { SearchIcon } from "@chakra-ui/icons";
+import { Pagenation } from "../component/Pagenation";
 
 function LikeContainer({ loggedIn, setLoggedIn, boardId, sendRefreshToken }) {
   const toast = useToast();
@@ -269,6 +270,7 @@ export function BoardList() {
     setSearchParams(params);
     setCurrentPage(0); // 검색 시 첫 페이지로 이동.
   };
+
   // useEffect(() => {
   //   // searchParams 상태를 사용하여 API 호출을 업데이트.
   //   axios
@@ -307,27 +309,6 @@ export function BoardList() {
   // param
   if (boardList === null) {
     return <Spinner />;
-  }
-
-  const pageButton = [];
-  for (let i = 0; i < totalPage; i++) {
-    pageButton.push(
-      <Button
-        key={i}
-        onClick={() => setCurrentPage(i)}
-        colorScheme={i === currentPage ? "pink" : "gray"}
-      >
-        {i + 1}
-      </Button>,
-    );
-  }
-
-  function handlePreviousPage() {
-    setCurrentPage((prev) => Math.max(prev - 1, 0));
-  }
-
-  function handleNextPage() {
-    setCurrentPage((prev) => Math.min(prev + 1, totalPage - 1));
   }
 
   function handleInCart(board) {
@@ -449,7 +430,7 @@ export function BoardList() {
           variant="simple"
           colorScheme="purple"
           w="full"
-          size={{ base: "sm", md: "md", lg: "lg" }}
+          size={{ sm: "xs", base: "sm", md: "md", lg: "lg" }}
           transition="0.5s all ease"
         >
           <Thead>
@@ -462,9 +443,8 @@ export function BoardList() {
               <Td textAlign="center">제목</Td>
               <Td textAlign="center">가수명</Td>
               <Td textAlign="center">가격</Td>
-              <Td textAlign="center">찜한 사람들</Td>
               <Td textAlign="center">찜하기</Td>
-              <Td textAlign="center">카트에 넣기</Td>
+              <Td textAlign="center">카트</Td>
             </Tr>
           </Thead>
           <Tbody>
@@ -482,7 +462,7 @@ export function BoardList() {
                     <Img
                       w="full"
                       h="full"
-                      borderRadius={10}
+                      borderRadius={5}
                       position="absolute"
                       top="0"
                       left="0"
@@ -497,15 +477,6 @@ export function BoardList() {
                   {item.artist}
                 </Td>
                 <Td textAlign="center">₩ {item.price.toLocaleString()}</Td>
-                <Td>
-                  <Flex alignItems="center" justifyContent="center">
-                    <AvatarGroup size="sm" max={isSmallScreen ? 2 : 3}>
-                      {likedPeers.map((name, index) => (
-                        <Avatar key={index} name={name} />
-                      ))}
-                    </AvatarGroup>
-                  </Flex>
-                </Td>
                 <Td>
                   <Flex alignItems="center" justifyContent="center">
                     <IconButton
@@ -707,21 +678,11 @@ export function BoardList() {
         {/*-----------------------------------------*/}
         {/*페이지 네이션-------------------------------------------*/}
         <Spacer h={50} />
-        <Center>
-          <ButtonGroup>
-            <Button onClick={handlePreviousPage} disable={currentPage === 0}>
-              <FontAwesomeIcon icon={faChevronLeft} />
-            </Button>
-            {pageButton}
-            <Button
-              onClick={handleNextPage}
-              e
-              disabled={currentPage === totalPage - 1}
-            >
-              <FontAwesomeIcon icon={faChevronRight} />
-            </Button>
-          </ButtonGroup>
-        </Center>
+        <Pagenation
+          totalPage={totalPage}
+          currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
+        />
         <Spacer h={50} />
       </Box>
     </>

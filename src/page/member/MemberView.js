@@ -33,6 +33,14 @@ export function MemberView() {
   const toast = useToast();
   const [orderNames, setOrderNames] = useState([]);
 
+  useEffect(() => {
+    getMember();
+  }, []);
+
+  if (member === null) {
+    return <Spinner />;
+  }
+
   function getMember() {
     const accessToken = localStorage.getItem("accessToken");
     console.log("엑세스 토큰", accessToken);
@@ -107,14 +115,6 @@ export function MemberView() {
         });
         navigate("/login");
       });
-  }
-
-  useEffect(() => {
-    getMember();
-  }, []);
-
-  if (member === null) {
-    return <Spinner />;
   }
 
   function handleDelete() {

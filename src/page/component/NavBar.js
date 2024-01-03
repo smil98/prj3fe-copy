@@ -48,6 +48,7 @@ import {
   faBuilding,
   faCartShopping,
   faCircleQuestion,
+  faCloudArrowUp,
   faCompactDisc,
   faCreditCard,
   faDollarSign,
@@ -61,6 +62,7 @@ import {
   faUser,
   faUserGear,
   faUserPlus,
+  faUsersGear,
 } from "@fortawesome/free-solid-svg-icons";
 
 export function NavBar(props) {
@@ -118,7 +120,7 @@ export function NavBar(props) {
 
   useEffect(() => {
     getMember();
-  }, []);
+  }, [location]);
 
   function getMember() {
     const accessToken = localStorage.getItem("accessToken");
@@ -272,6 +274,73 @@ export function NavBar(props) {
       });
   }
 
+  const MenuNav = () => {
+    return (
+      <Menu>
+        <MenuButton as={Avatar} boxSize={8} />
+        <MenuList>
+          <Text fontSize="sm" fontWeight="bold" textIndent={10}>
+            👋 환영합니다,{" "}
+            <Text as="span" color="#805AD5">
+              {member.nickName}
+            </Text>
+            님
+          </Text>
+          <MenuDivider />
+          <MenuGroup title="내 정보 보기">
+            <MenuItem
+              icon={<FontAwesomeIcon icon={faUserGear} />}
+              onClick={() => navigate(`/member?${urlParams.toString()}`)}
+            >
+              내 정보
+            </MenuItem>
+            <MenuItem
+              icon={<FontAwesomeIcon icon={faHeart} />}
+              onClick={() => {
+                navigate("/likelist");
+              }}
+            >
+              찜한 목록 //TODO: 수정
+            </MenuItem>
+            <MenuItem
+              icon={<FontAwesomeIcon icon={faScroll} />}
+              onClick={() => {
+                navigate("/orderDetails");
+              }}
+            >
+              주문 내역 //TODO: 수정
+            </MenuItem>
+          </MenuGroup>
+          <MenuDivider />
+          {isAdmin && (
+            <MenuGroup title="관리자">
+              <MenuItem
+                icon={<FontAwesomeIcon icon={faCloudArrowUp} />}
+                onClick={() => navigate("/write")}
+              >
+                제품 등록
+              </MenuItem>
+              <MenuItem
+                icon={<FontAwesomeIcon icon={faCircleQuestion} />}
+                onClick={() => {
+                  navigate("/products");
+                }}
+              >
+                제품 관리 //TODO: 수정
+              </MenuItem>
+              <MenuItem
+                icon={<FontAwesomeIcon icon={faUsersGear} />}
+                onClick={() => navigate("/member/list")}
+              >
+                회원 관리
+              </MenuItem>
+            </MenuGroup>
+          )}
+        </MenuList>
+      </Menu>
+    );
+  };
+
   return (
     <>
       <Flex
@@ -369,37 +438,59 @@ export function NavBar(props) {
                     <MenuList>
                       <Text fontSize="sm" fontWeight="bold" textIndent={10}>
                         👋 환영합니다,{" "}
-                        {member.nickName !== null
-                          ? member.nickName
-                          : member.email}
+                        <Text as="span" color="#805AD5">
+                          {member.nickName}
+                        </Text>
                         님
                       </Text>
                       <MenuDivider />
                       <MenuGroup title="내 정보 보기">
                         <MenuItem
+                          icon={<FontAwesomeIcon icon={faUserGear} />}
                           onClick={() =>
                             navigate(`/member?${urlParams.toString()}`)
                           }
                         >
                           내 정보
                         </MenuItem>
-                        <MenuItem as="div">
-                          <Link>찜한 목록</Link> //TODO: 수정
+                        <MenuItem
+                          icon={<FontAwesomeIcon icon={faHeart} />}
+                          onClick={() => {
+                            navigate("/likelist");
+                          }}
+                        >
+                          찜한 목록 //TODO: 수정
                         </MenuItem>
-                        <MenuItem as="div">
-                          <Link>주문 내역</Link> //TODO: 수정
+                        <MenuItem
+                          icon={<FontAwesomeIcon icon={faScroll} />}
+                          onClick={() => {
+                            navigate("/orderDetails");
+                          }}
+                        >
+                          주문 내역 //TODO: 수정
                         </MenuItem>
                       </MenuGroup>
                       <MenuDivider />
                       {isAdmin && (
                         <MenuGroup title="관리자">
-                          <MenuItem onClick={() => navigate("/write")}>
+                          <MenuItem
+                            icon={<FontAwesomeIcon icon={faCloudArrowUp} />}
+                            onClick={() => navigate("/write")}
+                          >
                             제품 등록
                           </MenuItem>
-                          <MenuItem as="div">
-                            <Link to="#">상품 관리</Link> //TODO: 수정
+                          <MenuItem
+                            icon={<FontAwesomeIcon icon={faCircleQuestion} />}
+                            onClick={() => {
+                              navigate("/products");
+                            }}
+                          >
+                            제품 관리 //TODO: 수정
                           </MenuItem>
-                          <MenuItem onClick={() => navigate("/member/list")}>
+                          <MenuItem
+                            icon={<FontAwesomeIcon icon={faUsersGear} />}
+                            onClick={() => navigate("/member/list")}
+                          >
                             회원 관리
                           </MenuItem>
                         </MenuGroup>
@@ -437,11 +528,19 @@ export function NavBar(props) {
             <Tag variant="ghost">
               <Avatar size="sm" ml={-1} mr={3} />
               <TagLabel fontSize="md" fontWeight="bold">
-                {loggedIn
-                  ? `환영합니다, ${
-                      member.nickName !== null ? member.nickName : member.email
-                    }님`
-                  : "로그인 해주세요"}
+                {loggedIn ? (
+                  <>
+                    환영합니다,{" "}
+                    <Text as="span" color="#805AD5">
+                      {member.nickName !== null
+                        ? member.nickName
+                        : member.email.split("@")[0]}
+                    </Text>
+                    님
+                  </>
+                ) : (
+                  "로그인 해주세요"
+                )}
               </TagLabel>
             </Tag>
           </DrawerHeader>
@@ -519,7 +618,7 @@ export function NavBar(props) {
                     <>
                       <Button
                         iconSpacing={5}
-                        leftIcon={<FontAwesomeIcon icon={faCircleQuestion} />}
+                        leftIcon={<FontAwesomeIcon icon={faCloudArrowUp} />}
                         {...drawerButtonStyle}
                         onClick={() => {
                           onClose();
@@ -541,7 +640,7 @@ export function NavBar(props) {
                       </Button>
                       <Button
                         iconSpacing={5}
-                        leftIcon={<FontAwesomeIcon icon={faCircleQuestion} />}
+                        leftIcon={<FontAwesomeIcon icon={faUsersGear} />}
                         {...drawerButtonStyle}
                         onClick={() => {
                           onClose();

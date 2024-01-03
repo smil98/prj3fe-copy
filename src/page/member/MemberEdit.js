@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import {
-  Box,
   Button,
   ButtonGroup,
   Card,
@@ -9,7 +8,6 @@ import {
   CardHeader,
   FormControl,
   FormErrorMessage,
-  FormHelperText,
   FormLabel,
   Heading,
   HStack,
@@ -30,7 +28,6 @@ import {
   NumberInput,
   NumberInputField,
   NumberInputStepper,
-  Select,
   Spacer,
   Spinner,
   Stack,
@@ -39,10 +36,9 @@ import {
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import {
-  CalendarIcon,
   CheckCircleIcon,
   LockIcon,
   QuestionIcon,
@@ -51,13 +47,12 @@ import {
   ViewOffIcon,
   WarningTwoIcon,
 } from "@chakra-ui/icons";
-import { faAddressBook, faUser } from "@fortawesome/free-solid-svg-icons";
+import { faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useDaumPostcodePopup } from "react-daum-postcode";
-import { postcodeScriptUrl } from "react-daum-postcode/lib/loadPostcode";
 import { PostCode } from "../component/authUtils";
 
 export function MemberEdit() {
+  const { id } = useParams();
   const navigate = useNavigate();
   const [member, setMember] = useState(null);
   const toast = useToast();
@@ -87,14 +82,16 @@ export function MemberEdit() {
 
   // 멤버 불러오기
   useEffect(() => {
-    getMember();
+    getMember(id);
   }, []);
 
-  function getMember() {
+  function getMember(memberId) {
     const accessToken = localStorage.getItem("accessToken");
     console.log("엑세스 토큰", accessToken);
     axios
-      .get("/member", { headers: { Authorization: `Bearer ${accessToken}` } })
+      .get(`/member/${memberId}`, {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      })
       .then((response) => {
         console.log("getMember()의 then 실행");
         setMember(response.data);
@@ -281,7 +278,7 @@ export function MemberEdit() {
       .finally(() => onClose());
   };
 
-  const formLabelStyle = {
+  const labelStyles = {
     color: "#805AD5",
     fontWeight: "bold",
     my: 5,
@@ -301,7 +298,7 @@ export function MemberEdit() {
             수정하지 않을 시 기존 정보가 보존됩니다
           </Heading>
           <FormControl>
-            <FormLabel {...formLabelStyle}>닉네임</FormLabel>
+            <FormLabel {...labelStyles}>닉네임</FormLabel>
             <InputGroup>
               <Input
                 value={nickName}
@@ -339,7 +336,7 @@ export function MemberEdit() {
             )}
           </FormControl>
           <FormControl isInvalid={password.length > 0 && !passwordValid}>
-            <FormLabel {...formLabelStyle}>
+            <FormLabel {...labelStyles}>
               <HStack>
                 <Text>비밀번호</Text>{" "}
                 <Tooltip
@@ -385,7 +382,7 @@ export function MemberEdit() {
           </FormControl>
           {passwordValid && (
             <FormControl isInvalid={!passwordChecked}>
-              <FormLabel {...formLabelStyle}>비밀번호 확인</FormLabel>
+              <FormLabel {...labelStyles}>비밀번호 확인</FormLabel>
               <InputGroup>
                 <Input
                   type="password"
@@ -407,7 +404,7 @@ export function MemberEdit() {
             </FormControl>
           )}
           <FormControl>
-            <FormLabel {...formLabelStyle}>주소</FormLabel>
+            <FormLabel {...labelStyles}>주소</FormLabel>
             <Stack spacing={3}>
               <HStack spacing={3}>
                 <Input
@@ -429,7 +426,7 @@ export function MemberEdit() {
             </Stack>
           </FormControl>
           <FormControl>
-            <FormLabel htmlFor="birth-date" {...formLabelStyle}>
+            <FormLabel htmlFor="birth-date" {...labelStyles}>
               나이
             </FormLabel>
             <NumberInput
@@ -446,7 +443,7 @@ export function MemberEdit() {
             </NumberInput>
           </FormControl>
           <FormControl>
-            <FormLabel {...formLabelStyle}>성별</FormLabel>
+            <FormLabel {...labelStyles}>성별</FormLabel>
             <ButtonGroup isAttached w="full">
               <Button
                 borderLeftRadius={20}
