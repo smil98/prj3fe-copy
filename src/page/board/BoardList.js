@@ -78,6 +78,7 @@ function LikeContainer({ loggedIn, setLoggedIn, boardId, sendRefreshToken }) {
   if (like === null) {
     return <center Spinner />;
   }
+
   function handleLike() {
     if (loggedIn) {
       axios
@@ -126,24 +127,39 @@ function LikeContainer({ loggedIn, setLoggedIn, boardId, sendRefreshToken }) {
   }
 
   return (
-    // <Flex gap={3} ml={400}>
-    <Flex>
-      <Button
-        size="md"
-        variant="ghost"
-        colorScheme="pink"
-        onClick={handleLike}
-        leftIcon={
-          like.isLiked ? (
-            <FontAwesomeIcon icon={fullHeart} size="xl" />
-          ) : (
-            <FontAwesomeIcon icon={emptyHeart} size="xl" />
-          )
-        }
-      >
-        <Heading fontSize="md">{like.countLike}</Heading>
-      </Button>
-    </Flex>
+    //   <Flex gap={3} ml={400}>
+    //   <Flex>
+    //   <Button
+    //     size="md"*/}
+    //     variant="ghost"*/}
+    //     colorScheme="pink"*/}
+    //     onClick={handleLike}*/}
+    //     leftIcon={*/}
+    //      like.isLiked ? (*/}
+    //        <FontAwesomeIcon icon={fullHeart} size="xl" />*/}
+    //       ) : (*/}
+    //         <FontAwesomeIcon icon={emptyHeart} size="xl" />*/}
+    //       )*/}
+    //     }*/}
+    //   >*/}
+    //     <Heading fontSize="md">{like.countLike}</Heading>*/}
+    //   </Button>*/}
+    // </Flex>*/}
+    <IconButton
+      isRound
+      position="absolute"
+      top={3}
+      right={3}
+      onClick={handleLike}
+      icon={
+        like.isLiked ? (
+          <FontAwesomeIcon icon={fullHeart} color="pink" />
+        ) : (
+          <FontAwesomeIcon icon={emptyHeart} color="pink" />
+        )
+      }
+      zIndex={1}
+    />
   );
 }
 
@@ -491,7 +507,8 @@ export function BoardList() {
                 <Td>
                   <Flex alignItems="center" justifyContent="center">
                     <IconButton
-                      isRound={true}
+                      isRound
+                      isDisabled
                       icon={<FontAwesomeIcon icon={emptyHeart} />}
                     />
                   </Flex>
@@ -503,6 +520,7 @@ export function BoardList() {
                         variant="solid"
                         size="sm"
                         colorScheme="purple"
+                        isDisabled
                         icon={<FontAwesomeIcon icon={faCartPlus} />}
                       />
                     ) : (
@@ -510,6 +528,7 @@ export function BoardList() {
                         variant="solid"
                         size="sm"
                         colorScheme="purple"
+                        isDisabled
                         leftIcon={<FontAwesomeIcon icon={faCartPlus} />}
                         borderRadius={20}
                         // onClick={() => handleInCart(board)}
@@ -583,14 +602,12 @@ export function BoardList() {
                         left="0"
                       />
                     </Box>
-                    <IconButton
-                      isRound={true}
-                      position="absolute"
-                      top={3}
-                      right={3}
-                      icon={<FontAwesomeIcon icon={emptyHeart} />}
-                      zIndex={1}
-                    />
+                    {/*          <LikeContainer*/}
+                    {/*            loggedIn={loggedIn}*/}
+                    {/*            setLoggedIn={setLoggedIn}*/}
+                    {/*            boardId={board.id}*/}
+                    {/*            sendRefreshToken={sendRefreshToken}*/}
+                    {/*          />*/}
                   </CardHeader>
                   <CardBody>
                     <Heading size="xs">{item.title}</Heading>
@@ -617,6 +634,7 @@ export function BoardList() {
                       variant="solid"
                       size="sm"
                       colorScheme="purple"
+                      isDisabled
                       leftIcon={<FontAwesomeIcon icon={faCartPlus} />}
                       borderRadius={20}
                       w="full"

@@ -22,6 +22,7 @@ import Payment from "./page/payment/Payment";
 import { Success } from "./page/payment/Success";
 import { Fail } from "./page/payment/Fail";
 import { Search } from "./page/board/Search";
+import { MemberLikes } from "./page/member/MemberLikes";
 
 const routes = createBrowserRouter(
   createRoutesFromElements(
@@ -35,7 +36,7 @@ const routes = createBrowserRouter(
       <Route path="member/list" element={<MemberList />} />
       <Route path="member/:id" element={<MemberView />} />
       <Route path="medit/:id" element={<MemberEdit />} />
-      <Route path="likes/:id" element={<MemberEdit />} />
+      <Route path="likes/:id" element={<MemberLikes />} />
       <Route path="login" element={<MemberLogin />} />
       <Route path="search" element={<Search />} />
       <Route path="loginprocess/:type" element={<MemeberSocialLogin />} />

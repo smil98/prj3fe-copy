@@ -78,6 +78,11 @@ export function NavBar(props) {
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPage, setTotalPage] = useState(0);
 
+  useEffect(() => {
+    getMember();
+    navigate("/");
+  }, [loggedIn]);
+
   //Nav Bar 변환 위해서 따오는 것들
   const isSmallScreen = useBreakpointValue({ base: true, md: false });
 
@@ -117,10 +122,6 @@ export function NavBar(props) {
         setLoggedIn(false);
       });
   }
-
-  useEffect(() => {
-    getMember();
-  }, [location]);
 
   function getMember() {
     const accessToken = localStorage.getItem("accessToken");
@@ -201,10 +202,6 @@ export function NavBar(props) {
     }
     return () => {};
   }, [loggedIn, isSocial]);
-
-  useEffect(() => {
-    navigate("/");
-  }, [loggedIn]);
 
   function handleLogout() {
     console.log("handleLogout");
@@ -311,30 +308,32 @@ export function NavBar(props) {
               주문 내역 //TODO: 수정
             </MenuItem>
           </MenuGroup>
-          <MenuDivider />
           {isAdmin && (
-            <MenuGroup title="관리자">
-              <MenuItem
-                icon={<FontAwesomeIcon icon={faCloudArrowUp} />}
-                onClick={() => navigate("/write")}
-              >
-                제품 등록
-              </MenuItem>
-              <MenuItem
-                icon={<FontAwesomeIcon icon={faCircleQuestion} />}
-                onClick={() => {
-                  navigate("/products");
-                }}
-              >
-                제품 관리 //TODO: 수정
-              </MenuItem>
-              <MenuItem
-                icon={<FontAwesomeIcon icon={faUsersGear} />}
-                onClick={() => navigate("/member/list")}
-              >
-                회원 관리
-              </MenuItem>
-            </MenuGroup>
+            <>
+              <MenuDivider />
+              <MenuGroup title="관리자">
+                <MenuItem
+                  icon={<FontAwesomeIcon icon={faCloudArrowUp} />}
+                  onClick={() => navigate("/write")}
+                >
+                  제품 등록
+                </MenuItem>
+                <MenuItem
+                  icon={<FontAwesomeIcon icon={faCircleQuestion} />}
+                  onClick={() => {
+                    navigate("/products");
+                  }}
+                >
+                  제품 관리 //TODO: 수정
+                </MenuItem>
+                <MenuItem
+                  icon={<FontAwesomeIcon icon={faUsersGear} />}
+                  onClick={() => navigate("/member/list")}
+                >
+                  회원 관리
+                </MenuItem>
+              </MenuGroup>
+            </>
           )}
         </MenuList>
       </Menu>
