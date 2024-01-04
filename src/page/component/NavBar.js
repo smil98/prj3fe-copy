@@ -150,6 +150,7 @@ export function NavBar(props) {
             description: "오류가 발생했습니다",
             status: "error",
           });
+          setLoggedIn(false);
           console.log("그 외 에러");
         }
       });

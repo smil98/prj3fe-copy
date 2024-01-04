@@ -1,6 +1,7 @@
 import { useNavigate, useParams } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import {
+  AbsoluteCenter,
   Box,
   Button,
   Center,
@@ -15,6 +16,7 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
+  Spacer,
   Spinner,
   Stack,
   Text,
@@ -23,6 +25,12 @@ import {
 } from "@chakra-ui/react";
 import axios from "axios";
 import CommentComponent from "../component/CommentComponent";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faHeartCircleXmark,
+  faHouse,
+  faTriangleExclamation,
+} from "@fortawesome/free-solid-svg-icons";
 
 export function BoardView() {
   const { id } = useParams(); //URL에서 동적인 값을 컴포넌트 내에서 쓸때 사용. <Route>컴포넌트 내에서 렌더링되는 컴포넌트에서만 사용가능
@@ -44,6 +52,7 @@ export function BoardView() {
       .catch((error) => console.log(error))
       .finally(() => console.log("끝"));
   }, []);
+
   useEffect(() => {
     axios
       .get("/api/board/file/id/" + id)
@@ -110,17 +119,34 @@ export function BoardView() {
       .finally(() => console.log(loggedIn));
   }
 
-  if (board === null) {
+  if (!board) {
     return (
       <Flex height="100vh" align="center" justify="center">
-        <Spinner
-          center
-          thickness="4px"
-          speed="0.65s"
-          emptyColor="gray.200"
-          color="#805AD5"
-          size="xl"
-        />
+        <Spacer h={120} />
+        <Flex height="70vh" align="center" justify="center" direction="column">
+          <AbsoluteCenter align="center">
+            <FontAwesomeIcon
+              icon={faTriangleExclamation}
+              color="#CDD7E1"
+              size="5x"
+            />
+            <Heading
+              size={{ base: "md", lg: "lg" }}
+              transition="0.3s all ease"
+              my={5}
+              color="gray.300"
+            >
+              존재하지 않는 제품입니다
+            </Heading>
+            <Button
+              leftIcon={<FontAwesomeIcon icon={faHouse} />}
+              colorScheme="purple"
+              onClick={() => navigate("/")}
+            >
+              홈으로 가기
+            </Button>
+          </AbsoluteCenter>
+        </Flex>
       </Flex>
     );
   }

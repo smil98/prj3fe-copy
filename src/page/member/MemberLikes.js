@@ -14,7 +14,7 @@ import {
   Th,
   Tr,
 } from "@chakra-ui/react";
-import { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import axios from "axios";
 import { Pagenation } from "../component/Pagenation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -116,27 +116,60 @@ export function MemberLikes() {
   return (
     <>
       <Spacer h={120} />
-      <TableContainer>
-        <Table>
-          <Tr>
-            <Th>커버</Th>
-            <Th>제목</Th>
-            <Th>가수</Th>
-            <Th>가격</Th>
-            <Th>좋아요</Th>
+      <TableContainer
+        mx={{ md: "5%", lg: "10%" }}
+        p={5}
+        transition="0.5s all ease"
+      >
+        <Table
+          variant="simple"
+          colorScheme="purple"
+          w="full"
+          size={{ sm: "xs", base: "sm", md: "md", lg: "lg" }}
+          transition="0.5s all ease"
+        >
+          <Tr
+            fontWeight="bold"
+            fontSize={{ sm: "xs", base: "sm", md: "md" }}
+            color="#805AD5"
+          >
+            <Th textAlign="center">커버</Th>
+            <Th textAlign="center">제목</Th>
+            <Th textAlign="center">가수</Th>
+            <Th textAlign="center">가격</Th>
+            <Th textAlign="center">좋아요</Th>
           </Tr>
           {likeList.map((like) => (
             <Tr key={like.id}>
               <Td>
-                <Img src={like.fileUrls} />
+                <Flex
+                  alignItems="center"
+                  justifyContent="center"
+                  position="relative"
+                  overflow="hidden"
+                  paddingBottom="100%"
+                  w="full"
+                >
+                  <Img
+                    w="full"
+                    h="full"
+                    borderRadius={5}
+                    position="absolute"
+                    top="0"
+                    left="0"
+                    src={like.fileUrls}
+                  />
+                </Flex>
               </Td>
-              <Td>{like.title}</Td>
-              <Td>{like.artist}</Td>
-              <Td>₩ {like.price.toLocaleString()}</Td>
-              <Td>
+              <Td textAlign="center">{like.title}</Td>
+              <Td textAlign="center">{like.artist}</Td>
+              <Td textAlign="center">₩ {like.price.toLocaleString()}</Td>
+              <Td textAlign="center">
                 <IconButton
                   isRound
                   isDisabled
+                  bgColor="pink"
+                  color="white"
                   icon={<FontAwesomeIcon icon={faHeart} />}
                 />
               </Td>

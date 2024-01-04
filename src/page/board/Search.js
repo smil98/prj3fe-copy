@@ -20,7 +20,7 @@ import {
   HStack,
 } from "@chakra-ui/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSearch } from "@fortawesome/free-solid-svg-icons";
+import { faSearch, faSliders } from "@fortawesome/free-solid-svg-icons";
 import { SearchIcon } from "@chakra-ui/icons";
 
 export const Search = ({ onSearch }) => {
@@ -115,10 +115,10 @@ export const Search = ({ onSearch }) => {
           mb={3}
           onClick={toggleSearchOptions}
           _hover="none"
-          leftIcon={<SearchIcon />}
+          leftIcon={<FontAwesomeIcon icon={faSliders} />}
           iconSpacing={2}
         >
-          검색 조건 설정
+          상세 조건 설정
           {showSearchOptions}
         </Button>
         <Collapse in={showSearchOptions} animateOpacity>

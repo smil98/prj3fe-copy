@@ -1,6 +1,13 @@
 //  앨범 쇼핑몰 첫 페이지 상품 셀렉 페이지
-import React, { createElement, useEffect, useRef, useState } from "react";
+import React, {
+  createElement,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
 import {
+  AbsoluteCenter,
   Avatar,
   AvatarGroup,
   Box,
@@ -43,7 +50,11 @@ import {
   faChevronRight,
   faGrip,
   faHeart as fullHeart,
+  faHeartCircleXmark,
+  faHourglassHalf,
+  faHouse,
   faList,
+  faTriangleExclamation,
   faWonSign,
 } from "@fortawesome/free-solid-svg-icons";
 import { Search } from "./Search";
@@ -171,13 +182,11 @@ export function BoardList() {
   const [totalPage, setTotalPage] = useState(0);
   const itemsPerPage = 16;
   const [board, setBoard] = useState();
-  // const [like, setLike] = useState(null);
   const [loggedIn, setLoggedIn] = useState(false);
   const [isSocial, setIsSocial] = useState(false);
+  const [hoveredIndex, setHoveredIndex] = useState(null);
 
   const toast = useToast();
-  // const { id } = useParams();
-  // const boardId = id;
   const location = useLocation();
 
   const { state } = location;
@@ -208,14 +217,16 @@ export function BoardList() {
   const [isGrid, setIsGrid] = useState(true);
 
   // 2, 1fr <-> 4, 1fr 변동 시 transition 추가
-  useEffect(() => {
+  useLayoutEffect(() => {
     const gridsElement = document.querySelector(".grids");
 
-    animateCSSGrid.wrapGrid(gridsElement, {
-      duration: 600,
-      easing: "linear",
-    });
-  }, [0]);
+    if (gridsElement) {
+      animateCSSGrid.wrapGrid(gridsElement, {
+        duration: 600,
+        easing: "linear",
+      });
+    }
+  }, []);
 
   function sendRefreshToken() {
     const refreshToken = localStorage.getItem("refreshToken");
@@ -287,54 +298,60 @@ export function BoardList() {
     setCurrentPage(0); // 검색 시 첫 페이지로 이동.
   };
 
-  // useEffect(() => {
-  //   // searchParams 상태를 사용하여 API 호출을 업데이트.
-  //   axios
-  //     .get(`/api/board/list`, {
-  //       params: {
-  //         page: currentPage,
-  //         size: itemsPerPage,
-  //         title: searchParams.title,
-  //         albumFormat:
-  //           albumFormat && !searchParams.format
-  //             ? albumFormat
-  //             : searchParams.format,
-  //         // albumDetails가 undefined가 아닌 경우에만 join을 호출.
-  //         albumDetails: searchParams.genres
-  //           ? searchParams.genres.join(",")
-  //           : "",
-  //         minPrice: searchParams.minPrice,
-  //         maxPrice: searchParams.maxPrice,
-  //         stockQuantity: searchParams.stockQuantity,
-  //       },
-  //     })
-  //     .then((response) => {
-  //       const boards = response.data.content;
-  //
-  //       // 각 board 객체에 대해 boardFile의 fileUrl을 추출합니다.
-  //       const updatedBoards = boards.map((board) => {
-  //         // boardFile 객체들이 배열 형태로 저장되어 있다고 가정
-  //         const fileUrls = board.boardFiles.map((file) => file.fileUrl);
-  //         return { ...board, fileUrls };
-  //       });
-  //
-  //       setBoardList(updatedBoards);
-  //       setTotalPage(response.data.totalPages);
-  //     });
-  // }, [currentPage, searchParams, param]);
-  // param
-  if (boardList === null) {
+  useEffect(() => {
+    // searchParams 상태를 사용하여 API 호출을 업데이트.
+    axios
+      .get(`/api/board/list`, {
+        params: {
+          page: currentPage,
+          size: itemsPerPage,
+          title: searchParams.title,
+          albumFormat:
+            albumFormat && !searchParams.format
+              ? albumFormat
+              : searchParams.format,
+          // albumDetails가 undefined가 아닌 경우에만 join을 호출.
+          albumDetails: searchParams.genres
+            ? searchParams.genres.join(",")
+            : "",
+          minPrice: searchParams.minPrice,
+          maxPrice: searchParams.maxPrice,
+          stockQuantity: searchParams.stockQuantity,
+        },
+      })
+      .then((response) => {
+        const boards = response.data.content;
+
+        // 각 board 객체에 대해 boardFile의 fileUrl을 추출합니다.
+        const updatedBoards = boards.map((board) => {
+          // boardFile 객체들이 배열 형태로 저장되어 있다고 가정
+          const fileUrls = board.boardFiles.map((file) => file.fileUrl);
+          return { ...board, fileUrls };
+        });
+
+        setBoardList(updatedBoards);
+        setTotalPage(response.data.totalPages);
+      });
+  }, [currentPage, searchParams, param]);
+
+  if (!boardList || boardList.length === 0) {
     return (
-      <Flex height="100vh" align="center" justify="center">
-        <Spinner
-          center
-          thickness="4px"
-          speed="0.65s"
-          emptyColor="gray.200"
-          color="#805AD5"
-          size="xl"
-        />
-      </Flex>
+      <>
+        <Spacer h={120} />
+        <Flex height="70vh" align="center" justify="center" direction="column">
+          <AbsoluteCenter align="center">
+            <FontAwesomeIcon icon={faHourglassHalf} color="#CDD7E1" size="5x" />
+            <Heading
+              size={{ base: "md", lg: "lg" }}
+              transition="0.3s all ease"
+              my={5}
+              color="gray.300"
+            >
+              상품 준비 중입니다
+            </Heading>
+          </AbsoluteCenter>
+        </Flex>
+      </>
     );
   }
 
@@ -379,74 +396,8 @@ export function BoardList() {
 
   //TODO: board.id 통해서 해당 포스트 좋아요한 사람들 이름 가져오는 쿼리문 작성, axios로 List 받아와 여기에 저장
   const likedPeers = ["John", "Jane", "Alice", "Bob", "Charlie", "David"];
-  const items = [
-    {
-      id: 1,
-      urlString:
-        "https://horizon-ui.com/chakra-pro/static/media/Nft4.5fc37877b25c9fb9a52d.png",
-      price: 12000,
-      title: "item.title",
-      artist: "item.artist",
-    },
-    {
-      id: 2,
-      urlString:
-        "https://horizon-ui.com/chakra-pro/static/media/Nft4.5fc37877b25c9fb9a52d.png",
-      price: 12000,
-      title: "item.title",
-      artist: "item.artist",
-    },
-    {
-      id: 3,
-      urlString:
-        "https://horizon-ui.com/chakra-pro/static/media/Nft4.5fc37877b25c9fb9a52d.png",
-      price: 12000,
-      title: "item.title",
-      artist: "item.artist",
-    },
-    {
-      id: 4,
-      urlString:
-        "https://horizon-ui.com/chakra-pro/static/media/Nft4.5fc37877b25c9fb9a52d.png",
-      price: 12000,
-      title: "item.title",
-      artist: "item.artist",
-    },
-    {
-      id: 5,
-      urlString:
-        "https://horizon-ui.com/chakra-pro/static/media/Nft4.5fc37877b25c9fb9a52d.png",
-      price: 12000,
-      title: "item.title",
-      artist: "item.artist",
-    },
-    {
-      id: 6,
-      urlString:
-        "https://horizon-ui.com/chakra-pro/static/media/Nft4.5fc37877b25c9fb9a52d.png",
-      price: 12000,
-      title: "item.title",
-      artist: "item.artist",
-    },
-    {
-      id: 7,
-      urlString:
-        "https://horizon-ui.com/chakra-pro/static/media/Nft4.5fc37877b25c9fb9a52d.png",
-      price: 12000,
-      title: "item.title",
-      artist: "item.artist",
-    },
-    {
-      id: 8,
-      urlString:
-        "https://horizon-ui.com/chakra-pro/static/media/Nft4.5fc37877b25c9fb9a52d.png",
-      price: 12000,
-      title: "item.title",
-      artist: "item.artist",
-    },
-  ];
 
-  const TableComponent = ({ items, likedPeers }) => {
+  const TableComponent = ({ boards, likedPeers }) => {
     return (
       <TableContainer
         mx={{ md: "5%", lg: "10%" }}
@@ -475,42 +426,47 @@ export function BoardList() {
             </Tr>
           </Thead>
           <Tbody>
-            {items.map((item) => (
-              <Tr key={item.id} textAlign="center">
-                <Td>
-                  <Flex
-                    alignItems="center"
-                    justifyContent="center"
-                    position="relative"
-                    overflow="hidden"
-                    paddingBottom="100%"
-                    w="full"
-                  >
-                    <Img
-                      w="full"
-                      h="full"
-                      borderRadius={5}
-                      position="absolute"
-                      top="0"
-                      left="0"
-                      src={item.urlString}
-                    />
-                  </Flex>
+            {boardList.map((board) => (
+              <Tr key={board.id} textAlign="center">
+                {board.fileUrls &&
+                  board.fileUrls.map((url, index) => (
+                    <Td>
+                      <Flex
+                        alignItems="center"
+                        justifyContent="center"
+                        position="relative"
+                        overflow="hidden"
+                        paddingBottom="100%"
+                        w="full"
+                      >
+                        <Img
+                          w="full"
+                          h="full"
+                          borderRadius={5}
+                          position="absolute"
+                          top="0"
+                          left="0"
+                          src={url}
+                        />
+                      </Flex>
+                    </Td>
+                  ))}
+                <Td textAlign="center" whiteSpace="normal">
+                  {board.title}
                 </Td>
                 <Td textAlign="center" whiteSpace="normal">
-                  {item.title}
+                  {board.artist}
                 </Td>
-                <Td textAlign="center" whiteSpace="normal">
-                  {item.artist}
-                </Td>
-                <Td textAlign="center">₩ {item.price.toLocaleString()}</Td>
+                <Td textAlign="center">₩ {board.price.toLocaleString()}</Td>
                 <Td>
                   <Flex alignItems="center" justifyContent="center">
-                    <IconButton
-                      isRound
-                      isDisabled
-                      icon={<FontAwesomeIcon icon={emptyHeart} />}
-                    />
+                    {/*<LikeContainer*/}
+                    {/*  loggedIn={loggedIn}*/}
+                    {/*  setLoggedIn={setLoggedIn}*/}
+                    {/*  boardId={board.id}*/}
+                    {/*  sendRefreshToken={sendRefreshToken}*/}
+                    {/*/>*/}
+                    {/* TODO: board 끝나고 살리기 */}
                   </Flex>
                 </Td>
                 <Td>
@@ -573,46 +529,71 @@ export function BoardList() {
         <Search onSearch={handleSearch} /> {/* 검색 컴포넌트*/}
         {isGrid ? (
           <SimpleGrid {...gridStyle} className="grids">
-            {items.map((item) => (
+            {boardList.map((board) => (
               <Box
-                key={item.id}
+                key={board.id}
                 w={{ base: "100%", lg: "95%", xl: "85%" }}
                 transition="1s all ease"
+                onMouseEnter={() => setHoveredIndex(board.id)}
+                onMouseLeave={() => setHoveredIndex(null)}
               >
                 <Card p={5} borderRadius={20} shadow="base">
-                  <CardHeader
-                    border="0px dashed blue"
-                    position="relative"
-                    p={0}
-                  >
-                    <Box
-                      position="relative"
-                      overflow="hidden"
-                      paddingBottom="75%" // 4:3 aspect ratio (75% = (3/4) * 100)
-                      w="full"
-                    >
-                      <Img
-                        src={item.urlString}
-                        borderRadius={10}
-                        objectFit="cover"
-                        w="full"
-                        h="full"
-                        position="absolute"
-                        top="0"
-                        left="0"
-                      />
-                    </Box>
-                    {/*          <LikeContainer*/}
-                    {/*            loggedIn={loggedIn}*/}
-                    {/*            setLoggedIn={setLoggedIn}*/}
-                    {/*            boardId={board.id}*/}
-                    {/*            sendRefreshToken={sendRefreshToken}*/}
-                    {/*          />*/}
+                  <CardHeader position="relative" p={0}>
+                    {board.fileUrls &&
+                      board.fileUrls.map((url, index) => (
+                        <Box
+                          position="relative"
+                          overflow="hidden"
+                          paddingBottom="75%" // 4:3 aspect ratio (75% = (3/4) * 100)
+                          w="full"
+                        >
+                          <Img
+                            src={url}
+                            borderRadius={10}
+                            objectFit="cover"
+                            w="full"
+                            h="full"
+                            position="absolute"
+                            top="0"
+                            left="0"
+                          />
+                          {hoveredIndex === board.id && (
+                            <Box
+                              position="absolute"
+                              top="0"
+                              left="0"
+                              right="0"
+                              bottom="0"
+                              p={5}
+                              display="flex"
+                              justifyContent="center"
+                              alignItems="center"
+                              background="rgba(0, 0, 0, 0.7)"
+                              borderRadius={10}
+                            >
+                              <Text
+                                color="white"
+                                fontSize="2xl"
+                                textAlign="center"
+                              >
+                                {board.albumFormat}
+                              </Text>
+                            </Box>
+                          )}
+                        </Box>
+                      ))}
+                    {/*<LikeContainer*/}
+                    {/*  loggedIn={loggedIn}*/}
+                    {/*  setLoggedIn={setLoggedIn}*/}
+                    {/*  boardId={board.id}*/}
+                    {/*  sendRefreshToken={sendRefreshToken}*/}
+                    {/*/>*/}
+                    {/*  TODO: Board 끝나면 like 살려오기 가져오기 */}
                   </CardHeader>
                   <CardBody>
-                    <Heading size="xs">{item.title}</Heading>
+                    <Heading size="sm">{board.title}</Heading>
                     <Text color="gray.600" my={3} fontSize="xs">
-                      By {item.artist}
+                      By {board.artist}
                     </Text>
                     <AvatarGroup size="sm" max={3}>
                       {likedPeers.map((name, index) => (
@@ -620,7 +601,7 @@ export function BoardList() {
                       ))}
                     </AvatarGroup>
                     <Text textAlign="right" mt={3}>
-                      ₩ {item.price.toLocaleString()}
+                      ₩ {board.price.toLocaleString()}
                     </Text>
                   </CardBody>
                   <CardFooter
@@ -644,65 +625,11 @@ export function BoardList() {
                     </Button>
                   </CardFooter>
                 </Card>
-                {/*{boardList.map((board) => (*/}
-                {/*  <Card*/}
-                {/*    key={board.fileUrl}*/}
-                {/*    borderRadius="xl"*/}
-                {/*    w="100%"*/}
-                {/*    h="100%"*/}
-                {/*    variant="outline"*/}
-                {/*    colorScheme="gray"*/}
-                {/*  >*/}
-                {/*    <CardHeader onClick={() => navigate(`/board/${board.id}`)}>*/}
-                {/*      <Center>*/}
-                {/*        {board.fileUrls &&*/}
-                {/*          board.fileUrls.map((url, index) => (*/}
-                {/*            <Image*/}
-                {/*              src={url}*/}
-                {/*              borderRadius="xl"*/}
-                {/*              style={{*/}
-                {/*                width: "200px",*/}
-                {/*                height: "200px",*/}
-                {/*                objectFit: "cover",*/}
-                {/*              }}*/}
-                {/*            />*/}
-                {/*          ))}*/}
-                {/*      </Center>*/}
-                {/*    </CardHeader>*/}
-                {/*    <CardBody onClick={() => navigate(`/board/${board.id}`)}>*/}
-                {/*      <Heading size="md" mb={3}>*/}
-                {/*        {board.title} - {board.artist}*/}
-                {/*      </Heading>*/}
-                {/*      <Heading size="m" textAlign="left">*/}
-                {/*        {board.price.toLocaleString()} 원*/}
-                {/*      </Heading>*/}
-                {/*    </CardBody>*/}
-                {/*    <CardFooter>*/}
-                {/*      <Center>*/}
-                {/*        <ButtonGroup spacing="2">*/}
-                {/*          <IconButton*/}
-                {/*            aria-label="cart"*/}
-                {/*            variant="solid"*/}
-                {/*            colorScheme="pink"*/}
-                {/*            onClick={() => handleInCart(board)}*/}
-                {/*            icon={<FontAwesomeIcon icon={faCartPlus} />}*/}
-                {/*          />*/}
-                {/*          <LikeContainer*/}
-                {/*            loggedIn={loggedIn}*/}
-                {/*            setLoggedIn={setLoggedIn}*/}
-                {/*            boardId={board.id}*/}
-                {/*            sendRefreshToken={sendRefreshToken}*/}
-                {/*          />*/}
-                {/*        </ButtonGroup>*/}
-                {/*      </Center>*/}
-                {/*    </CardFooter>*/}
-                {/*  </Card>*/}
-                {/*))}*/}
               </Box>
             ))}
           </SimpleGrid>
         ) : (
-          <TableComponent items={items} likedPeers={likedPeers} />
+          <TableComponent boardList={boardList} likedPeers={likedPeers} />
         )}
         {/*-----------------------------------------*/}
         {/*페이지 네이션-------------------------------------------*/}
