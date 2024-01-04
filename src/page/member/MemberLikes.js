@@ -67,7 +67,9 @@ export function MemberLikes() {
         },
       })
       .then((response) => {
+        console.log("/api/like/list/${id} 후");
         const boards = response.data.content;
+        console.log(boards);
 
         const updatedBoards = boards
           ? boards.map((board) => {

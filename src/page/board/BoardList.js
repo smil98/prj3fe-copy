@@ -161,12 +161,15 @@ function LikeContainer({ loggedIn, setLoggedIn, boardId, sendRefreshToken }) {
       position="absolute"
       top={3}
       right={3}
-      onClick={handleLike}
+      onClick={(e) => {
+        e.stopPropagation();
+        handleLike();
+      }}
       icon={
         like.isLiked ? (
-          <FontAwesomeIcon icon={fullHeart} color="pink" />
+          <FontAwesomeIcon color="red" icon={fullHeart} />
         ) : (
-          <FontAwesomeIcon icon={emptyHeart} color="pink" />
+          <FontAwesomeIcon icon={emptyHeart} />
         )
       }
       zIndex={1}
@@ -534,6 +537,9 @@ export function BoardList() {
                 key={board.id}
                 w={{ base: "100%", lg: "95%", xl: "85%" }}
                 transition="1s all ease"
+                onClick={() => {
+                  navigate(`/board/${board.id}`);
+                }}
                 onMouseEnter={() => setHoveredIndex(board.id)}
                 onMouseLeave={() => setHoveredIndex(null)}
               >
@@ -582,12 +588,12 @@ export function BoardList() {
                           )}
                         </Box>
                       ))}
-                    {/*<LikeContainer*/}
-                    {/*  loggedIn={loggedIn}*/}
-                    {/*  setLoggedIn={setLoggedIn}*/}
-                    {/*  boardId={board.id}*/}
-                    {/*  sendRefreshToken={sendRefreshToken}*/}
-                    {/*/>*/}
+                    <LikeContainer
+                      loggedIn={loggedIn}
+                      setLoggedIn={setLoggedIn}
+                      boardId={board.id}
+                      sendRefreshToken={sendRefreshToken}
+                    />
                     {/*  TODO: Board 끝나면 like 살려오기 가져오기 */}
                   </CardHeader>
                   <CardBody>
@@ -615,11 +621,13 @@ export function BoardList() {
                       variant="solid"
                       size="sm"
                       colorScheme="purple"
-                      isDisabled
                       leftIcon={<FontAwesomeIcon icon={faCartPlus} />}
                       borderRadius={20}
                       w="full"
-                      // onClick={() => handleInCart(board)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleInCart(board);
+                      }}
                     >
                       카트에 넣기
                     </Button>

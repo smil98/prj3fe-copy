@@ -8,6 +8,7 @@ import {
   Divider,
   Flex,
   Heading,
+  HStack,
   Image,
   Modal,
   ModalBody,
@@ -22,6 +23,7 @@ import {
   Text,
   useDisclosure,
   useToast,
+  VStack,
 } from "@chakra-ui/react";
 import axios from "axios";
 import CommentComponent from "../component/CommentComponent";
@@ -175,8 +177,38 @@ export function BoardView() {
       .finally(() => onClose());
   }
 
+  const formattedDate = (releaseDate) => {
+    const date = new Date(releaseDate);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0"); // Adding 1 because months are zero-based
+    const day = String(date.getDate()).padStart(2, "0");
+
+    return `${year}.${month}.${day}`;
+  };
+
   return (
     <>
+      <Spacer h={150} />
+      <HStack mx={{ base: "5%", md: "10%", lg: "15%" }}>
+        {fileURL.map((url) => (
+          <Box border="3px solid red" key={url}>
+            <Image
+              src={url}
+              w={{ base: "180px", md: "200px", lg: "300px" }}
+              transition="1s all ease"
+            />
+          </Box>
+        ))}
+        <VStack spacing={2} ml={10} alignItems="left">
+          <Heading>{board.title}</Heading>
+          <Heading size="sm" mb={5}>
+            {board.artist}
+          </Heading>
+          <Text>{board.albumFormat}</Text>
+          <Text>{board.price.toLocaleString()}</Text>
+          <Text>{formattedDate(board.releaseDate)}</Text>
+        </VStack>
+      </HStack>
       <>
         <Divider />
         <Box margin="40">
