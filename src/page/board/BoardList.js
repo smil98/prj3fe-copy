@@ -64,7 +64,13 @@ import * as animateCSSGrid from "animate-css-grid";
 import { SearchIcon } from "@chakra-ui/icons";
 import { Pagenation } from "../component/Pagenation";
 
-function LikeContainer({ loggedIn, setLoggedIn, boardId, sendRefreshToken }) {
+function LikeContainer({
+  loggedIn,
+  setLoggedIn,
+  boardId,
+  sendRefreshToken,
+  isGrid,
+}) {
   const toast = useToast();
   const [like, setLike] = useState(null);
 
@@ -158,9 +164,9 @@ function LikeContainer({ loggedIn, setLoggedIn, boardId, sendRefreshToken }) {
     // </Flex>*/}
     <IconButton
       isRound
-      position="absolute"
-      top={3}
-      right={3}
+      top={isGrid ? 3 : undefined}
+      right={isGrid ? 3 : undefined}
+      position={isGrid ? "absolute" : "undefined"}
       onClick={(e) => {
         e.stopPropagation();
         handleLike();
@@ -463,13 +469,12 @@ export function BoardList() {
                 <Td textAlign="center">₩ {board.price.toLocaleString()}</Td>
                 <Td>
                   <Flex alignItems="center" justifyContent="center">
-                    {/*<LikeContainer*/}
-                    {/*  loggedIn={loggedIn}*/}
-                    {/*  setLoggedIn={setLoggedIn}*/}
-                    {/*  boardId={board.id}*/}
-                    {/*  sendRefreshToken={sendRefreshToken}*/}
-                    {/*/>*/}
-                    {/* TODO: board 끝나고 살리기 */}
+                    <LikeContainer
+                      loggedIn={loggedIn}
+                      setLoggedIn={setLoggedIn}
+                      boardId={board.id}
+                      sendRefreshToken={sendRefreshToken}
+                    />
                   </Flex>
                 </Td>
                 <Td>
@@ -487,10 +492,9 @@ export function BoardList() {
                         variant="solid"
                         size="sm"
                         colorScheme="purple"
-                        isDisabled
                         leftIcon={<FontAwesomeIcon icon={faCartPlus} />}
                         borderRadius={20}
-                        // onClick={() => handleInCart(board)}
+                        onClick={() => handleInCart(board)}
                       >
                         {isSmallScreen ? "" : "카트에 넣기"}
                       </Button>
@@ -591,6 +595,7 @@ export function BoardList() {
                     <LikeContainer
                       loggedIn={loggedIn}
                       setLoggedIn={setLoggedIn}
+                      isGrid={isGrid}
                       boardId={board.id}
                       sendRefreshToken={sendRefreshToken}
                     />
