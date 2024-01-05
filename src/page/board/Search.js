@@ -112,6 +112,7 @@ export const Search = ({ onSearch }) => {
           type="button"
           variant="outline"
           colorScheme="purple"
+          transition="1s all ease"
           mb={3}
           onClick={toggleSearchOptions}
           _hover="none"

@@ -605,7 +605,7 @@ export function BoardList() {
                   </CardHeader>
                   <CardBody>
                     <Heading size="sm">{board.title}</Heading>
-                    <Text color="gray.600" my={3} fontSize="xs">
+                    <Text color="gray.600" my={3} fontSize="sm">
                       By {board.artist}
                     </Text>
                     <AvatarGroup size="sm" max={3}>

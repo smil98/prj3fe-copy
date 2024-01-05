@@ -33,7 +33,7 @@ import {
   faChevronLeft,
   faChevronRight,
   faComment,
-  faPenNib,
+  faPenToSquare,
   faTrashCan,
   faXmark,
 } from "@fortawesome/free-solid-svg-icons";
@@ -135,7 +135,7 @@ function CommentContent({
 
   return (
     <Box>
-      <Flex justifyContent="space-between">
+      <Flex justifyContent="space-between" mb={isEditing ? 2 : 0}>
         <HStack>
           <Text size={10} fontSize="sm" color="dimgrey">
             <Text as="span" color="#805AD5" fontWeight="bold">
@@ -155,7 +155,7 @@ function CommentContent({
               colorScheme="purple"
               variant="ghost"
               _hover={{ color: "white", bgColor: "purple" }}
-              icon={<FontAwesomeIcon icon={faPenNib} />}
+              icon={<FontAwesomeIcon icon={faPenToSquare} />}
               onClick={() => setIsEditing(true)}
             />
           )}
@@ -194,6 +194,12 @@ function CommentContent({
               <Textarea
                 w="84%"
                 value={commentEdit}
+                _focus={{
+                  outline: "none",
+                  border: "1px solid purple",
+                  boxShadow: "sm",
+                  bgColor: "none",
+                }}
                 onChange={(e) => setCommentEdit(e.target.value)}
               />
               <Button
@@ -231,18 +237,22 @@ function CommentList({
       {commentList &&
         commentList.map((comment, index) => (
           <Box key={comment.id}>
-            <CommentContent
-              // key={comment.id}
-              comment={comment}
-              isSubmitting={isSubmitting}
-              setIsSubmitting={setIsSubmitting}
-              onDeleteModalOpen={onDeleteModalOpen}
-              email={email}
-              isAdmin={isAdmin}
-              sendRefreshToken={sendRefreshToken}
-              setAccessToken={setAccessToken}
-            />
-            {index < commentList.length - 1 && <Divider my={3} />}
+            <Box
+              p={3}
+              bgColor={comment.member.email === email ? "gray.50" : "none"}
+            >
+              <CommentContent
+                comment={comment}
+                isSubmitting={isSubmitting}
+                setIsSubmitting={setIsSubmitting}
+                onDeleteModalOpen={onDeleteModalOpen}
+                email={email}
+                isAdmin={isAdmin}
+                sendRefreshToken={sendRefreshToken}
+                setAccessToken={setAccessToken}
+              />
+            </Box>
+            {index < commentList.length - 1 && <Divider />}
           </Box>
         ))}
     </>
@@ -257,10 +267,16 @@ function CommentForm({ boardId, isSubmitting, onSubmit }) {
   }
 
   return (
-    <Flex justifyContent="space-between">
+    <Flex justifyContent="space-between" px={5}>
       <Textarea
         w="84%"
         placeholder="리뷰를 작성해주세요"
+        _focus={{
+          outline: "none",
+          border: "1px solid purple",
+          boxShadow: "sm",
+          bgColor: "none",
+        }}
         value={content}
         onChange={(e) => setContent(e.target.value)}
       ></Textarea>
@@ -468,19 +484,21 @@ function CommentComponent({ boardId, loggedIn, email, isAdmin }) {
         {/*댓글 바로 올라가도록 하려면 CommentForm의 상태를 CommentList가 알도록 해야함.
        부모인 Comment컴포넌트가 그 상태를 갖고있으면 됨. 그리고 prop으로 받기*/}
         <CardHeader>
-          <HStack spacing={3} mb={5}>
+          <HStack spacing={3} p={5}>
             <Heading size="md">
               <FontAwesomeIcon icon={faComment} />
             </Heading>
             <Heading size="md">리뷰</Heading>
           </HStack>
-          <CommentForm
-            boardId={boardId}
-            isSubmitting={isSubmitting}
-            onSubmit={handleSubmit}
-          />
+          {loggedIn && (
+            <CommentForm
+              boardId={boardId}
+              isSubmitting={isSubmitting}
+              onSubmit={handleSubmit}
+            />
+          )}
         </CardHeader>
-        <CardBody>
+        <CardBody px={10}>
           <CommentList
             boardId={boardId}
             isSubmitting={isSubmitting}

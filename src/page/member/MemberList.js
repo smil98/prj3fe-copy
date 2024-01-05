@@ -33,7 +33,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faGear,
-  faPenNib,
+  faPenToSquare,
   faSearch,
   faTrashCan,
 } from "@fortawesome/free-solid-svg-icons";
@@ -194,7 +194,7 @@ export function MemberList() {
                     <IconButton
                       variant="ghost"
                       colorScheme="purple"
-                      icon={<FontAwesomeIcon icon={faPenNib} />}
+                      icon={<FontAwesomeIcon icon={faPenToSquare} />}
                       onClick={(e) => {
                         e.stopPropagation();
                         navigate("/medit/" + member.id);

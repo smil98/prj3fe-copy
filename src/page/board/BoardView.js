@@ -42,7 +42,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faHeartCircleXmark,
   faHouse,
-  faPenNib,
+  faPenToSquare,
   faTags,
   faTrashCan,
   faTriangleExclamation,
@@ -227,7 +227,7 @@ export function BoardView() {
             {isAdmin && (
               <ButtonGroup ml={8} size="sm">
                 <IconButton
-                  icon={<FontAwesomeIcon icon={faPenNib} />}
+                  icon={<FontAwesomeIcon icon={faPenToSquare} />}
                   colorScheme="purple"
                   variant="ghost"
                   onClick={() => navigate("/edit/" + id)}
