@@ -144,42 +144,44 @@ function LikeContainer({
   }
 
   return (
-    //   <Flex gap={3} ml={400}>
-    //   <Flex>
-    //   <Button
-    //     size="md"*/}
-    //     variant="ghost"*/}
-    //     colorScheme="pink"*/}
-    //     onClick={handleLike}*/}
-    //     leftIcon={*/}
-    //      like.isLiked ? (*/}
-    //        <FontAwesomeIcon icon={fullHeart} size="xl" />*/}
-    //       ) : (*/}
-    //         <FontAwesomeIcon icon={emptyHeart} size="xl" />*/}
-    //       )*/}
-    //     }*/}
-    //   >*/}
-    //     <Heading fontSize="md">{like.countLike}</Heading>*/}
-    //   </Button>*/}
-    // </Flex>*/}
-    <IconButton
-      isRound
-      top={isGrid ? 3 : undefined}
-      right={isGrid ? 3 : undefined}
-      position={isGrid ? "absolute" : "undefined"}
-      onClick={(e) => {
-        e.stopPropagation();
-        handleLike();
-      }}
-      icon={
-        like.isLiked ? (
-          <FontAwesomeIcon color="red" icon={fullHeart} />
-        ) : (
-          <FontAwesomeIcon icon={emptyHeart} />
-        )
-      }
-      zIndex={1}
-    />
+    <>
+      {isGrid ? (
+        <IconButton
+          isRound
+          top={3}
+          right={3}
+          position="absolute"
+          onClick={(e) => {
+            e.stopPropagation();
+            handleLike();
+          }}
+          icon={
+            like.isLiked ? (
+              <FontAwesomeIcon color="red" icon={fullHeart} />
+            ) : (
+              <FontAwesomeIcon icon={emptyHeart} />
+            )
+          }
+          zIndex={1}
+        />
+      ) : (
+        <IconButton
+          isRound
+          onClick={(e) => {
+            e.stopPropagation();
+            handleLike();
+          }}
+          icon={
+            like.isLiked ? (
+              <FontAwesomeIcon color="red" icon={fullHeart} />
+            ) : (
+              <FontAwesomeIcon icon={emptyHeart} />
+            )
+          }
+          zIndex={1}
+        />
+      )}
+    </>
   );
 }
 

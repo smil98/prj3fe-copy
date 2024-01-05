@@ -1,15 +1,20 @@
-import { useNavigate, useParams } from "react-router-dom";
+import { Form, useNavigate, useParams } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import {
   AbsoluteCenter,
   Box,
   Button,
+  ButtonGroup,
   Center,
   Divider,
   Flex,
+  FormControl,
+  FormLabel,
   Heading,
   HStack,
+  IconButton,
   Image,
+  Input,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -20,7 +25,13 @@ import {
   Spacer,
   Spinner,
   Stack,
+  Table,
+  TableContainer,
+  Tag,
+  Td,
   Text,
+  Th,
+  Tr,
   useDisclosure,
   useToast,
   VStack,
@@ -31,6 +42,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faHeartCircleXmark,
   faHouse,
+  faPenNib,
+  faTags,
+  faTrashCan,
   faTriangleExclamation,
 } from "@fortawesome/free-solid-svg-icons";
 
@@ -189,102 +203,115 @@ export function BoardView() {
   return (
     <>
       <Spacer h={150} />
-      <HStack mx={{ base: "5%", md: "10%", lg: "15%" }}>
+      <HStack spacing="5%" mx={{ base: "5%", md: "10%", lg: "15%" }}>
         {fileURL.map((url) => (
-          <Box border="3px solid red" key={url}>
-            <Image
-              src={url}
-              w={{ base: "180px", md: "200px", lg: "300px" }}
-              transition="1s all ease"
-            />
+          <Box
+            w={{ sm: "50%", base: "45%", md: "45%", lg: "50%" }}
+            transition="1s all ease"
+            key={url}
+          >
+            <Image src={url} w="100%" h="100%" objectFit="cover" />
           </Box>
         ))}
-        <VStack spacing={2} ml={10} alignItems="left">
-          <Heading>{board.title}</Heading>
-          <Heading size="sm" mb={5}>
-            {board.artist}
+        <VStack
+          w={{ sm: "45%", base: "50%", md: "50%", lg: "45%" }}
+          spacing={{ sm: 2, base: 4, md: 4, lg: 5 }}
+          alignItems="left"
+          transition="1s all ease"
+        >
+          <Heading
+            size={{ xs: "xs", sm: "lg", base: "2xl" }}
+            transition="1s all ease"
+          >
+            {board.title}
+            {isAdmin && (
+              <ButtonGroup ml={8} size="sm">
+                <IconButton
+                  icon={<FontAwesomeIcon icon={faPenNib} />}
+                  colorScheme="purple"
+                  variant="ghost"
+                  onClick={() => navigate("/edit/" + id)}
+                />
+                <IconButton
+                  icon={<FontAwesomeIcon icon={faTrashCan} />}
+                  colorScheme="red"
+                  variant="ghost"
+                  onClick={onOpen}
+                />
+              </ButtonGroup>
+            )}
           </Heading>
-          <Text>{board.albumFormat}</Text>
-          <Text>{board.price.toLocaleString()}</Text>
-          <Text>{formattedDate(board.releaseDate)}</Text>
+          <HStack>
+            <Text w="25%">가수</Text>
+            <Text w="70%" overflowWrap="break-word">
+              {board.artist}
+            </Text>
+          </HStack>
+          <HStack>
+            <Text w="25%">형태</Text>
+            <Text>{board.albumFormat}</Text>
+          </HStack>
+          <HStack>
+            <Text w="25%">음반사</Text>
+            <Text w="70%" overflowWrap="break-word">
+              {board.agency}
+            </Text>
+          </HStack>
+          <HStack>
+            <Text w="25%">판매가</Text>
+            <Text
+              as="span"
+              color="#805AD5"
+              fontSize={{ base: "lg", md: "xl", lg: "2xl" }}
+              transition="1s all ease"
+            >
+              {board.price.toLocaleString()}{" "}
+            </Text>
+            <Text as="span" color="#805AD5" fontSize="base">
+              원
+            </Text>
+          </HStack>
+          <HStack mb={2}>
+            <Text w="25%">발매일</Text>
+            <Text>{formattedDate(board.releaseDate)}</Text>
+          </HStack>
         </VStack>
       </HStack>
-      <>
-        <Divider />
-        <Box margin="40">
-          <Center>
-            <Stack
-              direction={["column", "row"]}
-              margin="50"
-              justifyContent=""
-              gap={4}
-            >
-              <Box border="0px solid black" bg="orange">
-                {fileURL.map((url) => (
-                  <Box key={url}>
-                    <Image
-                      src={url}
-                      w="400px"
-                      h="400px"
-                      border="0px solid black"
-                    />
-                  </Box>
-                ))}
-              </Box>
-              <Box mt={25} ml={5} border="0px solid yellow">
-                <Heading size="md">앨범명 : {board.title}</Heading>
-                <br />
-                <br />
-                <br />
-                <Heading size="s">음반 형태: {board.albumFormat}</Heading>
-                <Heading size="m">아티스트 : {board.artist}</Heading>
-                <Heading size="m">앨범 가격 : {board.price}</Heading>
-                <Heading size="s">발매일자 : {board.releaseDate}</Heading>
-              </Box>
+      <Center>
+        <Divider mt={10} w={{ base: "95%", md: "90%", lg: "85%" }} />
+      </Center>
+      <Text whiteSpace="break-spaces" mx={{ base: "5%", md: "10%", lg: "15%" }}>
+        <Heading my={10}>앨범 소개</Heading>
+        {board.content}
+        <HStack my={10}>
+          <FontAwesomeIcon icon={faTags} />
+          {board.albumGenres.map((genre, index) => (
+            <Tag colorScheme="purple" key={genre.id}>
+              {genre.albumDetail === "K_POP" ? "K-POP" : genre.albumDetail}
+            </Tag>
+          ))}
+        </HStack>
+      </Text>
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>상품 삭제</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>해당 상품을 삭제 하시겠습니까?</ModalBody>
+          <ModalFooter display="flex" justifyContent="center">
+            <Button w="30%" mr={5} onClick={handleDelete} colorScheme="red">
+              삭제
+            </Button>
+            <Button w="30%" onClick={onClose}>
+              닫기
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+      <Center>
+        <Divider mt={10} w={{ base: "95%", md: "90%", lg: "85%" }} />
+      </Center>
 
-              {/*관리자 권한 편집 기능*/}
-              {isAdmin && (
-                <Button
-                  colorScheme="pink"
-                  onClick={() => navigate("/edit/" + id)}
-                >
-                  edit
-                </Button>
-              )}
-              {isAdmin && (
-                <Button colorScheme="orange" onClick={onOpen}>
-                  delete
-                </Button>
-              )}
-
-              {/* 삭제 모달 */}
-              <Modal isOpen={isOpen} onClose={onClose}>
-                <ModalOverlay />
-                <ModalContent>
-                  <ModalHeader>Delete Message</ModalHeader>
-                  <ModalCloseButton />
-                  <ModalBody>해당 상품을 삭제 하시겠습니까?</ModalBody>
-                  <ModalFooter>
-                    <Button onClose={onClose}>닫기</Button>
-                    <Button onClick={handleDelete} colorScheme="red">
-                      삭제
-                    </Button>
-                  </ModalFooter>
-                </ModalContent>
-              </Modal>
-              {/* 댓글 */}
-            </Stack>
-          </Center>
-          <Divider />
-          <Center margin={50}>
-            <Box w="80%" h="90%" bg="">
-              <Text sx={{ whiteSpace: "pre-wrap" }} size="m">
-                Album Introduction : {board.content}
-              </Text>
-            </Box>
-          </Center>
-        </Box>
-      </>
       <CommentComponent
         boardId={id}
         loggedIn={loggedIn}
