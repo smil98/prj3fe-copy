@@ -54,7 +54,7 @@ export function BoardView() {
   const [fileURL, setFileURL] = useState([]);
   const [isAdmin, setIsAdmin] = useState(false);
   const [isSocial, setIsSocial] = useState(false);
-  const [userLogId, setUserLogId] = useState("");
+  const [email, setEmail] = useState("");
   const [loggedIn, setLoggedIn] = useState(false);
 
   const toast = useToast();
@@ -90,7 +90,7 @@ export function BoardView() {
           console.log("accessToken then 수행");
           console.log(response.data);
           setLoggedIn(true);
-          setUserLogId(response.data.logId);
+          setEmail(response.data.email);
           if (response.data.role === "ROLE_ADMIN") {
             console.log("setIsAdmin(true) 동작");
             setIsAdmin(true);
@@ -315,7 +315,7 @@ export function BoardView() {
       <CommentComponent
         boardId={id}
         loggedIn={loggedIn}
-        userLogId={userLogId}
+        email={email}
         isAdmin={isAdmin}
       />
     </>

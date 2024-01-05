@@ -5,10 +5,14 @@ import {
   ButtonGroup,
   Card,
   CardBody,
+  CardFooter,
   CardHeader,
   Center,
+  Divider,
   Flex,
   Heading,
+  HStack,
+  IconButton,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -16,6 +20,7 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
+  Spacer,
   Stack,
   StackDivider,
   Text,
@@ -27,16 +32,21 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faChevronLeft,
   faChevronRight,
+  faComment,
+  faPenNib,
+  faTrashCan,
+  faXmark,
 } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { Pagenation } from "./Pagenation";
 
 function CommentContent({
   comment,
   onDeleteModalOpen,
   isSubmitting,
   setIsSubmitting,
-  userLogId,
+  email,
   isAdmin,
   sendRefreshToken,
   setAccessToken,
@@ -44,7 +54,6 @@ function CommentContent({
   const [isEditing, setIsEditing] = useState(false);
   const [commentEdit, setCommentEdit] = useState(comment.content);
   const toast = useToast();
-  // const [loggedIn, setLoggedIn] = useState(false);
 
   const commentUpdate = {
     updateTime: comment.updateTime,
@@ -70,7 +79,7 @@ function CommentContent({
         {
           id: comment.id,
           content: commentEdit,
-          member: { logId: comment.member.logId },
+          member: { email: comment.member.email },
         },
         {
           headers: {
@@ -93,7 +102,7 @@ function CommentContent({
               {
                 id: comment.id,
                 content: commentEdit,
-                member: { logId: comment.member.logId },
+                member: { email: comment.member.email },
               },
               {
                 headers: {
@@ -127,62 +136,78 @@ function CommentContent({
   return (
     <Box>
       <Flex justifyContent="space-between">
-        <Text size={10} fontSize="sm" color="dimgrey">
-          {comment.member.logId}님
-        </Text>
-        <Text fontSize="xs" color="gray">
-          {/*{comment.updateTime}*/}
-          {commentUpdateTime}
-        </Text>
+        <HStack>
+          <Text size={10} fontSize="sm" color="dimgrey">
+            <Text as="span" color="#805AD5" fontWeight="bold">
+              {comment.member.nickName}
+            </Text>
+            님
+          </Text>
+          <Text fontSize="xs" color="gray">
+            {/*{comment.updateTime}*/}
+            {commentUpdateTime}
+          </Text>
+        </HStack>
+        <ButtonGroup>
+          {comment.member.email === email && !isEditing && (
+            <IconButton
+              size="xs"
+              colorScheme="purple"
+              variant="ghost"
+              _hover={{ color: "white", bgColor: "purple" }}
+              icon={<FontAwesomeIcon icon={faPenNib} />}
+              onClick={() => setIsEditing(true)}
+            />
+          )}
+          {isEditing && (
+            <IconButton
+              size="xs"
+              color="purple"
+              variant="ghost"
+              _hover={{ color: "white", bgColor: "purple" }}
+              icon={<FontAwesomeIcon icon={faXmark} />}
+              onClick={() => setIsEditing(false)}
+            />
+          )}
+          {(comment.member.email === email || isAdmin) && (
+            <IconButton
+              size="xs"
+              color="red"
+              variant="ghost"
+              _hover={{ color: "white", bgColor: "red" }}
+              icon={<FontAwesomeIcon icon={faTrashCan} />}
+              onClick={() => onDeleteModalOpen(comment.id)}
+            />
+          )}
+        </ButtonGroup>
       </Flex>
       <Flex justifyContent="space-between" alignItems="center">
         <Box flex={1}>
-          {/*{!isEditing && (*/}
-          <Text sx={{ whiteSpace: "pre-wrap" }} pt="2" fontSize="medium">
-            {comment.content}
-          </Text>
-          {/*)}*/}
+          {!isEditing && (
+            <Text sx={{ whiteSpace: "pre-wrap" }} pt="2" fontSize="medium">
+              {comment.content}
+            </Text>
+          )}
 
           {isEditing && (
-            <Box>
+            <Flex justifyContent="space-between">
               <Textarea
+                w="84%"
                 value={commentEdit}
                 onChange={(e) => setCommentEdit(e.target.value)}
               />
               <Button
-                colorScheme="pink"
+                w="14%"
+                p={0}
+                m={0}
+                size="undefined"
+                colorScheme="purple"
                 onClick={handleSubmit}
                 disabled={isSubmitting}
               >
-                저장
+                작성
               </Button>
-            </Box>
-          )}
-        </Box>
-
-        <Box>
-          {comment.member.logId === userLogId && !isEditing && (
-            <Button
-              size="xs"
-              colorScheme="blue"
-              onClick={() => setIsEditing(true)}
-            >
-              수정
-            </Button>
-          )}
-          {isEditing && (
-            <Button
-              size="xs"
-              colorScheme="red"
-              onClick={() => setIsEditing(false)}
-            >
-              취소
-            </Button>
-          )}
-          {(comment.member.logId === userLogId || isAdmin) && (
-            <Button size="xs" onClick={() => onDeleteModalOpen(comment.id)}>
-              삭제
-            </Button>
+            </Flex>
           )}
         </Box>
       </Flex>
@@ -195,66 +220,67 @@ function CommentList({
   onDeleteModalOpen,
   isSubmitting,
   setIsSubmitting,
-  userLogId,
+  email,
   isAdmin,
   sendRefreshToken,
   setAccessToken,
+  loggedIn,
 }) {
-  const toast = useToast();
-
   return (
-    <Center mt="20">
-      <Card w="xl">
-        <CardHeader>
-          <Heading size="sm">REVIEW</Heading>
-        </CardHeader>
-        <CardBody>
-          <Stack divider={<StackDivider />} spacing="3">
-            {commentList &&
-              commentList.map((comment) => (
-                <CommentContent
-                  key={comment.id}
-                  comment={comment}
-                  isSubmitting={isSubmitting}
-                  setIsSubmitting={setIsSubmitting}
-                  onDeleteModalOpen={onDeleteModalOpen}
-                  userLogId={userLogId}
-                  isAdmin={isAdmin}
-                  sendRefreshToken={sendRefreshToken}
-                  setAccessToken={setAccessToken}
-                />
-              ))}
-          </Stack>
-        </CardBody>
-      </Card>
-    </Center>
+    <>
+      {commentList &&
+        commentList.map((comment, index) => (
+          <Box key={comment.id}>
+            <CommentContent
+              // key={comment.id}
+              comment={comment}
+              isSubmitting={isSubmitting}
+              setIsSubmitting={setIsSubmitting}
+              onDeleteModalOpen={onDeleteModalOpen}
+              email={email}
+              isAdmin={isAdmin}
+              sendRefreshToken={sendRefreshToken}
+              setAccessToken={setAccessToken}
+            />
+            {index < commentList.length - 1 && <Divider my={3} />}
+          </Box>
+        ))}
+    </>
   );
 }
 
 function CommentForm({ boardId, isSubmitting, onSubmit }) {
   const [content, setContent] = useState("");
 
-  const toast = useToast();
-
   function handleSubmit() {
     onSubmit({ content });
   }
+
   return (
-    <Box>
+    <Flex justifyContent="space-between">
       <Textarea
+        w="84%"
         placeholder="리뷰를 작성해주세요"
         value={content}
         onChange={(e) => setContent(e.target.value)}
       ></Textarea>
-      <Button onClick={handleSubmit} isDisabled={isSubmitting}>
+      <Button
+        w="14%"
+        p={0}
+        m={0}
+        colorScheme="purple"
+        size="undefined"
+        onClick={handleSubmit}
+        isDisabled={isSubmitting}
+      >
         {/*버튼 활성화*/}
         작성
       </Button>
-    </Box>
+    </Flex>
   );
 }
 
-function CommentComponent({ boardId, loggedIn, userLogId, isAdmin }) {
+function CommentComponent({ boardId, loggedIn, email, isAdmin }) {
   const [isSubmitting, setIsSubmitting] = useState(false); //제출이 됐는지 알 수 있는 상태를 씀
   //submit했으면 isDisabled가 true되도록 설정
 
@@ -287,27 +313,6 @@ function CommentComponent({ boardId, loggedIn, userLogId, isAdmin }) {
     }
   }, [isSubmitting, boardId, currentPage, accessToken]); //pageSize 삭제
 
-  const pageButton = [];
-  for (let i = 0; i < totalPage; i++) {
-    pageButton.push(
-      <Button
-        key={i}
-        size="sm"
-        onClick={() => setCurrentPage(i)}
-        colorScheme={i === currentPage ? "orange" : "gray"}
-      >
-        {i + 1}
-      </Button>,
-    );
-  }
-
-  function handlePreviousPage() {
-    setCurrentPage((prev) => Math.max(prev - 1, 0));
-  }
-  function handleNextPage() {
-    setCurrentPage((prev) => Math.min(prev + 1, totalPage - 1));
-  }
-
   function sendRefreshToken() {
     const refreshToken = localStorage.getItem("refreshToken");
     console.log("리프레시 토큰: ", refreshToken);
@@ -336,6 +341,7 @@ function CommentComponent({ boardId, loggedIn, userLogId, isAdmin }) {
         });
     }
   }
+
   function handleSubmit({ content }) {
     setIsSubmitting(true);
     console.log(content);
@@ -454,31 +460,48 @@ function CommentComponent({ boardId, loggedIn, userLogId, isAdmin }) {
 
   return (
     <Box>
-      {/*댓글 바로 올라가도록 하려면 CommentForm의 상태를 CommentList가 알도록 해야함.
+      <Card
+        mt={10}
+        mx={{ base: "5%", md: "10%", lg: "15%" }}
+        transition="1s all ease"
+      >
+        {/*댓글 바로 올라가도록 하려면 CommentForm의 상태를 CommentList가 알도록 해야함.
        부모인 Comment컴포넌트가 그 상태를 갖고있으면 됨. 그리고 prop으로 받기*/}
-      {loggedIn && (
-        <Center mt="10">
-          <Box w="xl">
-            <CommentForm
-              boardId={boardId}
-              isSubmitting={isSubmitting}
-              onSubmit={handleSubmit}
-            />
-          </Box>
-        </Center>
-      )}
-
-      <CommentList
-        boardId={boardId}
-        isSubmitting={isSubmitting}
-        setIsSubmitting={setIsSubmitting}
-        commentList={commentList}
-        onDeleteModalOpen={handleDeleteModalOpen}
-        userLogId={userLogId}
-        isAdmin={isAdmin}
-        sendRefreshToken={sendRefreshToken}
-        setAccessToken={setAccessToken}
-      />
+        <CardHeader>
+          <HStack spacing={3} mb={5}>
+            <Heading size="md">
+              <FontAwesomeIcon icon={faComment} />
+            </Heading>
+            <Heading size="md">리뷰</Heading>
+          </HStack>
+          <CommentForm
+            boardId={boardId}
+            isSubmitting={isSubmitting}
+            onSubmit={handleSubmit}
+          />
+        </CardHeader>
+        <CardBody>
+          <CommentList
+            boardId={boardId}
+            isSubmitting={isSubmitting}
+            setIsSubmitting={setIsSubmitting}
+            commentList={commentList}
+            onDeleteModalOpen={handleDeleteModalOpen}
+            email={email}
+            isAdmin={isAdmin}
+            loggedIn={loggedIn}
+            sendRefreshToken={sendRefreshToken}
+            setAccessToken={setAccessToken}
+          />
+        </CardBody>
+        <CardFooter justifyContent="center">
+          <Pagenation
+            currentPage={currentPage}
+            setCurrentPage={setCurrentPage}
+            totalPage={totalPage}
+          />
+        </CardFooter>
+      </Card>
 
       {/*삭제 모달*/}
       <Modal isOpen={isOpen} onClose={onClose}>
@@ -488,38 +511,22 @@ function CommentComponent({ boardId, loggedIn, userLogId, isAdmin }) {
           <ModalCloseButton />
           <ModalBody>삭제 하시겠습니까?</ModalBody>
 
-          <ModalFooter>
-            <Button onClick={onClose}>닫기</Button>
+          <ModalFooter justifyContent="center">
             <Button
+              w="30%"
+              mr={5}
               isDisabled={isSubmitting}
               onClick={handleDelete}
               colorScheme="red"
             >
               삭제
             </Button>
+            <Button w="30%" onClick={onClose}>
+              닫기
+            </Button>
           </ModalFooter>
         </ModalContent>
       </Modal>
-
-      <Center>
-        <ButtonGroup mt={20}>
-          <Button
-            onClick={handlePreviousPage}
-            disable={currentPage === 0}
-            size="sm"
-          >
-            <FontAwesomeIcon icon={faChevronLeft} />
-          </Button>
-          {pageButton}
-          <Button
-            onClick={handleNextPage}
-            disabled={currentPage === totalPage - 1}
-            size="sm"
-          >
-            <FontAwesomeIcon icon={faChevronRight} />
-          </Button>
-        </ButtonGroup>
-      </Center>
     </Box>
   );
 }
