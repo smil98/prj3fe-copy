@@ -222,7 +222,7 @@ export function BoardList() {
     placeItems: "center",
     templateColumns: isSmallScreen ? "repeat(2, 1fr)" : "repeat(4, 1fr)",
     gap: 5,
-    transition: "all 1s", // or adjust the duration to your preference
+    transition: "all 1s",
   };
 
   //그리드, 리스트 형식 전환용
@@ -377,7 +377,10 @@ export function BoardList() {
           stockQuantity: board.stockQuantity,
         },
         {
-          headers: { Authorization: `Bearer ${accessToken}` },
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            "Content-Type": "application/json",
+          },
         },
       )
       .then((response) => {

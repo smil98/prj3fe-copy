@@ -14,6 +14,7 @@ import {
   Td,
   Th,
   Tr,
+  useToast,
 } from "@chakra-ui/react";
 import React, { useCallback, useEffect, useState } from "react";
 import axios from "axios";
@@ -30,6 +31,7 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 export function MemberLikes() {
   const location = useLocation();
   const navigate = useNavigate();
+  const toast = useToast();
   const [likeList, setLikeList] = useState([]);
   const [loggedIn, setLoggedIn] = useState(false);
   const [isSocial, setIsSocial] = useState(false);
@@ -48,6 +50,8 @@ export function MemberLikes() {
     title: "",
     artist: "",
   });
+
+  const combinedSearchParams = { title: "", artist: "", currentPage: 0 };
 
   // 검색 조건 업데이트
   const handleSearch = (params) => {
@@ -123,6 +127,39 @@ export function MemberLikes() {
     );
   }
 
+  function handleLikeToCart(boardId, title, artist) {
+    console.log("handleLikeToCart boardId: " + boardId);
+    const accessToken = localStorage.getItem("accessToken");
+
+    axios
+      .post(
+        "/cart/addLiked",
+        {
+          boardId: boardId,
+        },
+        {
+          headers: { Authorization: `Bearer ${accessToken}` },
+        },
+      )
+      .then((response) => {
+        toast({
+          title: `${title}을 카트로 옮기기 완료`,
+          description: `${artist}의 ${title}를 카트에 성공적으로 옮겼습니다.`,
+          status: "success",
+        });
+        setSearchParams(combinedSearchParams);
+      })
+      .catch((error) => {
+        toast({
+          title: `${title}을 카트로 옮기기 실패`,
+          description: `${artist}의 ${title}를 카트에 옮기지 못했습니다. 오류가 계속되면 관리자에게 문의하세요.`,
+          status: "error",
+        });
+      });
+  }
+
+  //도전
+
   return (
     <>
       <Spacer h={120} />
@@ -150,7 +187,10 @@ export function MemberLikes() {
             <Th textAlign="center">카트</Th>
           </Tr>
           {likeList.map((like) => (
-            <Tr key={like.id}>
+            <Tr
+              key={like.id}
+              onClick={() => navigate(`/board/${like.boardId}`)}
+            >
               <Td>
                 <Flex
                   alignItems="center"
@@ -183,6 +223,10 @@ export function MemberLikes() {
                   variant="solid"
                   colorScheme="purple"
                   icon={<FontAwesomeIcon icon={faCartPlus} />}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleLikeToCart(like.boardId, like.title, like.artist);
+                  }}
                 />
               </Td>
             </Tr>
