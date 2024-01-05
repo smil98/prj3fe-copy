@@ -46,6 +46,11 @@ export function OrderWrite() {
   const [orderName, setOrderName] = useState("");
   const [items, setItems] = useState([]);
 
+  useEffect(() => {
+    getMember();
+    fetchList();
+  }, []);
+
   const fetchList = () => {
     axios
       .get("/cart/fetch", {
@@ -79,12 +84,6 @@ export function OrderWrite() {
         });
       });
   };
-
-  // useEffect(() => {
-  //   fetchList();
-  // }, []);
-
-  // ===========================================
 
   function getMember() {
     axios
@@ -143,9 +142,6 @@ export function OrderWrite() {
         });
       });
   }
-  // useEffect(() => {
-  //   getMember();
-  // }, []);
 
   const handleSubmit = async () => {
     try {

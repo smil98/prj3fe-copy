@@ -149,6 +149,7 @@ function LikeContainer({
         <IconButton
           isRound
           top={3}
+          colorScheme={like.isLiked ? "purple" : "gray"}
           right={3}
           position="absolute"
           onClick={(e) => {
@@ -157,7 +158,7 @@ function LikeContainer({
           }}
           icon={
             like.isLiked ? (
-              <FontAwesomeIcon color="red" icon={fullHeart} />
+              <FontAwesomeIcon icon={fullHeart} />
             ) : (
               <FontAwesomeIcon icon={emptyHeart} />
             )
@@ -173,7 +174,7 @@ function LikeContainer({
           }}
           icon={
             like.isLiked ? (
-              <FontAwesomeIcon color="red" icon={fullHeart} />
+              <FontAwesomeIcon colorScheme="pink" icon={fullHeart} />
             ) : (
               <FontAwesomeIcon icon={emptyHeart} />
             )
@@ -368,7 +369,6 @@ export function BoardList() {
 
   function handleInCart(board) {
     const accessToken = localStorage.getItem("accessToken");
-    console.log("카트 클릭");
     axios
       .postForm(
         "/cart/add",
@@ -486,8 +486,8 @@ export function BoardList() {
                         variant="solid"
                         size="sm"
                         colorScheme="purple"
-                        isDisabled
                         icon={<FontAwesomeIcon icon={faCartPlus} />}
+                        onClick={() => handleInCart(board)}
                       />
                     ) : (
                       <Button

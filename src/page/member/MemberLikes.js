@@ -10,6 +10,7 @@ import {
   Spacer,
   Table,
   TableContainer,
+  Tbody,
   Td,
   Th,
   Tr,
@@ -19,6 +20,7 @@ import axios from "axios";
 import { Pagenation } from "../component/Pagenation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
+  faCartPlus,
   faHeart,
   faHeartCircleXmark,
   faHouse,
@@ -56,6 +58,7 @@ export function MemberLikes() {
   // 불러오기
   useEffect(() => {
     // sendRefreshToken();
+    const accessToken = localStorage.getItem("accessToken");
 
     axios
       .get(`/api/like/list/${id}`, {
@@ -65,6 +68,9 @@ export function MemberLikes() {
           title: searchParams.title,
           artist: searchParams.artist,
         },
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
       })
       .then((response) => {
         console.log("/api/like/list/${id} 후");
@@ -73,7 +79,9 @@ export function MemberLikes() {
 
         const updatedBoards = boards
           ? boards.map((board) => {
-              const fileUrls = board.boardFiles.map((file) => file.fileUrl);
+              const fileUrls = board.boardFiles
+                ? board.boardFiles.map((file) => file.fileUrl)
+                : [];
               return { ...board, fileUrls };
             })
           : [];
@@ -125,7 +133,6 @@ export function MemberLikes() {
       >
         <Table
           variant="simple"
-          colorScheme="purple"
           w="full"
           size={{ sm: "xs", base: "sm", md: "md", lg: "lg" }}
           transition="0.5s all ease"
@@ -133,13 +140,14 @@ export function MemberLikes() {
           <Tr
             fontWeight="bold"
             fontSize={{ sm: "xs", base: "sm", md: "md" }}
+            height={10}
             color="#805AD5"
           >
             <Th textAlign="center">커버</Th>
             <Th textAlign="center">제목</Th>
             <Th textAlign="center">가수</Th>
             <Th textAlign="center">가격</Th>
-            <Th textAlign="center">좋아요</Th>
+            <Th textAlign="center">카트</Th>
           </Tr>
           {likeList.map((like) => (
             <Tr key={like.id}>
@@ -159,7 +167,11 @@ export function MemberLikes() {
                     position="absolute"
                     top="0"
                     left="0"
-                    src={like.fileUrls}
+                    src={
+                      like.fileUrl
+                        ? like.fileUrl
+                        : "https://placehold.co/400x400"
+                    }
                   />
                 </Flex>
               </Td>
@@ -168,11 +180,9 @@ export function MemberLikes() {
               <Td textAlign="center">₩ {like.price.toLocaleString()}</Td>
               <Td textAlign="center">
                 <IconButton
-                  isRound
-                  isDisabled
-                  bgColor="pink"
-                  color="white"
-                  icon={<FontAwesomeIcon icon={faHeart} />}
+                  variant="solid"
+                  colorScheme="purple"
+                  icon={<FontAwesomeIcon icon={faCartPlus} />}
                 />
               </Td>
             </Tr>
