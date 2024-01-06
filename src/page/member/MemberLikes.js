@@ -2,7 +2,9 @@ import {
   AbsoluteCenter,
   Box,
   Button,
+  ButtonGroup,
   Card,
+  Checkbox,
   Flex,
   Heading,
   IconButton,
@@ -27,6 +29,7 @@ import {
   faHouse,
 } from "@fortawesome/free-solid-svg-icons";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { sendRefreshToken } from "../component/authUtils";
 
 export function MemberLikes() {
   const location = useLocation();
@@ -44,6 +47,17 @@ export function MemberLikes() {
   const { id } = useParams();
   const param = state?.param;
   console.log("param: ", param);
+
+  //도전
+  const [selectedLikes, setSelectedLikes] = useState([]);
+
+  const handleSelectAllLikes = (isChecked) => {
+    if (isChecked) {
+      setSelectedLikes(likeList.map((like) => like.id));
+    } else {
+      setSelectedLikes([]);
+    }
+  };
 
   // 검색 조건 상태로 관리
   const [searchParams, setSearchParams] = useState({
@@ -127,13 +141,13 @@ export function MemberLikes() {
     );
   }
 
-  function handleLikeToCart(boardId, title, artist) {
+  function handleMoveToCart(boardId, title, artist) {
     console.log("handleLikeToCart boardId: " + boardId);
     const accessToken = localStorage.getItem("accessToken");
 
     axios
       .post(
-        "/cart/addLiked",
+        "/cart/add/liked",
         {
           boardId: boardId,
         },
@@ -150,6 +164,9 @@ export function MemberLikes() {
         setSearchParams(combinedSearchParams);
       })
       .catch((error) => {
+        if (error.response.data === 401) {
+          sendRefreshToken();
+        }
         toast({
           title: `${title}을 카트로 옮기기 실패`,
           description: `${artist}의 ${title}를 카트에 옮기지 못했습니다. 오류가 계속되면 관리자에게 문의하세요.`,
@@ -158,16 +175,119 @@ export function MemberLikes() {
       });
   }
 
-  //도전
+  function handleCheckBoxChange(like) {
+    setSelectedLikes((prevSelectedLikes) =>
+      prevSelectedLikes.includes(like.id)
+        ? prevSelectedLikes.filter((id) => id !== like.id)
+        : [...prevSelectedLikes, like.id],
+    );
+  }
+
+  function handleAllToCart(selectedLikes) {
+    if (selectedLikes.length !== 0 && selectedLikes !== null) {
+      const accessToken = localStorage.getItem("accessToken");
+
+      axios
+        .post(
+          "/cart/add/selected",
+          { selectedLikes },
+          {
+            headers: { Authorization: `Bearer ${accessToken}` },
+          },
+        )
+        .then(() => {
+          setSelectedLikes([]);
+          setSearchParams(combinedSearchParams);
+        })
+        .catch((error) => {
+          toast({
+            title: "상품을 카트에 옮기는데 실패했습니다",
+            description: "다시 시도하거나 관리자에게 문의하세요",
+            status: "error",
+          });
+          if (error.response.data === 401) {
+            sendRefreshToken();
+          }
+          setSelectedLikes(selectedLikes);
+        });
+    } else {
+      toast({
+        title: "선택된 상품이 없습니다",
+        description: "원하시는 상품을 선택해주세요",
+        status: "warning",
+      });
+    }
+  }
+
+  function handleDeleteLike(selectedLikes) {
+    if (selectedLikes.length !== 0 && selectedLikes !== null) {
+      const accessToken = localStorage.getItem("accessToken");
+      axios
+        .delete("/cart/delete/selected", {
+          headers: { Authorization: `Bearer ${accessToken}` },
+          params: { selectedLikes: selectedLikes.join(",") },
+        })
+        .then(() => {
+          setSelectedLikes([]);
+          setSearchParams(combinedSearchParams);
+        })
+        .catch((error) => {
+          if (error.response.data === 401) {
+            sendRefreshToken();
+            toast({
+              title: "상품 지우기에 실패했습니다",
+              description: "다시 한 번 시도해주세요",
+              status: "error",
+            });
+          } else {
+            toast({
+              title: "상품 지우기에 실패했습니다",
+              description:
+                "다시 한 번 시도하시고, 현상이 계속 될 경우에는 관리자에게 문의하세요",
+              status: "error",
+            });
+          }
+        });
+    } else {
+      toast({
+        title: "선택된 상품이 없습니다",
+        description: "삭제하려는 상품을 선택해주세요",
+        status: "warning",
+      });
+    }
+  }
 
   return (
     <>
       <Spacer h={120} />
+
       <TableContainer
         mx={{ md: "5%", lg: "10%" }}
         p={5}
         transition="0.5s all ease"
       >
+        <Flex
+          display="flex"
+          alignItems="center"
+          justifyContent="space-between"
+          mb={5}
+        >
+          <Checkbox
+            isChecked={selectedLikes.length === likeList.length}
+            onChange={(e) => handleSelectAllLikes(e.target.checked)}
+          >
+            전체 선택
+          </Checkbox>
+          <ButtonGroup>
+            <Button size="sm" onClick={() => handleAllToCart(selectedLikes)}>
+              선택 카트로 이동
+            </Button>
+            <Button size="sm" onClick={() => handleDeleteLike(selectedLikes)}>
+              선택 삭제
+            </Button>
+          </ButtonGroup>
+        </Flex>
+
         <Table
           variant="simple"
           w="full"
@@ -180,6 +300,7 @@ export function MemberLikes() {
             height={10}
             color="#805AD5"
           >
+            <Th textAlign="center">선택</Th>
             <Th textAlign="center">커버</Th>
             <Th textAlign="center">제목</Th>
             <Th textAlign="center">가수</Th>
@@ -191,6 +312,19 @@ export function MemberLikes() {
               key={like.id}
               onClick={() => navigate(`/board/${like.boardId}`)}
             >
+              <Td
+                textAlign="center"
+                onClick={(e) => {
+                  e.stopPropagation();
+                }}
+              >
+                <Checkbox
+                  isChecked={selectedLikes.includes(like.id)}
+                  onChange={() => {
+                    handleCheckBoxChange(like);
+                  }}
+                />
+              </Td>
               <Td>
                 <Flex
                   alignItems="center"
@@ -225,7 +359,7 @@ export function MemberLikes() {
                   icon={<FontAwesomeIcon icon={faCartPlus} />}
                   onClick={(e) => {
                     e.stopPropagation();
-                    handleLikeToCart(like.boardId, like.title, like.artist);
+                    handleMoveToCart(like.boardId, like.title, like.artist);
                   }}
                 />
               </Td>

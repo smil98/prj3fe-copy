@@ -4,6 +4,28 @@ import { postcodeScriptUrl } from "react-daum-postcode/lib/loadPostcode";
 import { Button } from "@chakra-ui/react";
 import React, { useState } from "react";
 
+export function sendRefreshToken() {
+  const refreshToken = localStorage.getItem("refreshToken");
+  console.log("리프레시 토큰: ", refreshToken);
+
+  axios
+    .get("/refreshToken", {
+      headers: { Authorization: `Bearer ${refreshToken}` },
+    })
+    .then((response) => {
+      console.log("sendRefreshToken()의 then 실행");
+
+      localStorage.setItem("accessToken", response.data.accessToken);
+      localStorage.setItem("refreshToken", response.data.refreshToken);
+
+      console.log("토큰들 업데이트 리프레시 토큰: ");
+      console.log(response.data.refreshToken);
+    })
+    .catch((error) => {
+      console.log("sendRefreshToken()의 catch 실행");
+      localStorage.removeItem("refreshToken");
+    });
+}
 export const handleSocialLogin = (socialLoginType) => {
   axios
     .get(`/api/auth/${socialLoginType}`)
