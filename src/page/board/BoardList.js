@@ -197,6 +197,7 @@ export function BoardList() {
   const [loggedIn, setLoggedIn] = useState(false);
   const [isSocial, setIsSocial] = useState(false);
   const [hoveredIndex, setHoveredIndex] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   const toast = useToast();
   const location = useLocation();
@@ -312,6 +313,8 @@ export function BoardList() {
 
   useEffect(() => {
     // searchParams 상태를 사용하여 API 호출을 업데이트.
+    setLoading(true);
+
     axios
       .get(`/api/board/list`, {
         params: {
@@ -343,10 +346,26 @@ export function BoardList() {
 
         setBoardList(updatedBoards);
         setTotalPage(response.data.totalPages);
-      });
+      })
+      .finally(() => setLoading(false));
   }, [currentPage, searchParams, param]);
 
-  if (!boardList || boardList.length === 0) {
+  if (loading) {
+    return (
+      <Flex height="100vh" align="center" justify="center">
+        <Spinner
+          center
+          thickness="4px"
+          speed="0.65s"
+          emptyColor="gray.200"
+          color="#805AD5"
+          size="xl"
+        />
+      </Flex>
+    );
+  }
+
+  if (!loading && (!boardList || boardList.length === 0)) {
     return (
       <>
         <Spacer h={120} />
@@ -591,7 +610,9 @@ export function BoardList() {
                                 fontSize="2xl"
                                 textAlign="center"
                               >
-                                {board.albumFormat}
+                                {board.albumFormat === "CASSETTE_TAPE"
+                                  ? "CASSETTE TAPE"
+                                  : board.albumFormat}
                               </Text>
                             </Box>
                           )}

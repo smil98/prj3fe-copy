@@ -10,6 +10,7 @@ import {
   IconButton,
   Img,
   Spacer,
+  Spinner,
   Table,
   TableContainer,
   Tbody,
@@ -35,6 +36,7 @@ export function MemberLikes() {
   const location = useLocation();
   const navigate = useNavigate();
   const toast = useToast();
+  const [loading, setLoading] = useState(true);
   const [likeList, setLikeList] = useState([]);
   const [loggedIn, setLoggedIn] = useState(false);
   const [isSocial, setIsSocial] = useState(false);
@@ -78,6 +80,8 @@ export function MemberLikes() {
     // sendRefreshToken();
     const accessToken = localStorage.getItem("accessToken");
 
+    setLoading(true);
+
     axios
       .get(`/api/like/list/${id}`, {
         params: {
@@ -106,10 +110,25 @@ export function MemberLikes() {
 
         setLikeList(updatedBoards);
         setTotalPage(response.data.totalPages);
-      });
+      })
+      .finally(() => setLoading(false));
   }, [currentPage, searchParams, param]);
 
-  if (!likeList || likeList.length === 0) {
+  if (loading) {
+    return (
+      <Flex height="100vh" align="center" justify="center">
+        <Spinner
+          center
+          thickness="4px"
+          speed="0.65s"
+          emptyColor="gray.200"
+          color="#805AD5"
+          size="xl"
+        />
+      </Flex>
+    );
+  }
+  if (!loading && (!likeList || likeList.length === 0)) {
     return (
       <>
         <Spacer h={120} />
@@ -260,7 +279,9 @@ export function MemberLikes() {
   return (
     <>
       <Spacer h={120} />
-      <Heading mx={{ base: "5%", md: "10%", lg: "15%" }}>찜한 목록</Heading>
+      <Heading mx={{ base: "5%", md: "10%", lg: "15%" }} my={5}>
+        찜한 목록
+      </Heading>
       <TableContainer
         mx={{ base: "5%", md: "10%", lg: "15%" }}
         p={5}
@@ -273,6 +294,7 @@ export function MemberLikes() {
           mb={5}
         >
           <Checkbox
+            colorScheme="purple"
             isChecked={selectedLikes.length === likeList.length}
             onChange={(e) => handleSelectAllLikes(e.target.checked)}
           >
@@ -332,6 +354,7 @@ export function MemberLikes() {
                 }}
               >
                 <Checkbox
+                  colorScheme="purple"
                   isChecked={selectedLikes.includes(like.id)}
                   onChange={() => {
                     handleCheckBoxChange(like);

@@ -168,7 +168,6 @@ export function BoardWrite() {
               onChange={(e) => setTitle(e.target.value)}
             />
           </FormControl>
-          {/*================================*/}
           <FormControl>
             <FormLabel {...labelStyles}>가수</FormLabel>
             <Input
@@ -177,7 +176,6 @@ export function BoardWrite() {
               onChange={(e) => setArtist(e.target.value)}
             />
           </FormControl>
-          {/*======================================*/}
           <FormControl>
             <FormLabel {...labelStyles}>음반 소개</FormLabel>
             <Textarea
@@ -196,7 +194,7 @@ export function BoardWrite() {
             >
               <option value="CD">CD</option>
               <option value="VINYL">VINYL</option>
-              <option value="CASSETTE_TAPE">CASSETTE_TAPE</option>
+              <option value="CASSETTE_TAPE">CASSETTE TAPE</option>
             </Select>
           </FormControl>
 
@@ -216,8 +214,6 @@ export function BoardWrite() {
               </Stack>
             </CheckboxGroup>
           </FormControl>
-
-          {/* 릴리스 날짜 입력란 */}
           <FormControl>
             <FormLabel {...labelStyles}>발매일</FormLabel>
             <Input
@@ -226,8 +222,6 @@ export function BoardWrite() {
               onChange={(e) => setReleaseDate(e.target.value)}
             />
           </FormControl>
-
-          {/*발매사 입력란 */}
           <FormControl>
             <FormLabel {...labelStyles}>음반사</FormLabel>
             <Input
@@ -236,7 +230,6 @@ export function BoardWrite() {
               placeholder="해당 앨범의 발매회사를 입력해주세요"
             />
           </FormControl>
-          {/*수량 입력란*/}
           <FormControl>
             <FormLabel {...labelStyles}>재고 수량</FormLabel>
             <Input
@@ -247,8 +240,6 @@ export function BoardWrite() {
               placeholder="재고 수량을 입력해주세요"
             />
           </FormControl>
-
-          {/*사용한 가격 입력 폼*/}
           <FormControl>
             <FormLabel {...labelStyles}>가격</FormLabel>
             <InputGroup>
@@ -267,7 +258,7 @@ export function BoardWrite() {
         </CardBody>
         <CardFooter>
           <Button
-            isDisabled={isSubmitting}
+            isDisabled={isSubmitting || !price}
             onClick={handleSubmit}
             colorScheme="purple"
             w="full"

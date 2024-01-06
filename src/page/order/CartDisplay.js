@@ -13,11 +13,16 @@ import {
   IconButton,
   Image,
   AbsoluteCenter,
+  Checkbox,
+  Button,
+  ButtonGroup,
+  Flex,
 } from "@chakra-ui/react";
 import { AddIcon, CloseIcon, MinusIcon } from "@chakra-ui/icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faList, faShoppingCart } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
+import { sendRefreshToken } from "../component/authUtils";
 
 function MyNumberInput({ cartItemId, accessToken, count, fetchList, toast }) {
   const handleAddCount = () => {
@@ -92,6 +97,28 @@ export function CartDisplay({
   fetchList,
   toast,
 }) {
+  const [selectedItems, setSelectedItems] = useState([]);
+
+  const handleSelectAllItems = (isChecked) => {
+    if (isChecked) {
+      setSelectedItems(items.map((item) => item.cartItemId));
+    } else {
+      setSelectedItems([]);
+    }
+  };
+
+  function handleCheckBoxChange(item) {
+    setSelectedItems((prevSelectedItems) => {
+      const updatedSelectedItems = prevSelectedItems.includes(item.cartItemId)
+        ? prevSelectedItems.filter(
+            (cartItemId) => cartItemId !== item.cartItemId,
+          )
+        : [...prevSelectedItems, item.cartItemId];
+
+      return updatedSelectedItems;
+    });
+  }
+
   const handleDeleteItem = ({ item }) => {
     console.log(item.title + "삭제 요청 전송하는 함수");
 
@@ -118,21 +145,124 @@ export function CartDisplay({
       });
   };
 
+  function handleAllToLiked(selectedItems) {
+    if (selectedItems.length !== 0 && selectedItems !== null) {
+      axios
+        .post(
+          "/cart/move",
+          { selectedItems },
+          {
+            headers: { Authorization: `Bearer ${accessToken}` },
+          },
+        )
+        .then(() => {
+          setSelectedItems([]);
+          fecthList();
+        })
+        .catch((error) => {
+          toast({
+            title: "상품을 찜한 목록에 옮기는데 실패했습니다",
+            description: "다시 시도하거나 관리자에게 문의하세요",
+            status: "error",
+          });
+          if (error.response.data === 401) {
+            sendRefreshToken();
+          }
+          setSelectedItems(selectedItems);
+        });
+    } else {
+      toast({
+        title: "선택된 상품이 없습니다",
+        description: "원하시는 상품을 선택해주세요",
+        status: "warning",
+      });
+    }
+  }
+
+  function handleDeleteCartItem(selectedItems) {
+    if (selectedItems.length !== 0 && selectedItems !== null) {
+      axios
+        .delete("/cart/delete/cartItems", {
+          headers: { Authorization: `Bearer ${accessToken}` },
+          params: { selectedItems: selectedItems.join(",") },
+        })
+        .then(() => {
+          setSelectedItems([]);
+          fetchList();
+        })
+        .catch((error) => {
+          if (error.response.data === 401) {
+            sendRefreshToken();
+            toast({
+              title: "상품 지우기에 실패했습니다",
+              description: "다시 한 번 시도해주세요",
+              status: "error",
+            });
+          } else {
+            toast({
+              title: "상품 지우기에 실패했습니다",
+              description:
+                "다시 한 번 시도해보시고, 계속 실패할 경우 관리자에게 문의 바랍니다.",
+              status: "error",
+            });
+          }
+        });
+    } else {
+      toast({
+        title: "선택된 상품이 없습니다",
+        description: "삭제하려는 상품을 선택해주세요",
+        status: "warning",
+      });
+    }
+  }
+
   return (
     <Card mx={{ base: "5%", md: "10%", lg: "15%" }} transition="1s all ease">
-      <CardHeader>
-        <Heading size="md">
+      <CardHeader px={5}>
+        <Heading size="md" alignItems="center">
           <FontAwesomeIcon icon={faList} /> {orderName}
         </Heading>
       </CardHeader>
       <CardBody>
+        <Flex
+          display="flex"
+          alignItems="center"
+          justifyContent="space-between"
+          mb={5}
+        >
+          <Checkbox
+            colorScheme="purple"
+            isChecked={selectedItems.length === items.length}
+            onChange={(e) => handleSelectAllItems(e.target.checked)}
+          >
+            전체 선택
+          </Checkbox>
+          <ButtonGroup>
+            <Button size="sm" onClick={() => handleAllToLiked(selectedItems)}>
+              선택 찜한 목록으로 이동
+            </Button>
+            <Button
+              size="sm"
+              onClick={() => handleDeleteCartItem(selectedItems)}
+            >
+              선택 삭제
+            </Button>
+          </ButtonGroup>
+        </Flex>
         <Stack divider={<StackDivider />} spacing="4">
           {items && items.length > 0 ? (
-            items.map((item, index) => (
-              <Box key={index}>
-                <Heading size="sm" mb="2">
-                  {item.title}
-                </Heading>
+            items.map((item) => (
+              <Box key={item.cartItemId}>
+                <HStack alignItems="center" mb="2">
+                  <Checkbox
+                    colorScheme="purple"
+                    isChecked={selectedItems.includes(item.cartItemId)}
+                    onChange={() => {
+                      handleCheckBoxChange(item);
+                    }}
+                  />
+                  <Heading size="sm">{item.title}</Heading>
+                </HStack>
                 <HStack justifyContent="space-between">
                   <Image
                     src={item.fileUrl}
