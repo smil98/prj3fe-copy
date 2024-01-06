@@ -468,7 +468,7 @@ export function BoardList() {
                 <Td textAlign="center" whiteSpace="normal">
                   {board.title}
                 </Td>
-                <Td textAlign="center" whiteSpace="normal">
+                <Td textAlign="center" whiteSpace="break-spaces">
                   {board.artist}
                 </Td>
                 <Td textAlign="center">₩ {board.price.toLocaleString()}</Td>
@@ -552,7 +552,7 @@ export function BoardList() {
                 onMouseEnter={() => setHoveredIndex(board.id)}
                 onMouseLeave={() => setHoveredIndex(null)}
               >
-                <Card p={5} borderRadius={20} shadow="base">
+                <Card p={5} borderRadius={20} height="450px" shadow="base">
                   <CardHeader position="relative" p={0}>
                     {board.fileUrls &&
                       board.fileUrls.map((url, index) => (
@@ -606,17 +606,18 @@ export function BoardList() {
                     />
                     {/*  TODO: Board 끝나면 like 살려오기 가져오기 */}
                   </CardHeader>
-                  <CardBody>
+                  <CardBody
+                    flex="1"
+                    display="flex"
+                    flexDirection="column"
+                    justifyContent="space-between"
+                    h="150px"
+                  >
                     <Heading size="sm">{board.title}</Heading>
-                    <Text color="gray.600" my={3} fontSize="sm">
+                    <Text color="gray.600" fontSize="sm">
                       By {board.artist}
                     </Text>
-                    <AvatarGroup size="sm" max={3}>
-                      {likedPeers.map((name, index) => (
-                        <Avatar key={index} name={name} />
-                      ))}
-                    </AvatarGroup>
-                    <Text textAlign="right" mt={3}>
+                    <Text textAlign="right">
                       ₩ {board.price.toLocaleString()}
                     </Text>
                   </CardBody>

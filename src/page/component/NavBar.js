@@ -348,7 +348,7 @@ export function NavBar(props) {
         position="fixed"
         alignItems="center"
         h={"10%"}
-        top={0}
+        top={5}
         left={0}
         right={0}
         bgColor="whiteAlpha.100"
@@ -457,7 +457,7 @@ export function NavBar(props) {
                             navigate(`/likes/${member.id}`);
                           }}
                         >
-                          찜한 목록 //TODO: 수정
+                          찜한 목록
                         </MenuItem>
                         <MenuItem
                           icon={<FontAwesomeIcon icon={faScroll} />}

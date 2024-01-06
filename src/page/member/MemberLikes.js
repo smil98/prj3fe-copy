@@ -260,9 +260,9 @@ export function MemberLikes() {
   return (
     <>
       <Spacer h={120} />
-
+      <Heading mx={{ base: "5%", md: "10%", lg: "15%" }}>찜한 목록</Heading>
       <TableContainer
-        mx={{ md: "5%", lg: "10%" }}
+        mx={{ base: "5%", md: "10%", lg: "15%" }}
         p={5}
         transition="0.5s all ease"
       >
@@ -300,12 +300,24 @@ export function MemberLikes() {
             height={10}
             color="#805AD5"
           >
-            <Th textAlign="center">선택</Th>
-            <Th textAlign="center">커버</Th>
-            <Th textAlign="center">제목</Th>
-            <Th textAlign="center">가수</Th>
-            <Th textAlign="center">가격</Th>
-            <Th textAlign="center">카트</Th>
+            <Th textAlign="center" w="5%">
+              선택
+            </Th>
+            <Th textAlign="center" w="15%">
+              커버
+            </Th>
+            <Th textAlign="center" w="35%">
+              제목
+            </Th>
+            <Th textAlign="center" w="34%">
+              가수
+            </Th>
+            <Th textAlign="center" w="6%">
+              가격
+            </Th>
+            <Th textAlign="center" w="5%">
+              카트
+            </Th>
           </Tr>
           {likeList.map((like) => (
             <Tr
@@ -314,6 +326,7 @@ export function MemberLikes() {
             >
               <Td
                 textAlign="center"
+                p={3}
                 onClick={(e) => {
                   e.stopPropagation();
                 }}
@@ -327,12 +340,13 @@ export function MemberLikes() {
               </Td>
               <Td>
                 <Flex
+                  position="relative"
                   alignItems="center"
                   justifyContent="center"
-                  position="relative"
                   overflow="hidden"
                   paddingBottom="100%"
-                  w="full"
+                  minW="20px"
+                  maxW="100px"
                 >
                   <Img
                     w="full"
@@ -342,17 +356,21 @@ export function MemberLikes() {
                     top="0"
                     left="0"
                     src={
-                      like.fileUrl
-                        ? like.fileUrl
-                        : "https://placehold.co/400x400"
+                      like.fileUrl ? like.fileUrl : "https://placehold.co/40x40"
                     }
                   />
                 </Flex>
               </Td>
-              <Td textAlign="center">{like.title}</Td>
-              <Td textAlign="center">{like.artist}</Td>
-              <Td textAlign="center">₩ {like.price.toLocaleString()}</Td>
-              <Td textAlign="center">
+              <Td textAlign="center" whiteSpace="break-spaces" p={2}>
+                {like.title}
+              </Td>
+              <Td textAlign="center" whiteSpace="break-spaces" p={2}>
+                {like.artist}
+              </Td>
+              <Td textAlign="center" p={2}>
+                {like.price.toLocaleString()}
+              </Td>
+              <Td textAlign="center" p={2}>
                 <IconButton
                   variant="solid"
                   colorScheme="purple"

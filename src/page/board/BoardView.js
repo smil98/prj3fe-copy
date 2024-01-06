@@ -224,22 +224,6 @@ export function BoardView() {
             transition="1s all ease"
           >
             {board.title}
-            {isAdmin && (
-              <ButtonGroup ml={8} size="sm">
-                <IconButton
-                  icon={<FontAwesomeIcon icon={faPenToSquare} />}
-                  colorScheme="purple"
-                  variant="ghost"
-                  onClick={() => navigate("/edit/" + id)}
-                />
-                <IconButton
-                  icon={<FontAwesomeIcon icon={faTrashCan} />}
-                  colorScheme="red"
-                  variant="ghost"
-                  onClick={onOpen}
-                />
-              </ButtonGroup>
-            )}
           </Heading>
           <HStack>
             <Text w="25%">가수</Text>
@@ -277,6 +261,34 @@ export function BoardView() {
           </HStack>
         </VStack>
       </HStack>
+      {isAdmin && (
+        <Flex
+          mx={{ base: "5%", md: "10%", lg: "15%" }}
+          mt={10}
+          borderRadius={20}
+          shadow="base"
+          justifyContent="space-evenly"
+        >
+          <Button
+            leftIcon={<FontAwesomeIcon icon={faPenToSquare} />}
+            colorScheme="purple"
+            w="50%"
+            variant="ghost"
+            onClick={() => navigate("/edit/" + id)}
+          >
+            상품 정보 수정하기
+          </Button>
+          <Button
+            leftIcon={<FontAwesomeIcon icon={faTrashCan} />}
+            colorScheme="red"
+            w="50%"
+            variant="ghost"
+            onClick={onOpen}
+          >
+            상품 삭제하기
+          </Button>
+        </Flex>
+      )}
       <Center>
         <Divider mt={10} w={{ base: "95%", md: "90%", lg: "85%" }} />
       </Center>
