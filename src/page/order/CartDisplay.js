@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   Card,
   CardHeader,
@@ -108,15 +108,13 @@ export function CartDisplay({
   };
 
   function handleCheckBoxChange(item) {
-    setSelectedItems((prevSelectedItems) => {
-      const updatedSelectedItems = prevSelectedItems.includes(item.cartItemId)
+    setSelectedItems((prevSelectedItems) =>
+      prevSelectedItems.includes(item.cartItemId)
         ? prevSelectedItems.filter(
             (cartItemId) => cartItemId !== item.cartItemId,
           )
-        : [...prevSelectedItems, item.cartItemId];
-
-      return updatedSelectedItems;
-    });
+        : [...prevSelectedItems, item.cartItemId],
+    );
   }
 
   const handleDeleteItem = ({ item }) => {
@@ -145,19 +143,20 @@ export function CartDisplay({
       });
   };
 
+  // @@
   function handleAllToLiked(selectedItems) {
-    if (selectedItems.length !== 0 && selectedItems !== null) {
+    if (selectedItems.length !== 0) {
       axios
         .post(
           "/cart/move",
-          { selectedItems },
+          { selectedItems: selectedItems },
           {
             headers: { Authorization: `Bearer ${accessToken}` },
           },
         )
         .then(() => {
           setSelectedItems([]);
-          fecthList();
+          fetchList();
         })
         .catch((error) => {
           toast({
@@ -179,8 +178,9 @@ export function CartDisplay({
     }
   }
 
+  //@@
   function handleDeleteCartItem(selectedItems) {
-    if (selectedItems.length !== 0 && selectedItems !== null) {
+    if (selectedItems.length !== 0) {
       axios
         .delete("/cart/delete/cartItems", {
           headers: { Authorization: `Bearer ${accessToken}` },
