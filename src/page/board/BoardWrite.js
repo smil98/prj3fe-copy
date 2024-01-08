@@ -71,7 +71,7 @@ export function BoardWrite() {
       )
       .then(() => {
         toast({
-          description: "새 상품이 저장되었습니다",
+          description: "새 제품이 저장되었습니다",
           status: "success",
         });
         navigate("/"); //글 저장이 완료되면 home으로 이동

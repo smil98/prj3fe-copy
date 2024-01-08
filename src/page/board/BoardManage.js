@@ -9,6 +9,7 @@ import {
   Flex,
   Heading,
   IconButton,
+  Image,
   Input,
   Modal,
   ModalBody,
@@ -44,7 +45,7 @@ import axios from "axios";
 import { sendRefreshToken } from "../component/authUtils";
 import { Pagenation } from "../component/Pagenation";
 
-function SearchComponent({ navigate, setSearchParams, setCurrentPage }) {
+function SearchComponent({ setSearchParams, setCurrentPage }) {
   const [keyword, setKeyword] = useState("");
   const [category, setCategory] = useState("all");
 
@@ -121,7 +122,7 @@ export function BoardManage() {
   useEffect(() => {
     setLoading(true);
     axios
-      .get(`/api/board/manage`, {
+      .get(`/api/board/fetch`, {
         params: {
           page: currentPage,
           size: itemsPerPage,
@@ -190,7 +191,7 @@ export function BoardManage() {
               my={5}
               color="gray.300"
             >
-              등록된 상품이 없습니다
+              등록된 제품이 없습니다
             </Heading>
             <Button
               leftIcon={<FontAwesomeIcon icon={faHouse} />}
@@ -252,14 +253,14 @@ export function BoardManage() {
           if (error.response.data === 401) {
             sendRefreshToken();
             toast({
-              title: "상품 삭제에 실패했습니다",
+              title: "제품 삭제에 실패했습니다",
               description:
                 "다시 한 번 시도해주시고, 현상이 계속 될 경우 토큰 만료 여부를 확인하시기 바랍니다",
               status: "error",
             });
           } else {
             toast({
-              title: "상품 지우기에 실패했습니다",
+              title: "제품 지우기에 실패했습니다",
               description:
                 "다시 한 번 시도하시고, 현상이 계속될 경우에는 데이터베이스를 확인해보시기 바랍니다.",
               status: "error",
@@ -278,13 +279,15 @@ export function BoardManage() {
   return (
     <>
       <Spacer h={150} />
-      <Heading>상품 관리</Heading>
+      <Heading mx={{ base: "5%", md: "10%", lg: "15%" }} my={5}>
+        제품 관리
+      </Heading>
       <TableContainer
-        mx={{ md: "5%", lg: "10%" }}
+        mx={{ base: "5%", md: "10%", lg: "15%" }}
         p={5}
         transition="0.5s all ease"
       >
-        <Flex>
+        <Flex justifyContent="space-between" mb={5}>
           <Checkbox
             colorScheme="purple"
             isChecked={selectedBoards.length === boardList.length}
@@ -299,29 +302,33 @@ export function BoardManage() {
             선택 삭제
           </Button>
         </Flex>
-        <Table
-          w="full"
-          size={{ sm: "xs", base: "sm", md: "md", lg: "lg" }}
-          transition="0.5s all ease"
-        >
+        <Table transition="0.5s all ease">
           <Thead>
             <Tr>
-              <Th textAlign="center">선택</Th>
-              <Th textAlign="center">제품 번호</Th>
+              <Th textAlign="center" w="5%">
+                선택
+              </Th>
+              <Th textAlign="center" w="5%">
+                제품 번호
+              </Th>
+              <Th textAlign="center">앨범 커버</Th>
               <Th textAlign="center">제품명</Th>
               <Th textAlign="center">재고량</Th>
-              <Th textAlign="center">수정</Th>
-              <Th textAlign="center">삭제</Th>
+              <Th textAlign="center" w="5%">
+                수정
+              </Th>
+              <Th textAlign="center" w="5%">
+                삭제
+              </Th>
             </Tr>
           </Thead>
           <Tbody>
             {boardList.map((board) => (
-              <Container key={board.id}>
+              <React.Fragment key={board.id} border="1px solid red">
                 <Tr
                   _hover={{
                     cursor: "pointer",
                     bgColor: "gray.50",
-                    color: "white",
                   }}
                   onClick={() => navigate(`/board/${board.id}`)}
                 >
@@ -333,9 +340,24 @@ export function BoardManage() {
                     />
                   </Td>
                   <Td textAlign="center">{board.id}</Td>
-                  <Td>{board.title}</Td>
-                  <Td>{board.stockQuantity}</Td>
                   <Td>
+                    <Center>
+                      <Image
+                        src={
+                          board.fileUrl
+                            ? board.fileUrl
+                            : "https://placehold.co/150x150"
+                        }
+                        maxW="150px"
+                        minW="40px"
+                      ></Image>
+                    </Center>
+                  </Td>
+                  <Td textAlign="center" whiteSpace="break-word">
+                    {board.title}
+                  </Td>
+                  <Td textAlign="center">{board.stockQuantity}</Td>
+                  <Td textAlign="center" onClick={(e) => e.stopPropagation()}>
                     <IconButton
                       icon={<FontAwesomeIcon icon={faPenToSquare} />}
                       colorScheme="purple"
@@ -347,44 +369,46 @@ export function BoardManage() {
                       }}
                     />
                   </Td>
-                  <Td>
+                  <Td textAlign="center" onClick={(e) => e.stopPropagation()}>
                     <IconButton
                       icon={<FontAwesomeIcon icon={faTrashCan} />}
                       colorScheme="red"
                       w="50%"
                       variant="ghost"
-                      onClick={onOpen}
+                      onClick={() => setOpenModalId(board.id)}
                     />
+                    <Modal
+                      isOpen={openModalId === board.id}
+                      onClose={() => setOpenModalId(null)}
+                    >
+                      <ModalOverlay />
+                      <ModalContent>
+                        <ModalHeader>제품 삭제</ModalHeader>
+                        <ModalCloseButton />
+                        <ModalBody>
+                          {board.id}번 제품 {board.title}을 삭제 하시겠습니까?
+                        </ModalBody>
+                        <ModalFooter display="flex" justifyContent="center">
+                          <Button
+                            w="30%"
+                            mr={5}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleDelete(board);
+                            }}
+                            colorScheme="red"
+                          >
+                            삭제
+                          </Button>
+                          <Button w="30%" onClick={onClose}>
+                            닫기
+                          </Button>
+                        </ModalFooter>
+                      </ModalContent>
+                    </Modal>
                   </Td>
                 </Tr>
-                <Modal
-                  isOpen={openModalId === board.id}
-                  onClose={() => setOpenModalId(null)}
-                >
-                  <ModalOverlay />
-                  <ModalContent>
-                    <ModalHeader>상품 삭제</ModalHeader>
-                    <ModalCloseButton />
-                    <ModalBody>해당 상품을 삭제 하시겠습니까?</ModalBody>
-                    <ModalFooter display="flex" justifyContent="center">
-                      <Button
-                        w="30%"
-                        mr={5}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleDelete(board);
-                        }}
-                        colorScheme="red"
-                      >
-                        삭제
-                      </Button>
-                      <Button w="30%" onClick={onClose}>
-                        닫기
-                      </Button>
-                    </ModalFooter>
-                  </ModalContent>
-                </Modal>
-              </Container>
+              </React.Fragment>
             ))}
           </Tbody>
         </Table>

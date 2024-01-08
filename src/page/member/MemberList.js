@@ -61,7 +61,8 @@ function SearchComponent() {
             defaultValue="all"
             onChange={(e) => setCategory(e.target.value)}
           >
-            <option value="all">닉네임 검색</option>
+            <option value="all">전체</option>
+            <option value="nickName">닉네임 검색</option>
             <option value="email">이메일 검색</option>
           </Select>
         </Box>

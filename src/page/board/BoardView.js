@@ -51,30 +51,23 @@ import {
 export function BoardView() {
   const { id } = useParams(); //URL에서 동적인 값을 컴포넌트 내에서 쓸때 사용. <Route>컴포넌트 내에서 렌더링되는 컴포넌트에서만 사용가능
   const [board, setBoard] = useState(null);
-  const [fileURL, setFileURL] = useState([]);
   const [isAdmin, setIsAdmin] = useState(false);
   const [isSocial, setIsSocial] = useState(false);
   const [email, setEmail] = useState("");
   const [loggedIn, setLoggedIn] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const toast = useToast();
   const navigate = useNavigate();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   useEffect(() => {
+    setLoading(true);
     axios
-      .get("/api/board/id/" + id)
+      .get("/api/board/" + id)
       .then((response) => setBoard(response.data))
       .catch((error) => console.log(error))
-      .finally(() => console.log("끝"));
-  }, []);
-
-  useEffect(() => {
-    axios
-      .get("/api/board/file/id/" + id)
-      .then((response) => setFileURL(response.data))
-      .catch((e) => console.log(e))
-      .finally(() => console.log("끝"));
+      .finally(() => setLoading(false));
   }, []);
 
   useEffect(() => {
@@ -135,7 +128,7 @@ export function BoardView() {
       .finally(() => console.log(loggedIn));
   }
 
-  if (!board) {
+  if (!board && !loading) {
     return (
       <Flex height="100vh" align="center" justify="center">
         <Spacer h={150} />
@@ -163,6 +156,21 @@ export function BoardView() {
             </Button>
           </AbsoluteCenter>
         </Flex>
+      </Flex>
+    );
+  }
+
+  if (loading) {
+    return (
+      <Flex height="100vh" align="center" justify="center">
+        <Spinner
+          center
+          thickness="4px"
+          speed="0.65s"
+          emptyColor="gray.200"
+          color="#805AD5"
+          size="xl"
+        />
       </Flex>
     );
   }
@@ -204,15 +212,13 @@ export function BoardView() {
     <>
       <Spacer h={150} />
       <HStack spacing="5%" mx={{ base: "5%", md: "10%", lg: "15%" }}>
-        {fileURL.map((url) => (
-          <Box
-            w={{ sm: "50%", base: "45%", md: "45%", lg: "50%" }}
-            transition="1s all ease"
-            key={url}
-          >
-            <Image src={url} w="100%" h="100%" objectFit="cover" />
-          </Box>
-        ))}
+        <Box
+          w={{ sm: "50%", base: "45%", md: "45%", lg: "50%" }}
+          transition="1s all ease"
+          shadow="base"
+        >
+          <Image src={board.fileUrl} w="100%" h="100%" objectFit="cover" />
+        </Box>
         <VStack
           w={{ sm: "45%", base: "50%", md: "50%", lg: "45%" }}
           spacing={{ sm: 2, base: 4, md: 4, lg: 5 }}
@@ -233,7 +239,11 @@ export function BoardView() {
           </HStack>
           <HStack>
             <Text w="25%">형태</Text>
-            <Text>{board.albumFormat}</Text>
+            <Text>
+              {board.albumFormat === "CASSETTE_TAPE"
+                ? "CASSETTE TAPE"
+                : board.albumFormat}
+            </Text>
           </HStack>
           <HStack>
             <Text w="25%">음반사</Text>
@@ -276,7 +286,7 @@ export function BoardView() {
             variant="ghost"
             onClick={() => navigate("/edit/" + id)}
           >
-            상품 정보 수정하기
+            제품 정보 수정하기
           </Button>
           <Button
             leftIcon={<FontAwesomeIcon icon={faTrashCan} />}
@@ -285,7 +295,7 @@ export function BoardView() {
             variant="ghost"
             onClick={onOpen}
           >
-            상품 삭제하기
+            제품 삭제하기
           </Button>
         </Flex>
       )}
@@ -297,9 +307,9 @@ export function BoardView() {
         {board.content}
         <HStack my={10}>
           <FontAwesomeIcon icon={faTags} />
-          {board.albumGenres.map((genre, index) => (
-            <Tag colorScheme="purple" key={genre.id}>
-              {genre.albumDetail === "K_POP" ? "K-POP" : genre.albumDetail}
+          {board.albumGenres.map((genre) => (
+            <Tag colorScheme="purple" key={genre}>
+              {genre === "K_POP" ? "K-POP" : genre}
             </Tag>
           ))}
         </HStack>
@@ -307,9 +317,9 @@ export function BoardView() {
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>상품 삭제</ModalHeader>
+          <ModalHeader>제품 삭제</ModalHeader>
           <ModalCloseButton />
-          <ModalBody>해당 상품을 삭제 하시겠습니까?</ModalBody>
+          <ModalBody>해당 제품을 삭제 하시겠습니까?</ModalBody>
           <ModalFooter display="flex" justifyContent="center">
             <Button w="30%" mr={5} onClick={handleDelete} colorScheme="red">
               삭제

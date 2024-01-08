@@ -1,4 +1,4 @@
-//  앨범 쇼핑몰 첫 페이지 상품 셀렉 페이지
+//  앨범 쇼핑몰 첫 페이지 제품 셀렉 페이지
 import React, {
   createElement,
   useEffect,
@@ -377,7 +377,7 @@ export function BoardList() {
               my={5}
               color="gray.300"
             >
-              상품 준비 중입니다
+              제품 준비 중입니다
             </Heading>
           </AbsoluteCenter>
         </Flex>
@@ -402,7 +402,7 @@ export function BoardList() {
         },
       )
       .then((response) => {
-        console.log(board.id + "번 상품 카트에 추가");
+        console.log(board.id + "번 제품 카트에 추가");
         toast({
           description: `${board.title}을 장바구니에 추가되었습니다.`,
           status: "success",

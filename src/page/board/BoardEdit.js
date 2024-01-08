@@ -194,14 +194,14 @@ export function BoardEdit() {
     fontWeight: "bold",
   };
 
-  //--------------------------------------등록된 상품 수정 폼
+  //--------------------------------------등록된 제품 수정 폼
   return (
     <>
       <Spacer h={150} />
       <Card mx={{ base: "5%", md: "10%", lg: "15%" }}>
         <CardHeader>
           <Heading>
-            {id}번 상품 - {board.title} 수정
+            {id}번 제품 - {board.title} 수정
           </Heading>
         </CardHeader>
         <CardBody>
@@ -285,7 +285,7 @@ export function BoardEdit() {
             </FormControl>
             {/*앨범 상세 설명 란*/}
             <FormControl>
-              <FormLabel {...labelStyles}>앨범 상품 상세 설명 수정</FormLabel>
+              <FormLabel {...labelStyles}>앨범 제품 상세 설명 수정</FormLabel>
               <Textarea
                 value={board.content}
                 h="sm"

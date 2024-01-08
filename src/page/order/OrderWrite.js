@@ -79,7 +79,7 @@ export function OrderWrite() {
       .catch((error) => {
         console.log(error.response.data);
         toast({
-          description: "상품 불러오기에 실패했습니다.",
+          description: "제품 불러오기에 실패했습니다.",
           status: "error",
         });
       });

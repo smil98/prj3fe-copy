@@ -250,7 +250,7 @@ export function MemberLikes() {
         })
         .catch((error) => {
           toast({
-            title: "상품을 카트에 옮기는데 실패했습니다",
+            title: "제품을 카트에 옮기는데 실패했습니다",
             description: "다시 시도하거나 관리자에게 문의하세요",
             status: "error",
           });
@@ -261,8 +261,8 @@ export function MemberLikes() {
         });
     } else {
       toast({
-        title: "선택된 상품이 없습니다",
-        description: "원하시는 상품을 선택해주세요",
+        title: "선택된 제품이 없습니다",
+        description: "원하시는 제품을 선택해주세요",
         status: "warning",
       });
     }
@@ -284,13 +284,13 @@ export function MemberLikes() {
           if (error.response.data === 401) {
             sendRefreshToken();
             toast({
-              title: "상품 지우기에 실패했습니다",
+              title: "제품 지우기에 실패했습니다",
               description: "다시 한 번 시도해주세요",
               status: "error",
             });
           } else {
             toast({
-              title: "상품 지우기에 실패했습니다",
+              title: "제품 지우기에 실패했습니다",
               description:
                 "다시 한 번 시도하시고, 현상이 계속 될 경우에는 관리자에게 문의하세요",
               status: "error",
@@ -299,8 +299,8 @@ export function MemberLikes() {
         });
     } else {
       toast({
-        title: "선택된 상품이 없습니다",
-        description: "삭제하려는 상품을 선택해주세요",
+        title: "선택된 제품이 없습니다",
+        description: "삭제하려는 제품을 선택해주세요",
         status: "warning",
       });
     }
