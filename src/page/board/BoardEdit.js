@@ -5,6 +5,7 @@ import {
   CardBody,
   CardFooter,
   CardHeader,
+  Center,
   Container,
   Flex,
   FormControl,
@@ -31,7 +32,6 @@ import axios from "axios";
 
 export function BoardEdit() {
   const [board, updateBoard] = useImmer(null); //객체 사용해서 가변적으로 상태 변경
-  // /edit/:id
   const { id } = useParams();
   const [fileURL, setFileURL] = useState("");
   // const [previousFileUrl, setPreviousFileUrl] = useState('');
@@ -48,21 +48,13 @@ export function BoardEdit() {
 
   useEffect(() => {
     axios
-      .get("/api/board/id/" + id)
+      .get("/api/board/" + id, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        },
+      })
       .then((response) => updateBoard(response.data));
   }, []);
-  // useEffect(() => {
-  //   axios.get("/api/board/edit/"+ id)
-  //     .then((response)=>setFileURL(response.data))
-  //     .catch((error)=> console.log(error))
-  //     .finally(()=>console.log("얍"));
-  // }, []);
-
-  // useEffect(() => {
-  //   if (board !== null) {
-  //     setPreviousFileUrl(fileURL); // 이전 이미지 URL 설정
-  //   }
-  // }, [board]);
 
   if (!board) {
     return (
@@ -121,22 +113,6 @@ export function BoardEdit() {
       draft.stockQuantity = e.target.value;
     });
   }
-
-  // 이미지 수정 코드
-  // function handleImageUpload(e){}
-  //   const file = e.target.images[0]; //
-  //   const formData= new FormData();
-  //   formData.append("file",file);
-  //
-  //   axios
-  //     .post("/api/upload",formData)
-  //     .then((response)=> {
-  //       updateBoard((draft)=> {
-  //         draft.imageURL = response.data.url; //이미지 url
-  //       });
-  //     });
-  //
-  // }
 
   function handleSubmit(e) {
     const accessToken = localStorage.getItem("accessToken");
@@ -208,29 +184,23 @@ export function BoardEdit() {
           <Stack spacing={3}>
             <FormControl mb={3}>
               <FormLabel {...labelStyles}>커버</FormLabel>
-              {board.boardFiles !== null &&
-                board.boardFiles.map((file) => (
-                  <Box key={file.id}>
-                    <Image src={file.fileUrl} alt={file.fileName} w="100%" />
-                    <HStack justifyContent="center">
-                      <Text my={5}>등록된 앨범 커버 삭제 후 재업로드</Text>
-                      <Switch
-                        value={file.id}
-                        colorScheme="purple"
-                        onChange={handleRemoveFileSwitch}
-                      />
-                    </HStack>
-                  </Box>
-                ))}
+              <Box>
+                <Center>
+                  <Image src={board.fileUrl} maxW="350px" minW="150px" />
+                </Center>
+                <HStack justifyContent="center">
+                  <Text my={5}>등록된 앨범 커버 삭제 후 재업로드</Text>
+                  <Switch
+                    colorScheme="purple"
+                    onChange={handleRemoveFileSwitch}
+                  />
+                </HStack>
+              </Box>
               {/*----------------이미지 파일 수정 코드 --------------*/}
               {removeFileIds.length > 0 && (
                 <FormControl>
                   <FormLabel {...labelStyles}>앨범 커버 교체</FormLabel>
-                  <Image
-                    src={fileURL}
-                    borderRadius="l"
-                    border="0px solid black"
-                  />
+                  <Image src={fileURL} />
                   <Input
                     type="file"
                     accept="image/*"
