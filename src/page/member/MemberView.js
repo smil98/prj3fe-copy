@@ -34,7 +34,6 @@ export function MemberView() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const navigate = useNavigate();
   const toast = useToast();
-  // const [orderNames, setOrderNames] = useState([]);
 
   useEffect(() => {
     getMember(id);
@@ -66,13 +65,7 @@ export function MemberView() {
         console.log("getMember()의 then 실행");
         console.log(response.data);
         setMember(response.data);
-        // return axios.get(`/member/${response.data.email}/orders`, {
-        //   headers: { Authorization: `Bearer ${accessToken}` },
-        // });
       })
-      // .then((response) => {
-      //   setOrderNames(response.data);
-      // })
       .catch((error) => {
         if (error.response && error.response.status === 401) {
           console.log("getMember()의 catch 실행");
@@ -95,15 +88,6 @@ export function MemberView() {
       });
   }
 
-  //TODO : 주문 표시하는 것 여기있음
-  // 주문 이름들을 표시하는 폼 컨트롤
-  // const orderNameControls = orderNames.map((orderName, index) => (
-  //   <FormControl key={index}>
-  //     <FormLabel>Order Name {index + 1}</FormLabel>
-  //     <Input type="text" value={orderName} readOnly />
-  //   </FormControl>
-  // ));
-
   function sendRefreshToken() {
     const refreshToken = localStorage.getItem("refreshToken");
     console.log("리프레시 토큰: ", refreshToken);
@@ -124,7 +108,6 @@ export function MemberView() {
       .catch((error) => {
         console.log("sendRefreshToken()의 catch 실행");
         localStorage.removeItem("refreshToken");
-        //navigate("/login");
         toast({
           description: "권한이 없습니다",
           status: "warning",
@@ -150,11 +133,8 @@ export function MemberView() {
         console.log("해치웠나");
         onClose();
         navigate("/");
-        // 페이지 새로고침
         window.location.reload();
       });
-    //   axios.delete().then().catch();
-    // 홈 화면으로 이동시킬 것
   }
 
   const formattedEmail = () => {
@@ -244,7 +224,6 @@ export function MemberView() {
           </Button>
         </CardFooter>
       </Card>
-      {/*{orderNameControls}*/}
     </>
   );
 }

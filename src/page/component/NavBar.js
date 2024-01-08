@@ -295,10 +295,10 @@ export function NavBar(props) {
             <MenuItem
               icon={<FontAwesomeIcon icon={faScroll} />}
               onClick={() => {
-                navigate("/member/order");
+                navigate(`/member/order/${member.id}`);
               }}
             >
-              주문 내역 //TODO: 수정
+              주문 내역
             </MenuItem>
           </MenuGroup>
           {isAdmin && (
@@ -457,10 +457,10 @@ export function NavBar(props) {
                         <MenuItem
                           icon={<FontAwesomeIcon icon={faScroll} />}
                           onClick={() => {
-                            navigate("/member/order");
+                            navigate(`/member/order/${member.id}`);
                           }}
                         >
-                          주문 내역 //TODO: 수정
+                          주문 내역
                         </MenuItem>
                       </MenuGroup>
                       <MenuDivider />
@@ -603,7 +603,7 @@ export function NavBar(props) {
                     {...drawerButtonStyle}
                     onClick={() => {
                       onClose();
-                      navigate("/member/order"); //TODO: 수정
+                      navigate(`/member/order/${member.id}`);
                     }}
                   >
                     주문 내역
