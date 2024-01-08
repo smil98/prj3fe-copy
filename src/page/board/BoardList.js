@@ -74,6 +74,7 @@ function LikeContainer({
   const toast = useToast();
   const [like, setLike] = useState(null);
 
+  //TODO: 등록된 최신순으로 불러오도록 페이지 역순 로직 더하기
   useEffect(() => {
     axios
       .get(`/api/like/board/${boardId}`, {
@@ -189,11 +190,9 @@ function LikeContainer({
 export function BoardList() {
   const [boardList, setBoardList] = useState([]);
   const navigate = useNavigate();
-  const [fileUrl, setFileUrl] = useState();
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPage, setTotalPage] = useState(0);
   const itemsPerPage = 16;
-  const [board, setBoard] = useState();
   const [loggedIn, setLoggedIn] = useState(false);
   const [isSocial, setIsSocial] = useState(false);
   const [hoveredIndex, setHoveredIndex] = useState(null);
@@ -368,7 +367,7 @@ export function BoardList() {
   if (!loading && (!boardList || boardList.length === 0)) {
     return (
       <>
-        <Spacer h={120} />
+        <Spacer h={150} />
         <Flex height="70vh" align="center" justify="center" direction="column">
           <AbsoluteCenter align="center">
             <FontAwesomeIcon icon={faHourglassHalf} color="#CDD7E1" size="5x" />
@@ -427,10 +426,7 @@ export function BoardList() {
       });
   }
 
-  //TODO: board.id 통해서 해당 포스트 좋아요한 사람들 이름 가져오는 쿼리문 작성, axios로 List 받아와 여기에 저장
-  const likedPeers = ["John", "Jane", "Alice", "Bob", "Charlie", "David"];
-
-  const TableComponent = ({ boards, likedPeers }) => {
+  const TableComponent = ({ boards }) => {
     return (
       <TableContainer
         mx={{ md: "5%", lg: "10%" }}
@@ -536,7 +532,7 @@ export function BoardList() {
   return (
     <>
       <Box>
-        <Spacer h={120} />
+        <Spacer h={150} />
         <ButtonGroup ml="5%" isAttached mb={5}>
           <IconButton
             aria-label={"grid"}
@@ -625,7 +621,6 @@ export function BoardList() {
                       boardId={board.id}
                       sendRefreshToken={sendRefreshToken}
                     />
-                    {/*  TODO: Board 끝나면 like 살려오기 가져오기 */}
                   </CardHeader>
                   <CardBody
                     flex="1"
@@ -669,7 +664,7 @@ export function BoardList() {
             ))}
           </SimpleGrid>
         ) : (
-          <TableComponent boardList={boardList} likedPeers={likedPeers} />
+          <TableComponent boardList={boardList} />
         )}
         {/*-----------------------------------------*/}
         {/*페이지 네이션-------------------------------------------*/}

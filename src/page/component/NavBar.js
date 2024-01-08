@@ -53,6 +53,7 @@ import {
   faCreditCard,
   faDollarSign,
   faFileInvoice,
+  faGears,
   faHeart,
   faHome,
   faList,
@@ -298,7 +299,7 @@ export function NavBar(props) {
                 navigate(`/likes/${member.id}`);
               }}
             >
-              찜한 목록 //TODO: 수정
+              찜한 목록
             </MenuItem>
             <MenuItem
               icon={<FontAwesomeIcon icon={faScroll} />}
@@ -320,12 +321,12 @@ export function NavBar(props) {
                   제품 등록
                 </MenuItem>
                 <MenuItem
-                  icon={<FontAwesomeIcon icon={faCircleQuestion} />}
+                  icon={<FontAwesomeIcon icon={faGears} />}
                   onClick={() => {
-                    navigate("/products");
+                    navigate("/board/manage");
                   }}
                 >
-                  제품 관리 //TODO: 수정
+                  제품 관리
                 </MenuItem>
                 <MenuItem
                   icon={<FontAwesomeIcon icon={faUsersGear} />}
@@ -348,7 +349,7 @@ export function NavBar(props) {
         position="fixed"
         alignItems="center"
         h={"10%"}
-        top={5}
+        top={2}
         left={0}
         right={0}
         bgColor="whiteAlpha.100"
@@ -478,12 +479,12 @@ export function NavBar(props) {
                             제품 등록
                           </MenuItem>
                           <MenuItem
-                            icon={<FontAwesomeIcon icon={faCircleQuestion} />}
+                            icon={<FontAwesomeIcon icon={faGears} />}
                             onClick={() => {
-                              navigate("/products");
+                              navigate("/board/manage");
                             }}
                           >
-                            제품 관리 //TODO: 수정
+                            제품 관리
                           </MenuItem>
                           <MenuItem
                             icon={<FontAwesomeIcon icon={faUsersGear} />}
@@ -585,7 +586,7 @@ export function NavBar(props) {
                     {...drawerButtonStyle}
                     onClick={() => {
                       onClose();
-                      navigate(`/likes/${member.id}`); //TODO: 수정
+                      navigate(`/likes/${member.id}`);
                     }}
                   >
                     찜한 목록
@@ -627,11 +628,11 @@ export function NavBar(props) {
                       </Button>
                       <Button
                         iconSpacing={5}
-                        leftIcon={<FontAwesomeIcon icon={faCircleQuestion} />}
+                        leftIcon={<FontAwesomeIcon icon={faGears} />}
                         {...drawerButtonStyle}
                         onClick={() => {
                           onClose();
-                          navigate("/products"); //TODO: 수정
+                          navigate("/board/manage");
                         }}
                       >
                         제품 관리

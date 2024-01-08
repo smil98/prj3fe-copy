@@ -138,7 +138,7 @@ export function BoardView() {
   if (!board) {
     return (
       <Flex height="100vh" align="center" justify="center">
-        <Spacer h={120} />
+        <Spacer h={150} />
         <Flex height="70vh" align="center" justify="center" direction="column">
           <AbsoluteCenter align="center">
             <FontAwesomeIcon

@@ -197,7 +197,7 @@ export function BoardEdit() {
   //--------------------------------------등록된 상품 수정 폼
   return (
     <>
-      <Spacer h={120} />
+      <Spacer h={150} />
       <Card mx={{ base: "5%", md: "10%", lg: "15%" }}>
         <CardHeader>
           <Heading>

@@ -72,7 +72,7 @@ export function MemberLogin() {
 
   return (
     <>
-      <Spacer h={120} />
+      <Spacer h={150} />
       <Card
         width={{ base: "full", md: "60%", lg: "50%" }}
         ml={{ base: "none", md: "20%", lg: "25%" }}

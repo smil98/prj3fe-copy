@@ -36,8 +36,6 @@ export function Success() {
           },
         );
         console.log(response.data); // 성공 응답 데이터 출력
-        // TODO: 구매 완료 비즈니스 로직 구현
-        // 예: 성공 메시지 표시, 다른 페이지로 리디렉션 등
         toast({
           title: "결제 성공",
           description: `결제 금액: ${Number(
@@ -52,8 +50,6 @@ export function Success() {
         console.log("결제 성공!");
       } catch (error) {
         console.error(error.response ? error.response.data : error.message);
-        // TODO: 구매 실패 비즈니스 로직 구현
-        // 예: 실패 메시지 표시, 에러 페이지로 리디렉션 등
         if (error.response) {
           const { code, message } = error.response.data;
           console.log("결제 실패:", code, message);

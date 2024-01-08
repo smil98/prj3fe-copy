@@ -233,7 +233,7 @@ export function MemberEdit() {
 
   // 백엔드로 전송
   const handleEdit = () => {
-    // TODO: 데이터가 수정됐을 경우만 반영하도록 state hook 사용
+    // TODO: 상세주소와 주소 테이블에 반영
 
     for (const field of [
       "gender",
@@ -298,7 +298,7 @@ export function MemberEdit() {
 
   return (
     <>
-      <Spacer h={120} />
+      <Spacer h={150} />
       <Card mx={{ base: "5%", md: "10%", lg: "15%" }} transition="1s all ease">
         <CardHeader p={8}>
           <Heading display="flex" transition="1s all ease">

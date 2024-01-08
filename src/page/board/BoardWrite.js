@@ -137,7 +137,7 @@ export function BoardWrite() {
 
   return (
     <>
-      <Spacer h={120} />
+      <Spacer h={150} />
       <Card
         p={8}
         mx={{ base: "5%", md: "10%", lg: "15%" }}

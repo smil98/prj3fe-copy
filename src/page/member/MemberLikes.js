@@ -4,11 +4,14 @@ import {
   Button,
   ButtonGroup,
   Card,
+  Center,
   Checkbox,
   Flex,
   Heading,
   IconButton,
   Img,
+  Input,
+  Select,
   Spacer,
   Spinner,
   Table,
@@ -28,9 +31,53 @@ import {
   faHeart,
   faHeartCircleXmark,
   faHouse,
+  faSearch,
 } from "@fortawesome/free-solid-svg-icons";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { sendRefreshToken } from "../component/authUtils";
+
+function SearchComponent({
+  id,
+  itemsPerPage,
+  setCurrentPage,
+  setSearchParams,
+}) {
+  const [keyword, setKeyword] = useState("");
+  const [category, setCategory] = useState("all");
+  const navigate = useNavigate();
+
+  function handleSearch() {
+    const params = new URLSearchParams();
+    params.set("k", keyword);
+    params.set("c", category);
+    params.set("size", itemsPerPage);
+    setSearchParams((prevSearchParams) => {
+      const newSearchParams = { ...prevSearchParams, k: keyword, c: category };
+      setCurrentPage(0);
+      return newSearchParams;
+    });
+  }
+
+  return (
+    <Center mt={5}>
+      <Flex gap={1}>
+        <Select
+          defaultValue="all"
+          onChange={(e) => setCategory(e.target.value)}
+        >
+          <option value="all">전체</option>
+          <option value="title">제목</option>
+          <option value="artist">가수명</option>
+        </Select>
+        <Input value={keyword} onChange={(e) => setKeyword(e.target.value)} />
+        <IconButton
+          onClick={handleSearch}
+          icon={<FontAwesomeIcon icon={faSearch} />}
+        />
+      </Flex>
+    </Center>
+  );
+}
 
 export function MemberLikes() {
   const location = useLocation();
@@ -38,19 +85,11 @@ export function MemberLikes() {
   const toast = useToast();
   const [loading, setLoading] = useState(true);
   const [likeList, setLikeList] = useState([]);
-  const [loggedIn, setLoggedIn] = useState(false);
-  const [isSocial, setIsSocial] = useState(false);
-  const [fileUrl, setFileUrl] = useState();
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPage, setTotalPage] = useState(0);
   const itemsPerPage = 10;
-  const [board, setBoard] = useState();
-  const { state } = location;
   const { id } = useParams();
-  const param = state?.param;
-  console.log("param: ", param);
 
-  //도전
   const [selectedLikes, setSelectedLikes] = useState([]);
 
   const handleSelectAllLikes = (isChecked) => {
@@ -63,21 +102,12 @@ export function MemberLikes() {
 
   // 검색 조건 상태로 관리
   const [searchParams, setSearchParams] = useState({
-    title: "",
-    artist: "",
+    k: "",
+    c: "",
   });
-
-  const combinedSearchParams = { title: "", artist: "", currentPage: 0 };
-
-  // 검색 조건 업데이트
-  const handleSearch = (params) => {
-    setSearchParams(params);
-    setCurrentPage(0);
-  };
 
   // 불러오기
   useEffect(() => {
-    // sendRefreshToken();
     const accessToken = localStorage.getItem("accessToken");
 
     setLoading(true);
@@ -87,8 +117,8 @@ export function MemberLikes() {
         params: {
           page: currentPage,
           size: itemsPerPage,
-          title: searchParams.title,
-          artist: searchParams.artist,
+          c: searchParams.c,
+          k: searchParams.k,
         },
         headers: {
           Authorization: `Bearer ${accessToken}`,
@@ -110,7 +140,7 @@ export function MemberLikes() {
         setTotalPage(response.data.totalPages);
       })
       .finally(() => setLoading(false));
-  }, [currentPage, searchParams, param]);
+  }, [currentPage, searchParams.k, searchParams.c]);
 
   if (loading) {
     return (
@@ -126,10 +156,10 @@ export function MemberLikes() {
       </Flex>
     );
   }
-  if (!loading && (!likeList || likeList.length === 0)) {
+  if (!loading && !likeList) {
     return (
       <>
-        <Spacer h={120} />
+        <Spacer h={150} />
         <Flex height="70vh" align="center" justify="center" direction="column">
           <AbsoluteCenter align="center">
             <FontAwesomeIcon
@@ -159,7 +189,6 @@ export function MemberLikes() {
   }
 
   function handleMoveToCart(boardId, title, artist) {
-    console.log("handleLikeToCart boardId: " + boardId);
     const accessToken = localStorage.getItem("accessToken");
 
     axios
@@ -178,7 +207,10 @@ export function MemberLikes() {
           description: `${artist}의 ${title}를 카트에 성공적으로 옮겼습니다.`,
           status: "success",
         });
-        setSearchParams(combinedSearchParams);
+        setSearchParams({
+          k: "",
+          c: "",
+        });
       })
       .catch((error) => {
         if (error.response.data === 401) {
@@ -214,7 +246,7 @@ export function MemberLikes() {
         )
         .then(() => {
           setSelectedLikes([]);
-          setSearchParams(combinedSearchParams);
+          setSearchParams({ k: "", c: "" });
         })
         .catch((error) => {
           toast({
@@ -237,7 +269,7 @@ export function MemberLikes() {
   }
 
   function handleDeleteLike(selectedLikes) {
-    if (selectedLikes.length !== 0 && selectedLikes !== null) {
+    if (selectedLikes.length !== 0) {
       const accessToken = localStorage.getItem("accessToken");
       axios
         .delete("/cart/delete/selected", {
@@ -246,7 +278,7 @@ export function MemberLikes() {
         })
         .then(() => {
           setSelectedLikes([]);
-          setSearchParams(combinedSearchParams);
+          setSearchParams({ k: "", c: "" });
         })
         .catch((error) => {
           if (error.response.data === 401) {
@@ -276,7 +308,7 @@ export function MemberLikes() {
 
   return (
     <>
-      <Spacer h={120} />
+      <Spacer h={150} />
       <Heading mx={{ base: "5%", md: "10%", lg: "15%" }} my={5}>
         찜한 목록
       </Heading>
@@ -367,7 +399,7 @@ export function MemberLikes() {
                   overflow="hidden"
                   paddingBottom="100%"
                   minW="20px"
-                  maxW="100px"
+                  maxW="120px"
                 >
                   <Img
                     w="full"
@@ -406,6 +438,14 @@ export function MemberLikes() {
           ))}
         </Table>
       </TableContainer>
+      <Center mb={10}>
+        <SearchComponent
+          id={id}
+          itemsPerPage={itemsPerPage}
+          setCurrentPage={setCurrentPage}
+          setSearchParams={setSearchParams}
+        />
+      </Center>
       <Spacer h={50} />
       <Pagenation
         totalPage={totalPage}

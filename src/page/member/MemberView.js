@@ -178,7 +178,7 @@ export function MemberView() {
 
   return (
     <>
-      <Spacer h={120} />
+      <Spacer h={150} />
       <Card mx={{ base: "5%", md: "10%", lg: "15%" }} transition="1s all ease">
         <CardHeader pt={8} px={8}>
           <Heading display="flex" transition="1s all ease">

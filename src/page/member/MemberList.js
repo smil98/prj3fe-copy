@@ -52,6 +52,7 @@ function SearchComponent() {
     params.set("c", category);
     navigate("/member/list?" + params);
   }
+
   return (
     <Center mt={5}>
       <Flex gap={1}>
@@ -144,19 +145,15 @@ export function MemberList() {
       })
       .catch(() => console.log("회원 탈퇴 실패"))
       .finally(() => {
-        console.log("해치웠나");
         onClose();
         navigate("/");
-        // 페이지 새로고침
         window.location.reload();
       });
-    //   axios.delete().then().catch();
-    // 홈 화면으로 이동시킬 것
   }
 
   return (
     <>
-      <Spacer h={120} />
+      <Spacer h={150} />
       <TableContainer
         mx={{ md: "5%", lg: "10%" }}
         p={5}
