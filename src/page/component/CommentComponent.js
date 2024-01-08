@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import {
+  AbsoluteCenter,
   Box,
   Button,
   ButtonGroup,
@@ -33,6 +34,7 @@ import {
   faChevronLeft,
   faChevronRight,
   faComment,
+  faCommentSlash,
   faPenToSquare,
   faTrashCan,
   faXmark,
@@ -234,7 +236,7 @@ function CommentList({
 }) {
   return (
     <>
-      {commentList &&
+      {commentList && commentList.length > 0 ? (
         commentList.map((comment, index) => (
           <Box key={comment.id}>
             <Box
@@ -254,7 +256,22 @@ function CommentList({
             </Box>
             {index < commentList.length - 1 && <Divider />}
           </Box>
-        ))}
+        ))
+      ) : (
+        <Flex
+          align="center"
+          direction="column"
+          justify="center"
+          textAlign="center"
+          color="gray.400"
+          mt={-5}
+        >
+          <FontAwesomeIcon icon={faCommentSlash} size="2xl" />
+          <Text fontSize="lg" mt={5}>
+            리뷰가 존재하지 않습니다.
+          </Text>
+        </Flex>
+      )}
     </>
   );
 }

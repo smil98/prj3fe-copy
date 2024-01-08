@@ -34,7 +34,7 @@ export function MemberView() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const navigate = useNavigate();
   const toast = useToast();
-  const [orderNames, setOrderNames] = useState([]);
+  // const [orderNames, setOrderNames] = useState([]);
 
   useEffect(() => {
     getMember(id);
@@ -66,7 +66,7 @@ export function MemberView() {
         console.log("getMember()의 then 실행");
         console.log(response.data);
         setMember(response.data);
-        // return axios.get(`/member/${response.data.logId}/orders`, {
+        // return axios.get(`/member/${response.data.email}/orders`, {
         //   headers: { Authorization: `Bearer ${accessToken}` },
         // });
       })
@@ -244,6 +244,7 @@ export function MemberView() {
           </Button>
         </CardFooter>
       </Card>
+      {/*{orderNameControls}*/}
     </>
   );
 }

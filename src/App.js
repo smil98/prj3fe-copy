@@ -14,6 +14,7 @@ import { MemberList } from "./page/member/MemberList";
 import { MemberLogin } from "./page/member/MemberLogin";
 import { MemeberSocialLogin } from "./page/member/MemeberSocialLogin";
 import { MemberLikes } from "./page/member/MemberLikes";
+import { MemberOrder } from "./page/member/MemberOrder";
 import { Search } from "./page/board/Search";
 import { BoardList } from "./page/board/BoardList";
 import { BoardWrite } from "./page/board/BoardWrite";
@@ -35,6 +36,7 @@ const routes = createBrowserRouter(
       <Route path="edit/:id" element={<BoardEdit />} />
       <Route path="signup" element={<MemberSignup />} />
       <Route path="member/list" element={<MemberList />} />
+      <Route path="member/order" element={<MemberOrder />} />
       <Route path="member/:id" element={<MemberView />} />
       <Route path="medit/:id" element={<MemberEdit />} />
       <Route path="likes/:id" element={<MemberLikes />} />

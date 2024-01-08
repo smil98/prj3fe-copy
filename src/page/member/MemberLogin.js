@@ -74,15 +74,16 @@ export function MemberLogin() {
     <>
       <Spacer h={150} />
       <Card
-        width={{ base: "full", md: "60%", lg: "50%" }}
-        ml={{ base: "none", md: "20%", lg: "25%" }}
+        mx={{ base: "none", md: "20%", lg: "25%" }}
+        // width={{ base: "full", md: "60%", lg: "50%" }}
+        // ml={{ base: "none", md: "20%", lg: "25%" }}
       >
         <CardHeader>
           <Heading textAlign="center" my={5}>
             회원 로그인
           </Heading>
         </CardHeader>
-        <CardBody>
+        <CardBody px={20}>
           <Stack spacing={3}>
             <FormControl>
               <FormLabel>이메일</FormLabel>

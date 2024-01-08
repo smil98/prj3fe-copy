@@ -18,6 +18,7 @@ import {
   CardFooter,
   CardHeader,
   Center,
+  Collapse,
   css,
   Flex,
   Heading,
@@ -54,6 +55,7 @@ import {
   faHourglassHalf,
   faHouse,
   faList,
+  faSliders,
   faTriangleExclamation,
   faWonSign,
 } from "@fortawesome/free-solid-svg-icons";
@@ -197,6 +199,7 @@ export function BoardList() {
   const [isSocial, setIsSocial] = useState(false);
   const [hoveredIndex, setHoveredIndex] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [openFilter, setOpenFilter] = useState(false);
 
   const toast = useToast();
   const location = useLocation();
@@ -304,6 +307,7 @@ export function BoardList() {
     albumFormat: "",
     albumDetails: [],
   });
+
   // 검색 조건을 업데이트하는 함수.
   const handleSearch = (params) => {
     setSearchParams(params);
@@ -330,7 +334,6 @@ export function BoardList() {
             : "",
           minPrice: searchParams.minPrice,
           maxPrice: searchParams.maxPrice,
-          stockQuantity: searchParams.stockQuantity,
         },
       })
       .then((response) => {
@@ -533,27 +536,39 @@ export function BoardList() {
     <>
       <Box>
         <Spacer h={150} />
-        <ButtonGroup ml="5%" isAttached mb={5}>
-          <IconButton
-            aria-label={"grid"}
-            onClick={() => {
-              setIsGrid(true);
-            }}
-            icon={<FontAwesomeIcon icon={faGrip} />}
-            colorScheme={isGrid ? "purple" : "gray"}
-            borderRadius={0}
-          />
-          <IconButton
-            aria-label={"list"}
-            onClick={() => {
-              setIsGrid(false);
-            }}
-            icon={<FontAwesomeIcon icon={faList} />}
-            colorScheme={isGrid ? "gray" : "purple"}
-            borderRadius={0}
-          />
-        </ButtonGroup>
-        <Search onSearch={handleSearch} /> {/* 검색 컴포넌트*/}
+        <Flex mx="5%" mb={5} justifyContent="space-between">
+          <ButtonGroup isAttached>
+            <IconButton
+              aria-label={"grid"}
+              onClick={() => {
+                setIsGrid(true);
+              }}
+              icon={<FontAwesomeIcon icon={faGrip} />}
+              colorScheme={isGrid ? "purple" : "gray"}
+              borderRadius={0}
+            />
+            <IconButton
+              aria-label={"list"}
+              onClick={() => {
+                setIsGrid(false);
+              }}
+              icon={<FontAwesomeIcon icon={faList} />}
+              colorScheme={isGrid ? "gray" : "purple"}
+              borderRadius={0}
+            />
+          </ButtonGroup>
+          <Button
+            colorScheme="purple"
+            variant="outline"
+            onClick={() => setOpenFilter(!openFilter)}
+            leftIcon={<FontAwesomeIcon icon={faSliders} />}
+          >
+            상세 검색 조건 설정
+          </Button>
+        </Flex>
+        <Collapse in={openFilter === true} animateOpacity>
+          <Search handleSearch={handleSearch} onClose={openFilter === false} />
+        </Collapse>
         {isGrid ? (
           <SimpleGrid {...gridStyle} className="grids">
             {boardList.map((board) => (

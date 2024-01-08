@@ -44,21 +44,12 @@ import { HamburgerIcon, LockIcon, SearchIcon } from "@chakra-ui/icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faArrowRightFromBracket,
-  faBell,
-  faBuilding,
-  faCartShopping,
-  faCircleQuestion,
   faCloudArrowUp,
   faCompactDisc,
   faCreditCard,
-  faDollarSign,
-  faFileInvoice,
   faGears,
   faHeart,
   faHome,
-  faList,
-  faMusic,
-  faRecordVinyl,
   faScroll,
   faUser,
   faUserGear,
@@ -304,7 +295,7 @@ export function NavBar(props) {
             <MenuItem
               icon={<FontAwesomeIcon icon={faScroll} />}
               onClick={() => {
-                navigate("/orderDetails");
+                navigate("/member/order");
               }}
             >
               주문 내역 //TODO: 수정
@@ -369,7 +360,10 @@ export function NavBar(props) {
           mx="3%"
         >
           <Button
-            onClick={() => navigate("/")}
+            onClick={() => {
+              navigate("/");
+              window.location.reload();
+            }}
             ml={5}
             className="logo"
             variant="undefined"
@@ -463,7 +457,7 @@ export function NavBar(props) {
                         <MenuItem
                           icon={<FontAwesomeIcon icon={faScroll} />}
                           onClick={() => {
-                            navigate("/orderDetails");
+                            navigate("/member/order");
                           }}
                         >
                           주문 내역 //TODO: 수정
@@ -562,6 +556,7 @@ export function NavBar(props) {
                 onClick={() => {
                   onClose();
                   navigate("/");
+                  window.location.reload();
                 }}
               >
                 홈
@@ -608,7 +603,7 @@ export function NavBar(props) {
                     {...drawerButtonStyle}
                     onClick={() => {
                       onClose();
-                      navigate("/orderDetails"); //TODO: 수정
+                      navigate("/member/order"); //TODO: 수정
                     }}
                   >
                     주문 내역
@@ -696,7 +691,6 @@ export function NavBar(props) {
           <DrawerFooter h="10%">
             <Flex
               justifyContent="space-between"
-              // border="1px solid black"
               alignItems="center"
               w="full"
               h="full"
@@ -719,334 +713,6 @@ export function NavBar(props) {
         </DrawerContent>
       </Drawer>
     </>
-    // <>
-    //   <Flex flexDirection="column" mb={2}>
-    //     <Text
-    //       textAlign="center"
-    //       border="0px solid black"
-    //       marginTop="70px"
-    //       variant="ghost"
-    //       w="100%"
-    //       h="auto"
-    //       fontFamily="Constantia"
-    //       fontSize="80px"
-    //       fontWeight="bold"
-    //       _hover={{ cursor: "pointer" }}
-    //       onClick={() => {
-    //         navigate("/");
-    //       }}
-    //     >
-    //       MUSIC RECORDS SHOP
-    //     </Text>
-    //     <Box
-    //       margin="8"
-    //       border="1px solid black"
-    //       style={{
-    //         marginTop: "60px",
-    //         display: "flex",
-    //         border: "0px solid navy",
-    //         width: "100%",
-    //         height: "auto",
-    //         justifyContent: "space-evenly",
-    //         alignItems: "center", // Align items vertically in the center
-    //       }}
-    //     >
-    //       <Button
-    //         variant="ghost"
-    //         size="lg"
-    //         fontFamily="Constantia"
-    //         border="0px solid red"
-    //         _hover={{ bg: "none" }}
-    //         onClick={() => navigate("/", { state: { param: "CD" } })}
-    //         leftIcon={<FontAwesomeIcon icon={faMusic} />}
-    //       >
-    //         Cd
-    //       </Button>
-    //       <Button
-    //         variant="ghost"
-    //         size="lg"
-    //         fontFamily="Constantia"
-    //         border="0px solid red"
-    //         _hover={{ bg: "none" }}
-    //         onClick={() => navigate("/", { state: { param: "VINYL" } })}
-    //         leftIcon={<FontAwesomeIcon icon={faMusic} />}
-    //       >
-    //         Vinyl
-    //       </Button>
-    //       <Button
-    //         variant="ghost"
-    //         size="lg"
-    //         fontFamily="Constantia"
-    //         border="0px solid red"
-    //         _hover={{ bg: "none" }}
-    //         onClick={() => navigate("/", { state: { param: "CASSETTE_TAPE" } })}
-    //         leftIcon={<FontAwesomeIcon icon={faMusic} />}
-    //       >
-    //         CASSETTE TAPE
-    //       </Button>
-    //       <Box>
-    //         {loggedIn || (
-    //           <Button
-    //             borderRadius={0}
-    //             variant="ghost"
-    //             size="lg"
-    //             fontFamily="Constantia"
-    //             border="0px solid red"
-    //             leftIcon={<FontAwesomeIcon icon={faUserPlus} />}
-    //             onClick={() => navigate("/signup")}
-    //           >
-    //             Sign up
-    //           </Button>
-    //         )}
-    //         {!loggedIn && (
-    //           <Button
-    //             variant="ghost"
-    //             size="lg"
-    //             fontFamily="Constantia"
-    //             border="0px solid red"
-    //             _hover={{ bg: "none" }}
-    //             onClick={() => navigate("/login")}
-    //             leftIcon={<FontAwesomeIcon icon={faRightToBracket} />}
-    //           >
-    //             Log in
-    //           </Button>
-    //         )}
-    //         {loggedIn && (
-    //           <Button
-    //             variant="ghost"
-    //             size="lg"
-    //             fontFamily="Constantia"
-    //             border="0px solid red"
-    //             _hover={{ bg: "none" }}
-    //             onClick={handleLogout}
-    //             leftIcon={<FontAwesomeIcon icon={faRightFromBracket} />}
-    //           >
-    //             log out
-    //           </Button>
-    //         )}
-    //       </Box>
-    //     </Box>
-    //     {/*여기는 햄버거 바 Drawer*/}
-    //     <Box position="fixed" top={0} left={0}>
-    //       <Button
-    //         zIndex={1}
-    //         variant="ghost"
-    //         border="0px solid red"
-    //         size="lg"
-    //         leftIcon={<FontAwesomeIcon icon={faBars} />}
-    //         onClick={onOpen}
-    //       />
-    //       {/*====---------------------------------------------------------------- 바 누르면 */}
-    //       <Drawer
-    //         bg="gray.100"
-    //         placement="left"
-    //         isOpen={isOpen}
-    //         onClose={onClose}
-    //         size={"sm"}
-    //       >
-    //         {/*펼쳐지고*/}
-    //         <DrawerOverlay />
-    //         <DrawerContent>
-    //           {/*머리*/}
-    //           <DrawerHeader
-    //             border="0px solid black"
-    //             borderBottomWidth="1px"
-    //             display="flex"
-    //           >
-    //             <Button
-    //               marginTop="3"
-    //               border="0px solid red"
-    //               variant="ghost"
-    //               fontSize={30}
-    //               onClick={() => {
-    //                 onCloseDrawer();
-    //                 onClose();
-    //                 navigate("/");
-    //               }}
-    //             >
-    //               <FontAwesomeIcon
-    //                 icon={faMusic}
-    //                 style={{ color: "#000000" }}
-    //               />
-    //               MUSIC IS MY LIFE{" "}
-    //               <FontAwesomeIcon
-    //                 icon={faMusic}
-    //                 style={{ color: "#000000" }}
-    //               />
-    //             </Button>
-    //             <CloseButton
-    //               size="md"
-    //               border="0px solid blue"
-    //               onClick={() => {
-    //                 onClose();
-    //               }}
-    //               position="absolute"
-    //               right="5"
-    //             />
-    //             <br />
-    //             <br />
-    //           </DrawerHeader>
-    //           {/*몸통*/}
-    //           <DrawerBody>
-    //             {/*새로운 음반 등록 시스템 : 관리자만이 접근 가능.*/}
-    //             {/*로그인으로 가기 */}
-    //             <br />
-    //             <Stack
-    //               direction={["column", "row"]}
-    //               justifyContent="space-evenly"
-    //             >
-    //               {loggedIn || (
-    //                 <Button
-    //                   textDecoration="underline"
-    //                   // border="1px solid black"
-    //                   variant="ghost"
-    //                   size="lg"
-    //                   borderRadius={0}
-    //                   _hover={{ bg: "none" }}
-    //                   onClick={() => {
-    //                     onCloseDrawer();
-    //                     onClose();
-    //                     navigate("/login");
-    //                   }}
-    //                 >
-    //                   Log in
-    //                 </Button>
-    //               )}
-    //               {/*멤버로 가입하기 */}
-    //               {loggedIn || (
-    //                 <Button
-    //                   textDecoration="underline"
-    //                   // border="1px solid black"
-    //                   borderRadius={0}
-    //                   variant="ghost"
-    //                   size="lg"
-    //                   onClick={() => {
-    //                     onCloseDrawer();
-    //                     onClose();
-    //                     navigate("/signup");
-    //                   }}
-    //                 >
-    //                   Sign Up
-    //                 </Button>
-    //               )}
-    //               <Button
-    //                 textDecoration="underline"
-    //                 // border="1px solid black"
-    //                 borderRadius={0}
-    //                 variant="ghost"
-    //                 size="lg"
-    //                 onClick={() => {
-    //                   onCloseDrawer();
-    //                   onClose();
-    //                   navigate("/order");
-    //                 }}
-    //               >
-    //                 Order
-    //               </Button>
-    //               {loggedIn && (
-    //                 <Button
-    //                   borderRadius={0}
-    //                   variant="ghost"
-    //                   size="lg"
-    //                   onClick={() => {
-    //                     onCloseDrawer();
-    //                     onClose();
-    //                     navigate("/member?" + urlParams.toString());
-    //                   }}
-    //                 >
-    //                   Member Info
-    //                 </Button>
-    //               )}
-    //               {loggedIn && (
-    //                 <Button
-    //                   variant="ghost"
-    //                   size="lg"
-    //                   onClick={handleLogout}
-    //                   leftIcon={<FontAwesomeIcon icon={faRightFromBracket} />}
-    //                 >
-    //                   Log out
-    //                 </Button>
-    //               )}
-    //             </Stack>
-    //             <Card
-    //               mt={15}
-    //               size="lg"
-    //               variant="ghost"
-    //               margin="center"
-    //               w="100%"
-    //               h="0 auto"
-    //               border="0px solid black"
-    //               onClick={() => {
-    //                 onCloseDrawer();
-    //                 onClose();
-    //               }}
-    //             >
-    //               <Button
-    //                 border="0px solid black"
-    //                 onClick={() => {
-    //                   navigate("/");
-    //                 }}
-    //               >
-    //                 Home
-    //               </Button>
-    //               <Button
-    //                 onClick={() => navigate("/", { state: { param: "CD" } })}
-    //                 border="0px solid black"
-    //               >
-    //                 CD
-    //               </Button>
-    //               <Button
-    //                 onClick={() => navigate("/", { state: { param: "VINYL" } })}
-    //                 border="0px solid black"
-    //               >
-    //                 VINYL
-    //               </Button>
-    //               <Button
-    //                 onClick={() =>
-    //                   navigate("/", { state: { param: "CASSETTE_TAPE" } })
-    //                 }
-    //                 border="0px solid black"
-    //               >
-    //                 CASSETTE TAPE
-    //               </Button>
-    //             </Card>
-    //             <Card>
-    //               {/*" 관리자의 경우 열람 가능 */}
-    //               {isAdmin && (
-    //                 <Button
-    //                   border="0px solid black"
-    //                   borderRadius={0}
-    //                   variant="ghost"
-    //                   size="lg"
-    //                   leftIcon={<FontAwesomeIcon icon={faRecordVinyl} />}
-    //                   onClick={() => navigate("/write")}
-    //                 >
-    //                   {" "}
-    //                   ALBUM REGISTER SYSTEM
-    //                 </Button>
-    //               )}
-    //
-    //               {/*회원 리스트*/}
-    //               {isAdmin && (
-    //                 <Button
-    //                   borderRadius={0}
-    //                   variant="ghost"
-    //                   size="lg"
-    //                   leftIcon={<FontAwesomeIcon icon={faUsers} />}
-    //                   onClick={() => navigate("/member/list")}
-    //                 >
-    //                   Member List
-    //                 </Button>
-    //               )}
-    //             </Card>
-    //             <br />
-    //           </DrawerBody>
-    //         </DrawerContent>
-    //       </Drawer>
-    //     </Box>
-    //     {/*회원 가입 버튼*/}
-    //   </Flex>
-    // </>
   );
 }
 

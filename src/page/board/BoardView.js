@@ -56,6 +56,7 @@ export function BoardView() {
   const [email, setEmail] = useState("");
   const [loggedIn, setLoggedIn] = useState(false);
   const [loading, setLoading] = useState(true);
+  const accessToken = localStorage.getItem("accessToken");
 
   const toast = useToast();
   const navigate = useNavigate();
@@ -65,7 +66,9 @@ export function BoardView() {
     setLoading(true);
     axios
       .get("/api/board/" + id)
-      .then((response) => setBoard(response.data))
+      .then((response) => {
+        setBoard(response.data);
+      })
       .catch((error) => console.log(error))
       .finally(() => setLoading(false));
   }, []);
@@ -211,7 +214,11 @@ export function BoardView() {
   return (
     <>
       <Spacer h={150} />
-      <HStack spacing="5%" mx={{ base: "5%", md: "10%", lg: "15%" }}>
+      <HStack
+        spacing="5%"
+        mx={{ base: "5%", md: "10%", lg: "25%" }}
+        transition="1s all ease"
+      >
         <Box
           w={{ sm: "50%", base: "45%", md: "45%", lg: "50%" }}
           transition="1s all ease"
