@@ -15,6 +15,13 @@ export function MemeberSocialLogin() {
       .then((response) => {
         localStorage.setItem("accessToken", response.data.accessToken);
         localStorage.setItem("refreshToken", response.data.refreshToken);
+        console.log(
+          "가입 콜백 끝 (accessToken): " + localStorage.getItem("accessToken"),
+        );
+        console.log(
+          "가입 콜백 끝 (refreshToken): " +
+            localStorage.getItem("refreshToken"),
+        );
         toast({
           description: "로그인 되었습니다.",
           status: "success",

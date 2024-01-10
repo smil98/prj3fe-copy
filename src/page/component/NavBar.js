@@ -109,9 +109,8 @@ export function NavBar(props) {
       })
       .catch((error) => {
         console.log("sendRefreshToken()의 catch 실행");
-        localStorage.removeItem("refreshToken");
-
         setLoggedIn(false);
+        localStorage.removeItem("refreshToken");
       });
   }
 

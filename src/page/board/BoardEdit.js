@@ -6,7 +6,6 @@ import {
   CardFooter,
   CardHeader,
   Center,
-  Container,
   Flex,
   FormControl,
   FormHelperText,
@@ -26,25 +25,18 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
-import { Form, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useImmer } from "use-immer";
 import axios from "axios";
 
 export function BoardEdit() {
   const [board, updateBoard] = useImmer(null); //객체 사용해서 가변적으로 상태 변경
   const { id } = useParams();
-  const [fileURL, setFileURL] = useState("");
-  // const [previousFileUrl, setPreviousFileUrl] = useState('');
-  // const handleFileUrl = () => {
-  //   setPreviousFileUrl(fileURL);
-  // };
   //먼저 조회함.  updateBoard로 응답 받아옴
   const navigate = useNavigate();
   const toast = useToast();
   const [boardFiles, setBoardFiles] = useState(null);
-  const [removeFileIds, setRemoveFileIds] = useState([]);
-
-  //
+  const [showUploadFiles, setShowUploadFiles] = useState(false);
 
   useEffect(() => {
     axios
@@ -69,10 +61,6 @@ export function BoardEdit() {
         />
       </Flex>
     );
-  }
-
-  function handleFileUrlChange(e) {
-    setFileURL(e.target.value);
   }
 
   //타이틀 수정
@@ -153,16 +141,7 @@ export function BoardEdit() {
   }
 
   function handleRemoveFileSwitch(e) {
-    if (e.target.checked) {
-      setRemoveFileIds([...removeFileIds, e.target.value]);
-      updateBoard((draft) => {
-        draft.boardFiles = draft.boardFiles.filter(
-          (file) => file.id !== e.target.value,
-        );
-      });
-    } else {
-      setRemoveFileIds(removeFileIds.filter((item) => item !== e.target.value));
-    }
+    setShowUploadFiles(e.target.checked);
   }
 
   const labelStyles = {
@@ -197,10 +176,9 @@ export function BoardEdit() {
                 </HStack>
               </Box>
               {/*----------------이미지 파일 수정 코드 --------------*/}
-              {removeFileIds.length > 0 && (
+              {showUploadFiles && (
                 <FormControl>
                   <FormLabel {...labelStyles}>앨범 커버 교체</FormLabel>
-                  <Image src={fileURL} />
                   <Input
                     type="file"
                     accept="image/*"

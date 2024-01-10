@@ -32,7 +32,7 @@ export function Pagenation({ totalPage, currentPage, setCurrentPage }) {
   return (
     <Center>
       <ButtonGroup>
-        <Button onClick={handlePreviousPage} disable={currentPage === 0}>
+        <Button onClick={handlePreviousPage} disabled={currentPage === 0}>
           <FontAwesomeIcon icon={faChevronLeft} />
         </Button>
         {pageButton}

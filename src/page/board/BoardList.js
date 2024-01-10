@@ -1,15 +1,7 @@
 //  앨범 쇼핑몰 첫 페이지 제품 셀렉 페이지
-import React, {
-  createElement,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import {
   AbsoluteCenter,
-  Avatar,
-  AvatarGroup,
   Box,
   Button,
   ButtonGroup,
@@ -17,18 +9,11 @@ import {
   CardBody,
   CardFooter,
   CardHeader,
-  Center,
   Collapse,
-  css,
   Flex,
   Heading,
-  Icon,
   IconButton,
-  Image,
   Img,
-  Input,
-  InputGroup,
-  InputLeftElement,
   SimpleGrid,
   Spacer,
   Spinner,
@@ -41,30 +26,23 @@ import {
   Tr,
   useBreakpointValue,
   useToast,
-  VStack,
 } from "@chakra-ui/react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCartPlus,
-  faChevronLeft,
-  faChevronRight,
   faGrip,
   faHeart as fullHeart,
-  faHeartCircleXmark,
   faHourglassHalf,
-  faHouse,
   faList,
   faSliders,
-  faTriangleExclamation,
-  faWonSign,
 } from "@fortawesome/free-solid-svg-icons";
 import { Search } from "./Search";
 import { faHeart as emptyHeart } from "@fortawesome/free-regular-svg-icons";
 import axios from "axios";
 import * as animateCSSGrid from "animate-css-grid";
-import { SearchIcon } from "@chakra-ui/icons";
 import { Pagenation } from "../component/Pagenation";
+import { sendRefreshToken } from "../component/authUtils";
 
 function LikeContainer({
   loggedIn,
@@ -137,7 +115,6 @@ function LikeContainer({
             console.error("Error fetching like data: ", error);
           }
         });
-      // .finally(() => setUpdatingLike(false));
     } else {
       toast({
         description: "로그인 후 이용가능한 서비스입니다",
@@ -243,35 +220,8 @@ export function BoardList() {
     }
   }, []);
 
-  function sendRefreshToken() {
-    const refreshToken = localStorage.getItem("refreshToken");
-    console.log("리프레시 토큰: ", refreshToken);
-    // setLoggedIn(false);
-    if (refreshToken !== null) {
-      return axios
-        .get("/refreshToken", {
-          headers: { Authorization: `Bearer ${refreshToken}` },
-        })
-        .then((response) => {
-          console.log("sendRefreshToken()의 then 실행");
-
-          localStorage.setItem("accessToken", response.data.accessToken);
-          localStorage.setItem("refreshToken", response.data.refreshToken);
-
-          console.log("토큰들 업데이트 리프레시 토큰: ");
-          console.log(response.data.refreshToken);
-          setLoggedIn(true);
-        })
-        .catch((error) => {
-          console.log("sendRefreshToken()의 catch 실행");
-          localStorage.removeItem("refreshToken");
-
-          setLoggedIn(false);
-        });
-    }
-  }
-
   useEffect(() => {
+    console.log("====BoardList useEffect====");
     if (localStorage.getItem("accessToken") !== null) {
       console.log(localStorage.getItem("accessToken"));
       axios
@@ -298,7 +248,6 @@ export function BoardList() {
           console.log("isSocial: " + isSocial);
         });
     }
-    console.log("loggedIn: ", loggedIn);
   }, [location]);
 
   // 검색 조건을 상태로 관리.
@@ -537,7 +486,7 @@ export function BoardList() {
       <Box>
         <Spacer h={150} />
         <Flex mx="5%" mb={5} justifyContent="space-between">
-          <ButtonGroup isAttached>
+          <ButtonGroup isAttached={true}>
             <IconButton
               aria-label={"grid"}
               onClick={() => {
