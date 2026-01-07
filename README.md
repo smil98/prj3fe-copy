@@ -24,7 +24,8 @@ React + Spring Boot 기반으로 개발되었으며,
 - **DB**: RDBMS (JPA 기반)
 
 ## 🏗 시스템 아키텍처
-(아키텍처 다이어그램 이미지)
+<img width="805" height="444" alt="image" src="https://github.com/user-attachments/assets/1b792f60-1901-466d-adda-85022dbc907a" />
+
 
 ## ✨ 주요 기능
 - 회원가입 / 로그인 / 소셜 로그인
