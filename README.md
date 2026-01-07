@@ -1,70 +1,58 @@
-# Getting Started with Create React App
+# FavHub
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## 🎵 프로젝트 소개
+FavHub는 음반이 아닌 형태의 음악 카피를 구하기 어려운 환경에서  
+**음악을 소장하고 싶은 소비자와 공급자를 연결하는 음원 거래 플랫폼**입니다.
 
-## Available Scripts
+React + Spring Boot 기반으로 개발되었으며,  
+실제 서비스 수준의 **인증·결제·장바구니·검색 기능**을 구현하는 것을 목표로 했습니다.
 
-In the project directory, you can run:
+## 📅 개발 기간
+2023.11.23 ~ 2023.12.21
 
-### `npm start`
+## 👥 팀 구성 및 역할
+- 팀 프로젝트  
+- (개인정보 보호를 위해 세부 역할 비공개)
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## 🛠 기술 스택
+- **Frontend**: React, Chakra UI, JSX
+- **Backend**: Spring Boot, Spring Security, JPA, QueryDSL
+- **Auth**: JWT, OAuth (소셜 로그인)
+- **Infra**: AWS EC2, RDS
+- **DB**: RDBMS (JPA 기반)
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## 🏗 시스템 아키텍처
+(아키텍처 다이어그램 이미지)
 
-### `npm test`
+## ✨ 주요 기능
+- 회원가입 / 로그인 / 소셜 로그인
+- JWT 기반 인증 및 권한 관리
+- 음반 상품 조회 및 검색 필터링
+- 장바구니 CRUD (회원 / 비회원)
+- 댓글 및 좋아요 기능
+- 결제 기능
+- AWS 기반 배포
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## 🧠 트러블슈팅 (요약)
+- **CORS + 431 오류**  
+  → Axios params 구조 개선 및 Spring CorsFilter 설정 조정
+- **QueryDSL Q-Class 미생성 문제**  
+  → Gradle 빌드 설정 수정 및 Annotation Processor 이해
+- **JWT 환경에서 비회원 장바구니 처리**  
+  → sessionStorage 활용 후 로그인 시 서버 데이터 병합
+- **JPA 연관관계 쿼리 오류**  
+  → 엔티티 기반 JPQL 재설계로 null 반환 문제 해결
 
-### `npm run build`
+## 🚀 개선 및 개인 기여
+- **이미지 로딩 성능 개선 (WebP 적용)**  
+  - 서버 단에서 이미지 포맷 변환 처리
+  - 스토리지 용량 절감 및 페이지 로딩 성능 개선
+  - 정적 리소스 관리 및 CDN 캐싱에 유리한 구조로 개선
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## 📄 상세 문서
+- 프로젝트 기획 배경
+- ERD 및 상세 아키텍처
+- API 명세
+- 트러블슈팅 전체 과정 및 회고
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+👉 [프로젝트 상세 문서 (Notion)](https://www.notion.so/FavHub-5b3bf25c000c44ef8668d08a1dab992c?source=copy_link)
