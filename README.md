@@ -11,8 +11,10 @@ React + Spring Boot 기반으로 개발되었으며,
 2023.11.23 ~ 2023.12.21
 
 ## 👥 팀 구성 및 역할
-- 팀 프로젝트  
-- (개인정보 보호를 위해 세부 역할 비공개)
+| 주예린[@yel106](https://github.com/yel106/prj3) | 전희연[@jeon602](https://github.com/jeon602/pfj3fe3) | 원아영[@azerone52](https://github.com/azerone52/teamPrj2312Fe) | 김도형[@kkssii0210](https://github.com/kkssii0210/prj3) | 이승미 |
+|------|-------|-------|-------|-------|
+| 상품 CRUD, 댓글 CRUD | 상품 CRUD, 좋아요, 메인 UI | JWT 토큰을 이용한 로그인 | AWS 배포, 결제 (토스 API) | 소셜 로그인, 장바구니 CRUD |
+
 
 ## 🛠 기술 스택
 - **Frontend**: React, Chakra UI, JSX
